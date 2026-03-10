@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+  <meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+  <link href="./favicon.ico" rel="icon"/>
+  <link href="/iconfont/iconfont.css" rel="stylesheet"/>
+  <link href="/css/base.css" rel="stylesheet"/>
+  <title>
+   君和数字创意,APP开发,小程序开发,软件开发,网站建设,网站设计,网站建设公司,珠海君和睿通物联科技有限公司
+  </title>
+  <style>
+   /*屏幕大于1200排序（大屏幕电脑）*/
+			button {
+				border: none;
+			}
+
+			@media screen and (min-width: 1600px) {
+				html {
+					font-size: 58px !important;
+
+				}
+
+				body,
+				div,
+				span,
+				applet,
+				object,
+				iframe,
+				h1,
+				h2,
+				h3,
+				h4,
+				h5,
+				h6,
+				p,
+				blockquote,
+				pre,
+				a,
+				abbr,
+				acronym,
+				address,
+				big,
+				cite,
+				code,
+				del,
+				dfn,
+				em,
+				img,
+				ins,
+				kbd,
+				q,
+				s,
+				samp,
+				small,
+				strike,
+				strong,
+				sub,
+				sup,
+				tt,
+				var,
+				b,
+				u,
+				i,
+				center,
+				dl,
+				dt,
+				dd,
+				ol,
+				ul,
+				li,
+				fieldset,
+				form,
+				label,
+				legend,
+				table,
+				caption,
+				tbody,
+				tfoot,
+				thead,
+				tr,
+				th,
+				td,
+				article,
+				aside,
+				canvas,
+				details,
+				embed,
+				figure,
+				figcaption,
+				footer,
+				header,
+				hgroup,
+				menu,
+				nav,
+				output,
+				ruby,
+				section,
+				summary,
+				time,
+				mark,
+				audio,
+				video {
+					margin: 0;
+					padding: 0;
+					border: 0;
+					font-size: 100%;
+					font: inherit;
+					vertical-align: baseline;
+					text-decoration: none;
+				}
+
+				button {
+					border: none !important;
+				}
+
+				/* make sure to set some focus styles for accessibility */
+				:focus {
+					outline: 0;
+				}
+
+				/* HTML5 display-role reset for older browsers */
+				article,
+				aside,
+				details,
+				figcaption,
+				figure,
+				footer,
+				header,
+				hgroup,
+				menu,
+				nav,
+				section {
+					display: block;
+				}
+
+				body {
+					line-height: 1;
+				}
+
+				ol,
+				ul {
+					list-style: none;
+				}
+
+				blockquote,
+				q {
+					quotes: none;
+				}
+
+				blockquote:before,
+				blockquote:after,
+				q:before,
+				q:after {
+					content: '';
+					content: none;
+				}
+
+				table {
+					border-collapse: collapse;
+					border-spacing: 0;
+				}
+
+				input[type=search]::-webkit-search-cancel-button,
+				input[type=search]::-webkit-search-decoration,
+				input[type=search]::-webkit-search-results-button,
+				input[type=search]::-webkit-search-results-decoration {
+					-webkit-appearance: none;
+					-moz-appearance: none;
+				}
+
+				input[type=search] {
+					-webkit-appearance: none;
+					-moz-appearance: none;
+					-webkit-box-sizing: content-box;
+					-moz-box-sizing: content-box;
+					box-sizing: content-box;
+				}
+
+				textarea {
+					overflow: auto;
+					vertical-align: top;
+					resize: vertical;
+				}
+
+				/**
+ * Correct `inline-block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+				audio,
+				canvas,
+				video {
+					display: inline-block;
+					*display: inline;
+					*zoom: 1;
+					max-width: 100%;
+				}
+
+				/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+
+				audio:not([controls]) {
+					display: none;
+					height: 0;
+				}
+
+				/**
+ * Address styling not present in IE 7/8/9, Firefox 3, and Safari 4.
+ * Known issue: no IE 6 support.
+ */
+
+				[hidden] {
+					display: none;
+				}
+
+				/**
+ * 1. Correct text resizing oddly in IE 6/7 when body `font-size` is set using
+ *    `em` units.
+ * 2. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+
+				html {
+					font-size: 100%;
+					/* 1 */
+					-webkit-text-size-adjust: 100%;
+					/* 2 */
+					-ms-text-size-adjust: 100%;
+					/* 2 */
+				}
+
+				/**
+ * Address `outline` inconsistency between Chrome and other browsers.
+ */
+
+				a:focus {
+					outline: thin dotted;
+				}
+
+				/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+
+				a:active,
+				a:hover {
+					outline: 0;
+				}
+
+				/**
+ * 1. Remove border when inside `a` element in IE 6/7/8/9 and Firefox 3.
+ * 2. Improve image quality when scaled in IE 7.
+ */
+
+				img {
+					border: 0;
+					/* 1 */
+					-ms-interpolation-mode: bicubic;
+					/* 2 */
+				}
+
+				/**
+ * Address margin not present in IE 6/7/8/9, Safari 5, and Opera 11.
+ */
+
+				figure {
+					margin: 0;
+				}
+
+				/**
+ * Correct margin displayed oddly in IE 6/7.
+ */
+
+				form {
+					margin: 0;
+				}
+
+				/**
+ * Define consistent border, margin, and padding.
+ */
+
+				fieldset {
+					border: 1px solid #c0c0c0;
+					margin: 0 2px;
+					padding: 0.35em 0.625em 0.75em;
+				}
+
+				/**
+ * 1. Correct color not being inherited in IE 6/7/8/9.
+ * 2. Correct text not wrapping in Firefox 3.
+ * 3. Correct alignment displayed oddly in IE 6/7.
+ */
+
+				legend {
+					border: 0;
+					/* 1 */
+					padding: 0;
+					white-space: normal;
+					/* 2 */
+					*margin-left: -7px;
+					/* 3 */
+				}
+
+				/**
+ * 1. Correct font size not being inherited in all browsers.
+ * 2. Address margins set differently in IE 6/7, Firefox 3+, Safari 5,
+ *    and Chrome.
+ * 3. Improve appearance and consistency in all browsers.
+ */
+
+				button,
+				input,
+				select,
+				textarea {
+					font-size: 100%;
+					/* 1 */
+					margin: 0;
+					/* 2 */
+					vertical-align: baseline;
+					/* 3 */
+					*vertical-align: middle;
+					/* 3 */
+				}
+
+				/**
+ * Address Firefox 3+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+
+				button,
+				input {
+					line-height: normal;
+				}
+
+				/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Chrome, Safari 5+, and IE 6+.
+ * Correct `select` style inheritance in Firefox 4+ and Opera.
+ */
+
+				button,
+				select {
+					text-transform: none;
+				}
+
+				/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ * 4. Remove inner spacing in IE 7 without affecting normal text inputs.
+ *    Known issue: inner spacing remains in IE 6.
+ */
+
+				button,
+				html input[type="button"],
+				/* 1 */
+				input[type="reset"],
+				input[type="submit"] {
+					-webkit-appearance: button;
+					/* 2 */
+					cursor: pointer;
+					/* 3 */
+					*overflow: visible;
+					/* 4 */
+				}
+
+				/**
+ * Re-set default cursor for disabled elements.
+ */
+
+				button[disabled],
+				html input[disabled] {
+					cursor: default;
+				}
+
+				/**
+ * 1. Address box sizing set to content-box in IE 8/9.
+ * 2. Remove excess padding in IE 8/9.
+ * 3. Remove excess padding in IE 7.
+ *    Known issue: excess padding remains in IE 6.
+ */
+
+				input[type="checkbox"],
+				input[type="radio"] {
+					box-sizing: border-box;
+					/* 1 */
+					padding: 0;
+					/* 2 */
+					*height: 13px;
+					/* 3 */
+					*width: 13px;
+					/* 3 */
+				}
+
+				/**
+ * 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
+ *    (include `-moz` to future-proof).
+ */
+
+				input[type="search"] {
+					-webkit-appearance: textfield;
+					/* 1 */
+					-moz-box-sizing: content-box;
+					-webkit-box-sizing: content-box;
+					/* 2 */
+					box-sizing: content-box;
+				}
+
+				/**
+ * Remove inner padding and search cancel button in Safari 5 and Chrome
+ * on OS X.
+ */
+
+				input[type="search"]::-webkit-search-cancel-button,
+				input[type="search"]::-webkit-search-decoration {
+					-webkit-appearance: none;
+				}
+
+				/**
+ * Remove inner padding and border in Firefox 3+.
+ */
+
+				button::-moz-focus-inner,
+				input::-moz-focus-inner {
+					border: 0;
+					padding: 0;
+				}
+
+				/**
+ * 1. Remove default vertical scrollbar in IE 6/7/8/9.
+ * 2. Improve readability and alignment in all browsers.
+ */
+
+				textarea {
+					overflow: auto;
+					/* 1 */
+					vertical-align: top;
+					/* 2 */
+				}
+
+				/**
+ * Remove most spacing between table cells.
+ */
+
+				table {
+					border-collapse: collapse;
+					border-spacing: 0;
+				}
+
+				html,
+				button,
+				input,
+				select,
+				textarea {
+					color: #222;
+					border: none;
+				}
+
+
+				::-moz-selection {
+					background: #b3d4fc;
+					text-shadow: none;
+				}
+
+				::selection {
+					background: #b3d4fc;
+					text-shadow: none;
+				}
+
+				img {
+					vertical-align: middle;
+				}
+
+				fieldset {
+					border: 0;
+					margin: 0;
+					padding: 0;
+				}
+
+				textarea {
+					resize: vertical;
+				}
+
+				.chromeframe {
+					margin: 0.2em 0;
+					background: #ccc;
+					color: #000;
+					padding: 0.2em 0;
+				}
+
+			}
+
+			/*屏幕在1024px到1199之间（中屏幕电脑）*/
+			@media screen and (min-width: 0px) and (max-width: 1600px) {
+				html {
+					font-size: 46px !important;
+				}
+
+				button {
+					border: none !important;
+				}
+
+				body,
+				div,
+				span,
+				applet,
+				object,
+				iframe,
+				h1,
+				h2,
+				h3,
+				h4,
+				h5,
+				h6,
+				p,
+				blockquote,
+				pre,
+				a,
+				abbr,
+				acronym,
+				address,
+				big,
+				cite,
+				code,
+				del,
+				dfn,
+				em,
+				img,
+				ins,
+				kbd,
+				q,
+				s,
+				samp,
+				small,
+				strike,
+				strong,
+				sub,
+				sup,
+				tt,
+				var,
+				b,
+				u,
+				i,
+				center,
+				dl,
+				dt,
+				dd,
+				ol,
+				ul,
+				li,
+				fieldset,
+				form,
+				label,
+				legend,
+				table,
+				caption,
+				tbody,
+				tfoot,
+				thead,
+				tr,
+				th,
+				td,
+				article,
+				aside,
+				canvas,
+				details,
+				embed,
+				figure,
+				figcaption,
+				footer,
+				header,
+				hgroup,
+				menu,
+				nav,
+				output,
+				ruby,
+				section,
+				summary,
+				time,
+				mark,
+				audio,
+				video {
+					margin: 0;
+					padding: 0;
+					border: 0;
+					font-size: 100%;
+					font: inherit;
+					vertical-align: baseline;
+					text-decoration: none;
+				}
+
+				/* make sure to set some focus styles for accessibility */
+				:focus {
+					outline: 0;
+				}
+
+				/* HTML5 display-role reset for older browsers */
+				article,
+				aside,
+				details,
+				figcaption,
+				figure,
+				footer,
+				header,
+				hgroup,
+				menu,
+				nav,
+				section {
+					display: block;
+				}
+
+				body {
+					line-height: 1;
+				}
+
+				ol,
+				ul {
+					list-style: none;
+				}
+
+				blockquote,
+				q {
+					quotes: none;
+				}
+
+				blockquote:before,
+				blockquote:after,
+				q:before,
+				q:after {
+					content: '';
+					content: none;
+				}
+
+				table {
+					border-collapse: collapse;
+					border-spacing: 0;
+				}
+
+				input[type=search]::-webkit-search-cancel-button,
+				input[type=search]::-webkit-search-decoration,
+				input[type=search]::-webkit-search-results-button,
+				input[type=search]::-webkit-search-results-decoration {
+					-webkit-appearance: none;
+					-moz-appearance: none;
+				}
+
+				input[type=search] {
+					-webkit-appearance: none;
+					-moz-appearance: none;
+					-webkit-box-sizing: content-box;
+					-moz-box-sizing: content-box;
+					box-sizing: content-box;
+				}
+
+				textarea {
+					overflow: auto;
+					vertical-align: top;
+					resize: vertical;
+				}
+
+				/**
+ * Correct `inline-block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+				audio,
+				canvas,
+				video {
+					display: inline-block;
+					*display: inline;
+					*zoom: 1;
+					max-width: 100%;
+				}
+
+				/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+
+				audio:not([controls]) {
+					display: none;
+					height: 0;
+				}
+
+				/**
+ * Address styling not present in IE 7/8/9, Firefox 3, and Safari 4.
+ * Known issue: no IE 6 support.
+ */
+
+				[hidden] {
+					display: none;
+				}
+
+				/**
+ * 1. Correct text resizing oddly in IE 6/7 when body `font-size` is set using
+ *    `em` units.
+ * 2. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+
+				html {
+					font-size: 100%;
+					/* 1 */
+					-webkit-text-size-adjust: 100%;
+					/* 2 */
+					-ms-text-size-adjust: 100%;
+					/* 2 */
+				}
+
+				/**
+ * Address `outline` inconsistency between Chrome and other browsers.
+ */
+
+				a:focus {
+					outline: thin dotted;
+				}
+
+				/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+
+				a:active,
+				a:hover {
+					outline: 0;
+				}
+
+				/**
+ * 1. Remove border when inside `a` element in IE 6/7/8/9 and Firefox 3.
+ * 2. Improve image quality when scaled in IE 7.
+ */
+
+				img {
+					border: 0;
+					/* 1 */
+					-ms-interpolation-mode: bicubic;
+					/* 2 */
+				}
+
+				/**
+ * Address margin not present in IE 6/7/8/9, Safari 5, and Opera 11.
+ */
+
+				figure {
+					margin: 0;
+				}
+
+				/**
+ * Correct margin displayed oddly in IE 6/7.
+ */
+
+				form {
+					margin: 0;
+				}
+
+				/**
+ * Define consistent border, margin, and padding.
+ */
+
+				fieldset {
+					border: 1px solid #c0c0c0;
+					margin: 0 2px;
+					padding: 0.35em 0.625em 0.75em;
+				}
+
+				/**
+ * 1. Correct color not being inherited in IE 6/7/8/9.
+ * 2. Correct text not wrapping in Firefox 3.
+ * 3. Correct alignment displayed oddly in IE 6/7.
+ */
+
+				legend {
+					border: 0;
+					/* 1 */
+					padding: 0;
+					white-space: normal;
+					/* 2 */
+					*margin-left: -7px;
+					/* 3 */
+				}
+
+				/**
+ * 1. Correct font size not being inherited in all browsers.
+ * 2. Address margins set differently in IE 6/7, Firefox 3+, Safari 5,
+ *    and Chrome.
+ * 3. Improve appearance and consistency in all browsers.
+ */
+
+				button,
+				input,
+				select,
+				textarea {
+					font-size: 100%;
+					/* 1 */
+					margin: 0;
+					/* 2 */
+					vertical-align: baseline;
+					/* 3 */
+					*vertical-align: middle;
+					/* 3 */
+
+				}
+
+				/**
+ * Address Firefox 3+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+
+				button,
+				input {
+					line-height: normal;
+				}
+
+				/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Chrome, Safari 5+, and IE 6+.
+ * Correct `select` style inheritance in Firefox 4+ and Opera.
+ */
+
+				button,
+				select {
+					text-transform: none;
+				}
+
+				/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ * 4. Remove inner spacing in IE 7 without affecting normal text inputs.
+ *    Known issue: inner spacing remains in IE 6.
+ */
+
+				button,
+				html input[type="button"],
+				/* 1 */
+				input[type="reset"],
+				input[type="submit"] {
+					-webkit-appearance: button;
+					/* 2 */
+					cursor: pointer;
+					/* 3 */
+					*overflow: visible;
+					/* 4 */
+				}
+
+				/**
+ * Re-set default cursor for disabled elements.
+ */
+
+				button[disabled],
+				html input[disabled] {
+					cursor: default;
+				}
+
+				/**
+ * 1. Address box sizing set to content-box in IE 8/9.
+ * 2. Remove excess padding in IE 8/9.
+ * 3. Remove excess padding in IE 7.
+ *    Known issue: excess padding remains in IE 6.
+ */
+
+				input[type="checkbox"],
+				input[type="radio"] {
+					box-sizing: border-box;
+					/* 1 */
+					padding: 0;
+					/* 2 */
+					*height: 13px;
+					/* 3 */
+					*width: 13px;
+					/* 3 */
+				}
+
+				/**
+ * 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
+ *    (include `-moz` to future-proof).
+ */
+
+				input[type="search"] {
+					-webkit-appearance: textfield;
+					/* 1 */
+					-moz-box-sizing: content-box;
+					-webkit-box-sizing: content-box;
+					/* 2 */
+					box-sizing: content-box;
+				}
+
+				/**
+ * Remove inner padding and search cancel button in Safari 5 and Chrome
+ * on OS X.
+ */
+
+				input[type="search"]::-webkit-search-cancel-button,
+				input[type="search"]::-webkit-search-decoration {
+					-webkit-appearance: none;
+				}
+
+				/**
+ * Remove inner padding and border in Firefox 3+.
+ */
+
+				button::-moz-focus-inner,
+				input::-moz-focus-inner {
+					border: 0;
+					padding: 0;
+				}
+
+				/**
+ * 1. Remove default vertical scrollbar in IE 6/7/8/9.
+ * 2. Improve readability and alignment in all browsers.
+ */
+
+				textarea {
+					overflow: auto;
+					/* 1 */
+					vertical-align: top;
+					/* 2 */
+				}
+
+				/**
+ * Remove most spacing between table cells.
+ */
+
+				table {
+					border-collapse: collapse;
+					border-spacing: 0;
+				}
+
+				html,
+				button,
+				input,
+				select,
+				textarea {
+					color: #222;
+					border: none;
+				}
+
+
+				::-moz-selection {
+					background: #b3d4fc;
+					text-shadow: none;
+				}
+
+				::selection {
+					background: #b3d4fc;
+					text-shadow: none;
+				}
+
+				img {
+					vertical-align: middle;
+				}
+
+				fieldset {
+					border: 0;
+					margin: 0;
+					padding: 0;
+				}
+
+				textarea {
+					resize: vertical;
+				}
+
+				.chromeframe {
+					margin: 0.2em 0;
+					background: #ccc;
+					color: #000;
+					padding: 0.2em 0;
+				}
+			}
+  </style>
+  <link href="/xcx/static/js/case~._src_views_case_Case.vue~1.js" rel="prefetch"/>
+  <link href="/xcx/static/js/chargingPile~._src_views_chargingPile_i.js" rel="prefetch"/>
+  <link href="/xcx/static/js/chargingPile~internetThings~._i.js" rel="prefetch"/>
+  <link href="/xcx/static/js/internetThings~._src_views_internetThings_i.js" rel="prefetch"/>
+  <link href="/xcx/static/js/regarding~._n.js" rel="prefetch"/>
+  <link href="/xcx/static/js/serve~._src_views_Serve_Serve.vue~3.js" rel="prefetch"/>
+  <link href="/xcx/static/js/solve~._src_views_Solve_Solve.vue~1.js" rel="prefetch"/>
+  <link href="/xcx/static/js/vendor.async-validator~._node_modules_async-validator_dist-node_index.js~0f3d3a4c.js" rel="prefetch"/>
+  <link href="/xcx/static/js/vendor.ctrl~._node_modules_@ctrl_tinycolor_dist_c.js" rel="prefetch"/>
+  <link href="/xcx/static/js/vendor.floating-ui~._node_modules_@floating-ui_c.js" rel="prefetch"/>
+  <link href="/xcx/static/js/vendor.lodash~._node_modules_lodash_lodash.js~2ef0e502.js" rel="prefetch"/>
+  <link href="/xcx/static/js/vendor.popperjs~._node_modules_@popperjs_core_dist_index.js~5e764602.js" rel="prefetch"/>
+  <link href="/xcx/static/js/vendor.regenerator-runtime~._node_modules_regenerator-runtime_runtime.js~96cf36c6.js" rel="prefetch"/>
+  <link href="/xcx/static/js/vendor.umi-request~._node_modules_umi-request_d.js" rel="prefetch"/>
+  <link href="/xcx/static/js/vendor.vueuse~._node_modules_@vueuse_core_i.js" rel="prefetch"/>
+  <link href="/xcx/static/js/vendor.vueuse~._node_modules_@vueuse_shared_i.js" rel="prefetch"/>
+  <link as="script" href="/xcx/static/js/app~._m.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.core-js~._node_modules_core-js_i.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.dom7~._node_modules_dom7_d.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_@element-plus_icons-vue_dist_index.cjs~9ad7aa2d.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_d.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_dist_index.css~cde00016.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_c.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_c.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_col_.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_d.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_dia.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_f.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_l.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_o.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_r.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_sp.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_ta.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_table-v2_i.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_te.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_tree_i.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_d.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_i.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_u.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.swiper~._node_modules_swiper_dist_css_swiper.css~97.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.swiper~._node_modules_swiper_dist_js_swiper.esm.bundle.js~41d6728b.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.swiper~._node_modules_swiper_dist_js_swiper.js~d09073bf.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.vue-router~._node_modules_vue-router_dist_vue-router.esm-bundler.js~6c023413.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.vuex~._node_modules_vuex_dist_vuex.esm-browser.js~550286b6.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.vue~._node_modules_@.js" rel="preload"/>
+  <link as="script" href="/xcx/static/js/vendor.vue~._node_modules_@vue_runtime-core_dist_runtime-core.esm-bundler.js~5c40226b.js" rel="preload"/>
+ </head>
+ <body>
+  <noscript>
+   <strong>
+    We're sorry but 01website doesn't work properly without JavaScript
+				enabled.
+				Please enable it to continue.
+   </strong>
+  </noscript>
+  <div id="app">
+  </div>
+  <script language="javascript" src="https://dbt.zoosnet.net/JS/LsJS.aspx?siteid=DBT71555130&amp;float=1&amp;lng=cn">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_@element-plus_icons-vue_dist_index.cjs~9ad7aa2d.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_d.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_dist_index.css~cde00016.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_c.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_c.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_col_.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_d.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_dia.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_f.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_l.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_o.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_r.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_sp.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_ta.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_table-v2_i.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_te.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_components_tree_i.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_d.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_i.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.element-plus~._node_modules_element-plus_es_u.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.vue~._node_modules_@.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.vue~._node_modules_@vue_runtime-core_dist_runtime-core.esm-bundler.js~5c40226b.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.core-js~._node_modules_core-js_i.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.swiper~._node_modules_swiper_dist_css_swiper.css~97.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.swiper~._node_modules_swiper_dist_js_swiper.esm.bundle.js~41d6728b.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.swiper~._node_modules_swiper_dist_js_swiper.js~d09073bf.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.dom7~._node_modules_dom7_d.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.vue-router~._node_modules_vue-router_dist_vue-router.esm-bundler.js~6c023413.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/vendor.vuex~._node_modules_vuex_dist_vuex.esm-browser.js~550286b6.js" type="text/javascript">
+  </script>
+  <script src="/xcx/static/js/app~._m.js" type="text/javascript">
+  </script>
+ </body>
+</html>

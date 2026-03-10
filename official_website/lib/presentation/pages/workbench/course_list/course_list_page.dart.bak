@@ -1,0 +1,1951 @@
+import 'package:flutter/material.dart';
+import 'course_model.dart';
+import '../course_qa_management/course_qa_model.dart';
+
+/// 讲师分类（用于下拉选择）
+class InstructorCategory {
+  final String id;
+  final String name;
+  final String avatar;
+
+  InstructorCategory({
+    required this.id,
+    required this.name,
+    required this.avatar,
+  });
+}
+
+/// 行业分类节点（树形结构）
+class IndustryCategoryNode {
+  final String id;
+  final String name;
+  final int level;
+  final List<IndustryCategoryNode>? children;
+
+  IndustryCategoryNode({
+    required this.id,
+    required this.name,
+    required this.level,
+    this.children,
+  });
+}
+
+/// 形式分类
+class FormatCategory {
+  final String id;
+  final String name;
+
+  FormatCategory({
+    required this.id,
+    required this.name,
+  });
+}
+
+/// 类型分类
+class TypeCategory {
+  final String id;
+  final String name;
+
+  TypeCategory({
+    required this.id,
+    required this.name,
+  });
+}
+
+/// 课程列表管理页面
+class CourseListPage extends StatefulWidget {
+  const CourseListPage({super.key});
+
+  @override
+  State<CourseListPage> createState() => _CourseListPageState();
+}
+
+class _CourseListPageState extends State<CourseListPage>
+    with TickerProviderStateMixin {
+  // 搜索关键词
+  String _searchKeyword = '';
+
+  // 筛选条件
+  String? _selectedInstructorId; // 讲师ID，null表示全部
+  String? _selectedIndustryCategoryId; // 行业分类ID，null表示全部
+  String? _selectedFormatCategoryId; // 形式分类ID，null表示全部
+  String? _selectedTypeCategoryId; // 类型分类ID，null表示全部
+
+  // 模拟分类数据（应该从API获取）
+  List<InstructorCategory> _instructorCategories = [];
+  List<IndustryCategoryNode> _industryCategories = [];
+  List<FormatCategory> _formatCategories = [];
+  List<TypeCategory> _typeCategories = [];
+
+  // 模拟课程数据
+  List<Course> _courses = [];
+
+  // 分页
+  int _currentPage = 1;
+  int _totalCourses = 0;
+
+  // 用于级联选择的状态
+  String? _selectedIndustry1; // 第1级
+  String? _selectedIndustry2; // 第2级
+  String? _selectedIndustry3; // 第3级
+  String? _selectedIndustry4; // 第4级
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMockData();
+  }
+
+  /// 加载模拟数据
+  void _loadMockData() {
+    // 加载讲师数据（模拟100个讲师）
+    _instructorCategories = List.generate(100, (index) {
+      final id = 'ins_${index + 1}';
+      return InstructorCategory(
+        id: id,
+        name: '讲师${index + 1}',
+        avatar: 'https://via.placeholder.com/40',
+      );
+    });
+
+    // 加载行业分类数据（4层结构）
+    _industryCategories = [
+      IndustryCategoryNode(
+        id: 'ind_1',
+        name: '计算机',
+        level: 1,
+        children: [
+          IndustryCategoryNode(
+            id: 'ind_1_1',
+            name: 'Python',
+            level: 2,
+            children: [
+              IndustryCategoryNode(
+                id: 'ind_1_1_1',
+                name: 'Django',
+                level: 3,
+                children: [
+                  IndustryCategoryNode(
+                    id: 'ind_1_1_1_1',
+                    name: 'RESTful API',
+                    level: 4,
+                  ),
+                  IndustryCategoryNode(
+                    id: 'ind_1_1_1_2',
+                    name: '数据库操作',
+                    level: 4,
+                  ),
+                ],
+              ),
+              IndustryCategoryNode(
+                id: 'ind_1_1_2',
+                name: 'Flask',
+                level: 3,
+                children: [
+                  IndustryCategoryNode(
+                    id: 'ind_1_1_2_1',
+                    name: '微服务架构',
+                    level: 4,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          IndustryCategoryNode(
+            id: 'ind_1_2',
+            name: 'Java',
+            level: 2,
+            children: [
+              IndustryCategoryNode(
+                id: 'ind_1_2_1',
+                name: 'Spring Boot',
+                level: 3,
+              ),
+            ],
+          ),
+          IndustryCategoryNode(
+            id: 'ind_1_3',
+            name: '前端开发',
+            level: 2,
+            children: [
+              IndustryCategoryNode(
+                id: 'ind_1_3_1',
+                name: 'React',
+                level: 3,
+                children: [
+                  IndustryCategoryNode(
+                    id: 'ind_1_3_1_1',
+                    name: 'React基础',
+                    level: 4,
+                  ),
+                  IndustryCategoryNode(
+                    id: 'ind_1_3_1_2',
+                    name: 'React进阶',
+                    level: 4,
+                  ),
+                ],
+              ),
+              IndustryCategoryNode(
+                id: 'ind_1_3_2',
+                name: 'Vue',
+                level: 3,
+              ),
+            ],
+          ),
+          IndustryCategoryNode(
+            id: 'ind_1_4',
+            name: '移动开发',
+            level: 2,
+            children: [
+              IndustryCategoryNode(
+                id: 'ind_1_4_1',
+                name: 'Flutter',
+                level: 3,
+              ),
+              IndustryCategoryNode(
+                id: 'ind_1_4_2',
+                name: 'React Native',
+                level: 3,
+              ),
+            ],
+          ),
+        ],
+      ),
+      IndustryCategoryNode(
+        id: 'ind_2',
+        name: '设计',
+        level: 1,
+        children: [
+          IndustryCategoryNode(
+            id: 'ind_2_1',
+            name: 'UI设计',
+            level: 2,
+          ),
+          IndustryCategoryNode(
+            id: 'ind_2_2',
+            name: '平面设计',
+            level: 2,
+          ),
+        ],
+      ),
+    ];
+
+    // 形式分类
+    _formatCategories = [
+      FormatCategory(id: 'format_single', name: '单课'),
+      FormatCategory(id: 'format_series', name: '套课'),
+    ];
+
+    // 类型分类
+    _typeCategories = [
+      TypeCategory(id: 'type_video', name: '视频课'),
+      TypeCategory(id: 'type_live', name: '直播课'),
+    ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMockData();
+  }
+
+  /// 加载模拟数据
+  void _loadMockData() {
+    // 讲师列表
+    _instructors = [
+      '全部讲师',
+      '张三',
+      '李四',
+      '王五',
+      '赵六',
+      '钱七',
+    ];
+
+    // 分类列表
+    _categories = [
+      '全部分类',
+      'Python',
+      'React',
+      'Vue',
+      'Java',
+      'Flutter',
+      'Go',
+      '前端开发',
+      '后端开发',
+      '移动开发',
+    ];
+
+    // 课程数据
+    _courses = [
+      Course(
+        id: 'course_001',
+        title: 'Python全栈开发实战',
+        coverImage: 'https://via.placeholder.com/300x200',
+        description: '从零基础到全栈开发，系统学习Python编程',
+        industryCategoryId: 'ind_001',
+        industryCategoryPath: '计算机 > Python',
+        formatCategoryId: 'format_single',
+        formatCategoryName: '单课',
+        typeCategoryId: 'type_video',
+        typeCategoryName: '视频课',
+        instructorId: 'ins_001',
+        instructorName: '张三',
+        instructorAvatar: 'https://via.placeholder.com/40',
+        status: CourseStatus.completed,
+        format: CourseFormat.single,
+        totalDuration: 1440, // 24小时
+        lessonCount: 30,
+        studentCount: 1256,
+        likeCount: 3420,
+        reviewCount: 89,
+        averageRating: 4.8,
+        price: 199.0,
+        originalPrice: 299.0,
+        createdAt: DateTime.now().subtract(const Duration(days: 90)),
+        publishedAt: DateTime.now().subtract(const Duration(days: 60)),
+      ),
+      Course(
+        id: 'course_002',
+        title: 'React18高级进阶',
+        coverImage: 'https://via.placeholder.com/300x200',
+        description: '深入理解React18新特性，掌握现代前端开发',
+        industryCategoryId: 'ind_002',
+        industryCategoryPath: '计算机 > 前端 > React',
+        formatCategoryId: 'format_series',
+        formatCategoryName: '套课',
+        typeCategoryId: 'type_video',
+        typeCategoryName: '视频课',
+        instructorId: 'ins_002',
+        instructorName: '李四',
+        instructorAvatar: 'https://via.placeholder.com/40',
+        status: CourseStatus.inProduction,
+        format: CourseFormat.series,
+        totalDuration: 2100, // 35小时
+        lessonCount: 45,
+        studentCount: 890,
+        likeCount: 2156,
+        reviewCount: 56,
+        averageRating: 4.6,
+        price: 299.0,
+        originalPrice: 399.0,
+        createdAt: DateTime.now().subtract(const Duration(days: 60)),
+        publishedAt: DateTime.now().subtract(const Duration(days: 30)),
+      ),
+      Course(
+        id: 'course_003',
+        title: 'Flutter移动开发实战',
+        coverImage: 'https://via.placeholder.com/300x200',
+        description: '使用Flutter构建跨平台移动应用',
+        industryCategoryId: 'ind_003',
+        industryCategoryPath: '计算机 > 移动开发 > Flutter',
+        formatCategoryId: 'format_series',
+        formatCategoryName: '套课',
+        typeCategoryId: 'type_video',
+        typeCategoryName: '视频课',
+        instructorId: 'ins_003',
+        instructorName: '王五',
+        instructorAvatar: 'https://via.placeholder.com/40',
+        status: CourseStatus.completed,
+        format: CourseFormat.series,
+        totalDuration: 2700, // 45小时
+        lessonCount: 60,
+        studentCount: 1567,
+        likeCount: 4521,
+        reviewCount: 123,
+        averageRating: 4.9,
+        price: 399.0,
+        originalPrice: 599.0,
+        createdAt: DateTime.now().subtract(const Duration(days: 120)),
+        publishedAt: DateTime.now().subtract(const Duration(days: 90)),
+      ),
+      Course(
+        id: 'course_004',
+        title: 'Java Spring Boot微服务',
+        coverImage: 'https://via.placeholder.com/300x200',
+        description: '使用Spring Boot构建企业级微服务应用',
+        industryCategoryId: 'ind_004',
+        industryCategoryPath: '计算机 > 后端 > Java',
+        formatCategoryId: 'format_single',
+        formatCategoryName: '单课',
+        typeCategoryId: 'type_live',
+        typeCategoryName: '直播课',
+        instructorId: 'ins_001',
+        instructorName: '张三',
+        instructorAvatar: 'https://via.placeholder.com/40',
+        status: CourseStatus.presale,
+        format: CourseFormat.single,
+        totalDuration: 1800, // 30小时
+        lessonCount: 20,
+        studentCount: 0,
+        likeCount: 567,
+        reviewCount: 0,
+        averageRating: 0.0,
+        price: 499.0,
+        originalPrice: 699.0,
+        createdAt: DateTime.now().subtract(const Duration(days: 30)),
+      ),
+      Course(
+        id: 'course_005',
+        title: 'Vue3企业级项目实战',
+        coverImage: 'https://via.placeholder.com/300x200',
+        description: 'Vue3 + TypeScript + Vite构建企业级项目',
+        industryCategoryId: 'ind_005',
+        industryCategoryPath: '计算机 > 前端 > Vue',
+        formatCategoryId: 'format_series',
+        formatCategoryName: '套课',
+        typeCategoryId: 'type_video',
+        typeCategoryName: '视频课',
+        instructorId: 'ins_002',
+        instructorName: '李四',
+        instructorAvatar: 'https://via.placeholder.com/40',
+        status: CourseStatus.inProduction,
+        format: CourseFormat.series,
+        totalDuration: 1920, // 32小时
+        lessonCount: 40,
+        studentCount: 789,
+        likeCount: 1823,
+        reviewCount: 34,
+        averageRating: 4.7,
+        price: 349.0,
+        originalPrice: 499.0,
+        createdAt: DateTime.now().subtract(const Duration(days: 45)),
+        publishedAt: DateTime.now().subtract(const Duration(days: 15)),
+      ),
+      Course(
+        id: 'course_006',
+        title: 'Go语言高并发编程',
+        coverImage: 'https://via.placeholder.com/300x200',
+        description: '深入Go语言并发编程，构建高性能服务',
+        industryCategoryId: 'ind_006',
+        industryCategoryPath: '计算机 > 后端 > Go',
+        formatCategoryId: 'format_single',
+        formatCategoryName: '单课',
+        typeCategoryId: 'type_video',
+        typeCategoryName: '视频课',
+        instructorId: 'ins_004',
+        instructorName: '赵六',
+        instructorAvatar: 'https://via.placeholder.com/40',
+        status: CourseStatus.completed,
+        format: CourseFormat.single,
+        totalDuration: 1200, // 20小时
+        lessonCount: 25,
+        studentCount: 543,
+        likeCount: 1234,
+        reviewCount: 28,
+        averageRating: 4.5,
+        price: 249.0,
+        originalPrice: 349.0,
+        createdAt: DateTime.now().subtract(const Duration(days: 80)),
+        publishedAt: DateTime.now().subtract(const Duration(days: 50)),
+      ),
+    ];
+
+    _totalCourses = _courses.length;
+  }
+
+  /// 获取筛选后的课程列表
+  List<Course> get _filteredCourses {
+    var courses = _courses;
+
+    // 按讲师筛选
+    if (_selectedInstructorId != null) {
+      courses = courses
+          .where((course) => course.instructorId == _selectedInstructorId)
+          .toList();
+    }
+
+    // 按行业分类筛选
+    if (_selectedIndustryCategoryId != null) {
+      courses = courses
+          .where((course) =>
+              course.industryCategoryId == _selectedIndustryCategoryId)
+          .toList();
+    }
+
+    // 按形式分类筛选
+    if (_selectedFormatCategoryId != null) {
+      courses = courses
+          .where((course) =>
+              course.formatCategoryId == _selectedFormatCategoryId)
+          .toList();
+    }
+
+    // 按类型分类筛选
+    if (_selectedTypeCategoryId != null) {
+      courses = courses
+          .where((course) => course.typeCategoryId == _selectedTypeCategoryId)
+          .toList();
+    }
+
+    // 按关键词搜索
+    if (_searchKeyword.isNotEmpty) {
+      courses = courses
+          .where((course) =>
+              course.title
+                  .toLowerCase()
+                  .contains(_searchKeyword.toLowerCase()) ||
+              course.instructorName
+                  .toLowerCase()
+                  .contains(_searchKeyword.toLowerCase()))
+          .toList();
+    }
+
+    return courses;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final filteredCourses = _filteredCourses;
+
+    return Column(
+      children: [
+        _buildHeader(),
+        _buildFilters(),
+        Expanded(
+          child: _buildCourseList(filteredCourses),
+        ),
+        _buildPagination(filteredCourses.length),
+      ],
+    );
+  }
+
+  /// 构建标题栏
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+          ),
+        ],
+      ),
+      child: const Row(
+        children: [
+          Text(
+            '课程列表',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建筛选区域
+  Widget _buildFilters() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      color: Colors.grey[50],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 第一行：讲师、形式分类、类型分类
+          Row(
+            children: [
+              // 讲师下拉选择
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      '讲师',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String?>(
+                      value: _selectedInstructorId,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
+                      hint: const Text('全部讲师'),
+                      items: [
+                        const DropdownMenuItem(
+                          value: null,
+                          child: Text('全部讲师'),
+                        ),
+                        ..._instructorCategories.map((instructor) {
+                          return DropdownMenuItem(
+                            value: instructor.id,
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 12,
+                                  backgroundImage: NetworkImage(instructor.avatar),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(instructor.name),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedInstructorId = value;
+                          _currentPage = 1;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+
+              // 形式分类下拉选择
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      '课程形式',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String?>(
+                      value: _selectedFormatCategoryId,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
+                      hint: const Text('全部形式'),
+                      items: [
+                        const DropdownMenuItem(
+                          value: null,
+                          child: Text('全部形式'),
+                        ),
+                        ..._formatCategories.map((category) {
+                          return DropdownMenuItem(
+                            value: category.id,
+                            child: Text(category.name),
+                          );
+                        }),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedFormatCategoryId = value;
+                          _currentPage = 1;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+
+              // 类型分类下拉选择
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      '课程类型',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String?>(
+                      value: _selectedTypeCategoryId,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
+                      hint: const Text('全部类型'),
+                      items: [
+                        const DropdownMenuItem(
+                          value: null,
+                          child: Text('全部类型'),
+                        ),
+                        ..._typeCategories.map((category) {
+                          return DropdownMenuItem(
+                            value: category.id,
+                            child: Text(category.name),
+                          );
+                        }),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedTypeCategoryId = value;
+                          _currentPage = 1;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // 第二行：行业分类（级联选择）
+          const Text(
+            '行业分类',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              // 第1级
+              Expanded(
+                child: DropdownButtonFormField<String?>(
+                  value: _selectedIndustry1,
+                  decoration: const InputDecoration(
+                    labelText: '一级分类',
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  hint: const Text('请选择'),
+                  items: [
+                    const DropdownMenuItem(
+                      value: null,
+                      child: Text('全部分类'),
+                    ),
+                    ..._industryCategories.map((category) {
+                      return DropdownMenuItem(
+                        value: category.id,
+                        child: Text(category.name),
+                      );
+                    }),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedIndustry1 = value;
+                      _selectedIndustry2 = null;
+                      _selectedIndustry3 = null;
+                      _selectedIndustry4 = null;
+                      _selectedIndustryCategoryId = null;
+                      _currentPage = 1;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+
+              // 第2级
+              Expanded(
+                child: DropdownButtonFormField<String?>(
+                  value: _selectedIndustry2,
+                  decoration: const InputDecoration(
+                    labelText: '二级分类',
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  hint: const Text('请选择'),
+                  items: _buildSecondLevelIndustryItems(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedIndustry2 = value;
+                      _selectedIndustry3 = null;
+                      _selectedIndustry4 = null;
+                      _selectedIndustryCategoryId = value;
+                      _currentPage = 1;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+
+              // 第3级
+              Expanded(
+                child: DropdownButtonFormField<String?>(
+                  value: _selectedIndustry3,
+                  decoration: const InputDecoration(
+                    labelText: '三级分类',
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  hint: const Text('请选择'),
+                  items: _buildThirdLevelIndustryItems(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedIndustry3 = value;
+                      _selectedIndustry4 = null;
+                      _selectedIndustryCategoryId = value;
+                      _currentPage = 1;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+
+              // 第4级
+              Expanded(
+                child: DropdownButtonFormField<String?>(
+                  value: _selectedIndustry4,
+                  decoration: const InputDecoration(
+                    labelText: '四级分类',
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  hint: const Text('请选择'),
+                  items: _buildFourthLevelIndustryItems(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedIndustry4 = value;
+                      _selectedIndustryCategoryId = value;
+                      _currentPage = 1;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // 第三行：搜索和重置
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: const InputDecoration(
+                    labelText: '搜索课程名称',
+                    hintText: '请输入关键词',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchKeyword = value;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _selectedInstructorId = null;
+                    _selectedFormatCategoryId = null;
+                    _selectedTypeCategoryId = null;
+                    _selectedIndustry1 = null;
+                    _selectedIndustry2 = null;
+                    _selectedIndustry3 = null;
+                    _selectedIndustry4 = null;
+                    _selectedIndustryCategoryId = null;
+                    _searchKeyword = '';
+                    _currentPage = 1;
+                  });
+                },
+                icon: const Icon(Icons.refresh),
+                label: const Text('重置筛选'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建二级分类菜单项
+  List<DropdownMenuItem<String?>> _buildSecondLevelIndustryItems() {
+    if (_selectedIndustry1 == null) {
+      return [
+        const DropdownMenuItem(
+          value: null,
+          child: Text('请先选择一级分类'),
+        ),
+      ];
+    }
+
+    final level1Category = _industryCategories
+        .firstWhere((cat) => cat.id == _selectedIndustry1);
+
+    if (level1Category.children == null || level1Category.children!.isEmpty) {
+      return [
+        const DropdownMenuItem(
+          value: null,
+          child: Text('无二级分类'),
+        ),
+      ];
+    }
+
+    return [
+      const DropdownMenuItem(
+        value: null,
+        child: Text('全部二级'),
+      ),
+      ...level1Category.children!.map((child) {
+        return DropdownMenuItem(
+          value: child.id,
+          child: Text(child.name),
+        );
+      }),
+    ];
+  }
+
+  /// 构建三级分类菜单项
+  List<DropdownMenuItem<String?>> _buildThirdLevelIndustryItems() {
+    if (_selectedIndustry2 == null) {
+      return [
+        const DropdownMenuItem(
+          value: null,
+          child: Text('请先选择二级分类'),
+        ),
+      ];
+    }
+
+    final level1Category = _industryCategories
+        .firstWhere((cat) => cat.id == _selectedIndustry1);
+    final level2Category =
+        level1Category.children!.firstWhere((cat) => cat.id == _selectedIndustry2);
+
+    if (level2Category.children == null || level2Category.children!.isEmpty) {
+      return [
+        const DropdownMenuItem(
+          value: null,
+          child: Text('无三级分类'),
+        ),
+      ];
+    }
+
+    return [
+      const DropdownMenuItem(
+        value: null,
+        child: Text('全部三级'),
+      ),
+      ...level2Category.children!.map((child) {
+        return DropdownMenuItem(
+          value: child.id,
+          child: Text(child.name),
+        );
+      }),
+    ];
+  }
+
+  /// 构建四级分类菜单项
+  List<DropdownMenuItem<String?>> _buildFourthLevelIndustryItems() {
+    if (_selectedIndustry3 == null) {
+      return [
+        const DropdownMenuItem(
+          value: null,
+          child: Text('请先选择三级分类'),
+        ),
+      ];
+    }
+
+    final level1Category = _industryCategories
+        .firstWhere((cat) => cat.id == _selectedIndustry1);
+    final level2Category =
+        level1Category.children!.firstWhere((cat) => cat.id == _selectedIndustry2);
+    final level3Category =
+        level2Category.children!.firstWhere((cat) => cat.id == _selectedIndustry3);
+
+    if (level3Category.children == null || level3Category.children!.isEmpty) {
+      return [
+        const DropdownMenuItem(
+          value: null,
+          child: Text('无四级分类'),
+        ),
+      ];
+    }
+
+    return [
+      const DropdownMenuItem(
+        value: null,
+        child: Text('全部四级'),
+      ),
+      ...level3Category.children!.map((child) {
+        return DropdownMenuItem(
+          value: child.id,
+          child: Text(child.name),
+        );
+      }),
+    ];
+  }
+
+  /// 构建课程列表
+  Widget _buildCourseList(List<Course> courses) {
+    if (courses.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off,
+              size: 64,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 16),
+            Text(
+              '暂无符合条件的课程',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columnSpacing: 16,
+            horizontalMargin: 12,
+            headingRowHeight: 56,
+            dataRowHeight: 80,
+            columns: const [
+              DataColumn(label: Text('课程名称'), tooltip: '点击查看详情'),
+              DataColumn(label: Text('行业分类')),
+              DataColumn(label: Text('课程形式')),
+              DataColumn(label: Text('课程类型')),
+              DataColumn(label: Text('讲师')),
+              DataColumn(label: Text('课程状态')),
+              DataColumn(label: Text('总时长')),
+              DataColumn(label: Text('课时数')),
+              DataColumn(label: Text('学员数')),
+              DataColumn(label: Text('点赞数')),
+              DataColumn(label: Text('评价数')),
+              DataColumn(label: Text('评分')),
+              DataColumn(label: Text('操作')),
+            ],
+            rows: courses.map((course) {
+              return DataRow(
+                cells: [
+                  // 课程名称
+                  DataCell(
+                    Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: Image.network(
+                            course.coverImage,
+                            width: 60,
+                            height: 45,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 60,
+                                height: 45,
+                                color: Colors.grey[300],
+                                child: const Icon(Icons.broken_image),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                course.title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // 行业分类
+                  DataCell(
+                    Container(
+                      constraints: const BoxConstraints(maxWidth: 150),
+                      child: Text(
+                        course.industryCategoryPath ?? '-',
+                        style: const TextStyle(fontSize: 13),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+
+                  // 课程形式
+                  DataCell(
+                    Chip(
+                      label: Text(
+                        course.formatCategoryName ?? '-',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+
+                  // 课程类型
+                  DataCell(
+                    Chip(
+                      label: Text(
+                        course.typeCategoryName ?? '-',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+
+                  // 讲师
+                  DataCell(
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 14,
+                          backgroundImage: NetworkImage(course.instructorAvatar),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          course.instructorName,
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // 课程状态
+                  DataCell(
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: _getStatusColor(course.status),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        course.status.label,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // 总时长
+                  DataCell(
+                    Text(
+                      course.durationText,
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ),
+
+                  // 课时数
+                  DataCell(
+                    Text(
+                      course.isSeries ? '${course.lessonCount}节' : '-',
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ),
+
+                  // 学员数
+                  DataCell(
+                    Text(
+                      '${course.studentCount}',
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ),
+
+                  // 点赞数
+                  DataCell(
+                    Row(
+                      children: [
+                        const Icon(Icons.thumb_up, size: 16, color: Colors.grey),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${course.likeCount}',
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // 评价数
+                  DataCell(
+                    Row(
+                      children: [
+                        const Icon(Icons.comment, size: 16, color: Colors.grey),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${course.reviewCount}',
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // 评分
+                  DataCell(
+                    Row(
+                      children: [
+                        const Icon(Icons.star, size: 16, color: Colors.orange),
+                        const SizedBox(width: 4),
+                        Text(
+                          course.averageRating > 0
+                              ? '${course.averageRating}'
+                              : '-',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // 操作
+                  DataCell(
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            _showCourseDetail(course);
+                          },
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: const Text('详情', style: TextStyle(fontSize: 12)),
+                        ),
+                        const SizedBox(width: 4),
+                        OutlinedButton(
+                          onPressed: () {
+                            // TODO: 编辑课程
+                          },
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: const Text('编辑', style: TextStyle(fontSize: 12)),
+                        ),
+                        const SizedBox(width: 4),
+                        OutlinedButton(
+                          onPressed: () {
+                            // TODO: 删除课程
+                          },
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            side: const BorderSide(color: Colors.red),
+                          ),
+                          child: const Text(
+                            '删除',
+                            style: TextStyle(fontSize: 12, color: Colors.red),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 获取状态颜色
+  Color _getStatusColor(CourseStatus status) {
+    switch (status) {
+      case CourseStatus.completed:
+        return Colors.green;
+      case CourseStatus.inProduction:
+        return Colors.orange;
+      case CourseStatus.presale:
+        return Colors.grey;
+    }
+  }
+
+  /// 构建分页
+  Widget _buildPagination(int totalCount) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(color: Colors.grey[300]!),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('共 $totalCount 条记录'),
+          const SizedBox(width: 24),
+          IconButton(
+            onPressed: _currentPage > 1
+                ? () {
+                    setState(() {
+                      _currentPage--;
+                    });
+                  }
+                : null,
+            icon: const Icon(Icons.chevron_left),
+          ),
+          Text('第 $_currentPage 页'),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _currentPage++;
+              });
+            },
+            icon: const Icon(Icons.chevron_right),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 显示课程详情
+  void _showCourseDetail(Course course) {
+    showDialog(
+      context: context,
+      builder: (context) => CourseDetailDialog(course: course),
+    );
+  }
+}
+
+/// 课程详情对话框
+class CourseDetailDialog extends StatefulWidget {
+  final Course course;
+
+  const CourseDetailDialog({super.key, required this.course});
+
+  @override
+  State<CourseDetailDialog> createState() => _CourseDetailDialogState();
+}
+
+class _CourseDetailDialogState extends State<CourseDetailDialog>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Container(
+        width: 1000,
+        height: 700,
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 标题栏
+            Row(
+              children: [
+                const Text(
+                  '课程详情',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // 课程基本信息
+            _buildCourseBasicInfo(),
+            const SizedBox(height: 24),
+
+            // Tab栏
+            TabBar(
+              controller: _tabController,
+              labelColor: Colors.blue,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: Colors.blue,
+              tabs: const [
+                Tab(text: '课程简介'),
+                Tab(text: '课程目录'),
+                Tab(text: '课程问答'),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Tab内容
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildDescriptionTab(),
+                  _buildCurriculumTab(),
+                  _buildQATab(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 构建课程基本信息
+  Widget _buildCourseBasicInfo() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 课程封面
+          Container(
+            width: 200,
+            height: 150,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              image: DecorationImage(
+                image: NetworkImage(widget.course.coverImage),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(width: 24),
+
+          // 课程信息
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 课程标题
+                Text(
+                  widget.course.title,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // 分类和状态
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    Chip(
+                      label: Text(widget.course.formatCategoryName ?? '-'),
+                      backgroundColor: Colors.blue[50],
+                    ),
+                    Chip(
+                      label: Text(widget.course.typeCategoryName ?? '-'),
+                      backgroundColor: Colors.green[50],
+                    ),
+                    Chip(
+                      label: Text(widget.course.status.label),
+                      backgroundColor: widget.course.status == CourseStatus.completed
+                          ? Colors.green[50]
+                          : widget.course.status == CourseStatus.inProduction
+                              ? Colors.orange[50]
+                              : Colors.grey[50],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                // 讲师信息
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 16,
+                      backgroundImage:
+                          NetworkImage(widget.course.instructorAvatar),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '讲师: ${widget.course.instructorName}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                // 统计数据
+                Row(
+                  children: [
+                    _buildStatItem('时长', widget.course.durationText),
+                    const SizedBox(width: 24),
+                    if (widget.course.isSeries)
+                      _buildStatItem('课时', '${widget.course.lessonCount}节'),
+                    if (widget.course.isSeries) const SizedBox(width: 24),
+                    _buildStatItem('学员', '${widget.course.studentCount}'),
+                    const SizedBox(width: 24),
+                    _buildStatItem('点赞', '${widget.course.likeCount}'),
+                    const SizedBox(width: 24),
+                    _buildStatItem('评价', '${widget.course.reviewCount}'),
+                    const SizedBox(width: 24),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, size: 18, color: Colors.orange),
+                        const SizedBox(width: 4),
+                        Text(
+                          widget.course.averageRating > 0
+                              ? '${widget.course.averageRating}'
+                              : '-',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[600],
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 构建简介Tab
+  Widget _buildDescriptionTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '课程简介',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              widget.course.description,
+              style: const TextStyle(fontSize: 14, height: 1.6),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          const Text(
+            '讲师简介',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage:
+                      NetworkImage(widget.course.instructorAvatar),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.course.instructorName,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        '资深讲师，拥有多年行业经验，擅长将复杂的概念简单化，帮助学员快速掌握知识点。',
+                        style: TextStyle(fontSize: 14, height: 1.6),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建目录Tab
+  Widget _buildCurriculumTab() {
+    // 模拟章节数据
+    final chapters = [
+      Chapter(
+        id: 'ch_001',
+        courseId: widget.course.id,
+        chapterNumber: 1,
+        title: '第一章：课程介绍与环境搭建',
+        lessons: [
+          Lesson(
+            id: 'l_001',
+            courseId: widget.course.id,
+            chapterNumber: 1,
+            lessonNumber: 1,
+            title: '1.1 课程介绍',
+            outline: '本节课介绍课程的主要内容和学习目标，帮助学员了解课程整体结构。',
+            duration: 15,
+            isFree: true,
+            createdAt: DateTime.now(),
+            questionCount: 5,
+          ),
+          Lesson(
+            id: 'l_002',
+            courseId: widget.course.id,
+            chapterNumber: 1,
+            lessonNumber: 2,
+            title: '1.2 开发环境搭建',
+            outline: '详细讲解如何搭建开发环境，包括软件安装、配置等步骤。',
+            duration: 45,
+            isFree: true,
+            createdAt: DateTime.now(),
+            questionCount: 12,
+          ),
+        ],
+      ),
+      Chapter(
+        id: 'ch_002',
+        courseId: widget.course.id,
+        chapterNumber: 2,
+        title: '第二章：基础知识讲解',
+        lessons: [
+          Lesson(
+            id: 'l_003',
+            courseId: widget.course.id,
+            chapterNumber: 2,
+            lessonNumber: 1,
+            title: '2.1 基础概念',
+            outline: '讲解课程的核心概念和基础知识，为后续学习打下坚实基础。',
+            duration: 52,
+            isFree: false,
+            createdAt: DateTime.now(),
+            questionCount: 8,
+          ),
+          Lesson(
+            id: 'l_004',
+            courseId: widget.course.id,
+            chapterNumber: 2,
+            lessonNumber: 2,
+            title: '2.2 核心语法',
+            outline: '深入讲解核心语法和使用技巧，通过实例加深理解。',
+            duration: 68,
+            isFree: false,
+            createdAt: DateTime.now(),
+            questionCount: 15,
+          ),
+        ],
+      ),
+    ];
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: chapters.length,
+      itemBuilder: (context, index) {
+        final chapter = chapters[index];
+        return Card(
+          margin: const EdgeInsets.only(bottom: 16),
+          child: ExpansionTile(
+            title: Text(
+              chapter.title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Text(
+              '${chapter.totalLessons}节课时 · ${_formatDuration(chapter.totalDuration)}',
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            ),
+            children: chapter.lessons.map((lesson) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: Colors.blue,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            lesson.title,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        if (lesson.isFree)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.green[50],
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: Colors.green),
+                            ),
+                            child: Text(
+                              '免费',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.green[700],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '大纲: ${lesson.outline}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Icon(Icons.access_time,
+                                  size: 12, color: Colors.grey[600]),
+                              const SizedBox(width: 4),
+                              Text(
+                                lesson.durationText,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Icon(Icons.chat_bubble,
+                                  size: 12, color: Colors.grey[600]),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${lesson.questionCount}条问答',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const Spacer(),
+                              TextButton(
+                                onPressed: () {
+                                  _showLessonQuestions(lesson);
+                                },
+                                child: const Text('查看问答'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 构建问答Tab
+  Widget _buildQATab() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.chat_bubble_outline,
+            size: 64,
+            color: Colors.grey,
+          ),
+          SizedBox(height: 16),
+          Text(
+            '课程问答功能',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            '该课程的课后问答将在这里显示',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 显示课时问答
+  void _showLessonQuestions(Lesson lesson) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('${lesson.title} - 问答列表'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('共 ${lesson.questionCount} 条问答'),
+            const SizedBox(height: 16),
+            const Text('问答列表待实现...'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('关闭'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDuration(int minutes) {
+    final hours = minutes ~/ 60;
+    final mins = minutes % 60;
+    if (hours > 0) {
+      return '$hours小时${mins > 0 ? ' $mins分钟' : ''}';
+    }
+    return '$mins分钟';
+  }
+}
+
+/// 课程列表内容组件（嵌入在merchant_dashboard中使用）
+class CourseListContent extends StatelessWidget {
+  const CourseListContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CourseListPage();
+  }
+}

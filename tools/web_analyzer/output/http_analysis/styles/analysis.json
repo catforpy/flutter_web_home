@@ -1,0 +1,38 @@
+{
+  "url": "https://www.junhesoftware.online/xcx/serve",
+  "timestamp": "2026-03-04T11:06:21.899806",
+  "status_code": 200,
+  "meta": {
+    "title": "君和数字创意,APP开发,小程序开发,软件开发,网站建设,网站设计,网站建设公司,珠海君和睿通物联科技有限公司\r\n\t\t",
+    "description": {},
+    "keywords": {}
+  },
+  "structure": {
+    "headings": {
+      "h1": [],
+      "h2": [],
+      "h3": []
+    },
+    "sections": 0,
+    "divs": 1,
+    "forms": 0
+  },
+  "content": {
+    "buttons": [],
+    "paragraphs": [],
+    "lists": 0
+  },
+  "styles": {
+    "inline_styles_count": 0,
+    "color_samples": []
+  },
+  "components": {
+    "navbar": false,
+    "hero": false,
+    "cards": [],
+    "footer": false,
+    "card_count": 0
+  },
+  "images": [],
+  "links": []
+}

@@ -1,0 +1,102 @@
+# Web 网页分析工具配置文件
+
+# 目标网页
+target_url: "https://www.junhesoftware.online/xcx/serve"
+
+# 输出目录
+output_dir: "./output"
+
+# 浏览器视口设置
+viewport:
+  width: 1920      # 桌面端宽度
+  height: 1080     # 桌面端高度
+  # 移动端配置
+  # width: 375
+  # height: 667
+
+# 等待策略
+wait_for:
+  timeout: 5000        # 最大等待时间（毫秒）
+  idle: 1000           # 空闲时间（毫秒）
+  selector: null       # 等待特定元素出现（CSS选择器）
+  wait_for_network: true  # 等待网络空闲
+
+# 截图配置
+screenshot:
+  full_page: true          # 完整页面截图
+  components: true         # 组件截图
+  animations: false        # 动画帧截图（实验性）
+  format: "png"            # 图片格式：png/jpeg
+  quality: 90              # 图片质量（JPEG）
+
+# 组件截图设置（需要截图的组件）
+component_selectors:
+  - name: "hero_banner"
+    selector: ".hero-banner, .banner, header"
+    description: "顶部横幅"
+
+  - name: "services"
+    selector: ".services, .service-cards"
+    description: "服务卡片"
+
+  - name: "tech_advantage"
+    selector: ".tech-advantage, .advantages"
+    description: "技术优势"
+
+  - name: "process_flow"
+    selector: ".process-flow, .flow-steps"
+    description: "流程图"
+
+  - name: "contact"
+    selector: ".contact, .contact-bar, footer"
+    description: "联系栏"
+
+# 样式提取配置
+extract_styles:
+  colors: true          # 提取颜色
+  typography: true      # 提取字体
+  spacing: true         # 提取间距
+  layout: true          # 提取布局
+  animations: true      # 提取动效
+  images: true          # 提取图片
+
+# 动效分析配置
+animation_analysis:
+  extract_transitions: true   # 提取过渡效果
+  extract_keyframes: true     # 提取关键帧动画
+  extract_interactions: true  # 提取交互效果
+  capture_hover: true         # 捕获悬停效果
+  capture_scroll: true        # 捕获滚动效果
+
+# 资源下载配置
+download_resources:
+  images: true          # 下载图片
+  fonts: false          # 下载字体文件
+  icons: true           # 下载图标
+
+# 报告生成配置
+report:
+  format: "markdown"    # 报告格式：markdown/json/html
+  include_components: true   # 包含组件分析
+  include_animations: true   # 包含动效分析
+  include_flutter_code: true # 包含 Flutter 代码示例
+
+# 高级选项
+advanced:
+  headless: true            # 无头模式（不显示浏览器窗口）
+  user_agent: null          # 自定义 User Agent
+  locale: "zh-CN"           # 语言设置
+  timezone: "Asia/Shanghai" # 时区
+  slow_mo: 0                # 慢动作模式（毫秒），用于调试
+
+# 代理设置（可选）
+proxy:
+  enabled: false
+  server: null
+  username: null
+  password: null
+
+# 日志配置
+logging:
+  level: "INFO"       # 日志级别：DEBUG/INFO/WARNING/ERROR
+  file: "analyzer.log"  # 日志文件

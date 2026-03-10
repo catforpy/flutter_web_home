@@ -1,0 +1,692 @@
+{
+  "url": "https://www.junhesoftware.online/xcx/serve",
+  "timestamp": "2026-03-04T14:12:41.635784",
+  "cards": [],
+  "buttons": [],
+  "interactive_elements": [
+    {
+      "tag": "a",
+      "className": "",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    },
+    {
+      "tag": "a",
+      "className": "router-link-active router-link-exact-active",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    },
+    {
+      "tag": "a",
+      "className": "",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    },
+    {
+      "tag": "a",
+      "className": "",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    },
+    {
+      "tag": "a",
+      "className": "",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    },
+    {
+      "tag": "a",
+      "className": "",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    },
+    {
+      "tag": "a",
+      "className": "",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    },
+    {
+      "tag": "a",
+      "className": "",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    },
+    {
+      "tag": "a",
+      "className": "",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    },
+    {
+      "tag": "a",
+      "className": "",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    },
+    {
+      "tag": "a",
+      "className": "",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    },
+    {
+      "tag": "a",
+      "className": "",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    },
+    {
+      "tag": "a",
+      "className": "",
+      "hasHover": true,
+      "transition": "all",
+      "transform": "none",
+      "hasTransition": true
+    }
+  ],
+  "animations": [
+    {
+      "name": "swiper-preloader-spin",
+      "rules": [
+        {
+          "key": "100%",
+          "styles": "transform: rotate(360deg);"
+        }
+      ]
+    },
+    {
+      "name": "swiper-preloader-spin",
+      "rules": [
+        {
+          "key": "100%",
+          "styles": "transform: rotate(360deg);"
+        }
+      ]
+    },
+    {
+      "name": "rotating",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "transform: rotate(0deg);"
+        },
+        {
+          "key": "100%",
+          "styles": "transform: rotate(1turn);"
+        }
+      ]
+    },
+    {
+      "name": "v-modal-in",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "opacity: 0;"
+        }
+      ]
+    },
+    {
+      "name": "v-modal-out",
+      "rules": [
+        {
+          "key": "100%",
+          "styles": "opacity: 0;"
+        }
+      ]
+    },
+    {
+      "name": "dialog-fade-in",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "opacity: 0; transform: translate3d(0px, -20px, 0px);"
+        },
+        {
+          "key": "100%",
+          "styles": "opacity: 1; transform: translateZ(0px);"
+        }
+      ]
+    },
+    {
+      "name": "dialog-fade-out",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "opacity: 1; transform: translateZ(0px);"
+        },
+        {
+          "key": "100%",
+          "styles": "opacity: 0; transform: translate3d(0px, -20px, 0px);"
+        }
+      ]
+    },
+    {
+      "name": "modal-fade-in",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "opacity: 0;"
+        },
+        {
+          "key": "100%",
+          "styles": "opacity: 1;"
+        }
+      ]
+    },
+    {
+      "name": "modal-fade-out",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "opacity: 1;"
+        },
+        {
+          "key": "100%",
+          "styles": "opacity: 0;"
+        }
+      ]
+    },
+    {
+      "name": "viewer-fade-in",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "opacity: 0; transform: translate3d(0px, -20px, 0px);"
+        },
+        {
+          "key": "100%",
+          "styles": "opacity: 1; transform: translateZ(0px);"
+        }
+      ]
+    },
+    {
+      "name": "viewer-fade-out",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "opacity: 1; transform: translateZ(0px);"
+        },
+        {
+          "key": "100%",
+          "styles": "opacity: 0; transform: translate3d(0px, -20px, 0px);"
+        }
+      ]
+    },
+    {
+      "name": "loading-rotate",
+      "rules": [
+        {
+          "key": "100%",
+          "styles": "transform: rotate(1turn);"
+        }
+      ]
+    },
+    {
+      "name": "loading-dash",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "stroke-dasharray: 1, 200; stroke-dashoffset: 0;"
+        },
+        {
+          "key": "50%",
+          "styles": "stroke-dasharray: 90, 150; stroke-dashoffset: -40px;"
+        },
+        {
+          "key": "100%",
+          "styles": "stroke-dasharray: 90, 150; stroke-dashoffset: -120px;"
+        }
+      ]
+    },
+    {
+      "name": "msgbox-fade-in",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "opacity: 0; transform: translate3d(0px, -20px, 0px);"
+        },
+        {
+          "key": "100%",
+          "styles": "opacity: 1; transform: translateZ(0px);"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "background-position: 0px 0px;"
+        },
+        {
+          "key": "100%",
+          "styles": "background-position: 32px 0px;"
+        }
+      ]
+    },
+    {
+      "name": "indeterminate",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "left: -100%;"
+        },
+        {
+          "key": "100%",
+          "styles": "left: 100%;"
+        }
+      ]
+    },
+    {
+      "name": "striped-flow",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "background-position: -100% center;"
+        },
+        {
+          "key": "100%",
+          "styles": "background-position: 100% center;"
+        }
+      ]
+    },
+    {
+      "name": "el-skeleton-loading",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "background-position: 100% 50%;"
+        },
+        {
+          "key": "100%",
+          "styles": "background-position: 0px 50%;"
+        }
+      ]
+    },
+    {
+      "name": "rotate",
+      "rules": [
+        {
+          "key": "100%",
+          "styles": "transform: rotate(1turn);"
+        }
+      ]
+    },
+    {
+      "name": "dash",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "stroke-dasharray: 1, 150; stroke-dashoffset: 0;"
+        },
+        {
+          "key": "50%",
+          "styles": "stroke-dasharray: 90, 150; stroke-dashoffset: -35;"
+        },
+        {
+          "key": "100%",
+          "styles": "stroke-dasharray: 90, 150; stroke-dashoffset: -124;"
+        }
+      ]
+    },
+    {
+      "name": "slideInRight-enter",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "opacity: 0; transform: translateX(100%); transform-origin: 0px 0px;"
+        },
+        {
+          "key": "100%",
+          "styles": "opacity: 1; transform: translateX(0px); transform-origin: 0px 0px;"
+        }
+      ]
+    },
+    {
+      "name": "slideInRight-leave",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "opacity: 1; transform: translateX(0px); transform-origin: 0px 0px;"
+        },
+        {
+          "key": "100%",
+          "styles": "opacity: 0; transform: translateX(100%); transform-origin: 0px 0px;"
+        }
+      ]
+    },
+    {
+      "name": "slideInLeft-enter",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "opacity: 0; transform: translateX(-100%); transform-origin: 0px 0px;"
+        },
+        {
+          "key": "100%",
+          "styles": "opacity: 1; transform: translateX(0px); transform-origin: 0px 0px;"
+        }
+      ]
+    },
+    {
+      "name": "slideInLeft-leave",
+      "rules": [
+        {
+          "key": "0%",
+          "styles": "opacity: 1; transform: translateX(0px); transform-origin: 0px 0px;"
+        },
+        {
+          "key": "100%",
+          "styles": "opacity: 0; transform: translateX(-100%); transform-origin: 0px 0px;"
+        }
+      ]
+    }
+  ],
+  "colors": [
+    {
+      "property": "color",
+      "value": "rgb(34, 34, 34)",
+      "element": "HTML",
+      "class": ""
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(34, 34, 34)",
+      "element": "HTML",
+      "class": ""
+    },
+    {
+      "property": "boxShadow",
+      "value": "none",
+      "element": "HTML",
+      "class": ""
+    },
+    {
+      "property": "textShadow",
+      "value": "none",
+      "element": "HTML",
+      "class": ""
+    },
+    {
+      "property": "backgroundColor",
+      "value": "rgb(255, 255, 255)",
+      "element": "BODY",
+      "class": ""
+    },
+    {
+      "property": "color",
+      "value": "rgb(28, 27, 27)",
+      "element": "BODY",
+      "class": ""
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(28, 27, 27)",
+      "element": "BODY",
+      "class": ""
+    },
+    {
+      "property": "color",
+      "value": "rgb(85, 85, 85)",
+      "element": "A",
+      "class": ""
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(85, 85, 85)",
+      "element": "A",
+      "class": ""
+    },
+    {
+      "property": "color",
+      "value": "rgb(255, 255, 255)",
+      "element": "DIV",
+      "class": "nav"
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(255, 255, 255)",
+      "element": "DIV",
+      "class": "nav"
+    },
+    {
+      "property": "color",
+      "value": "rgb(0, 0, 0)",
+      "element": "H3",
+      "class": ""
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(0, 0, 0)",
+      "element": "H3",
+      "class": ""
+    },
+    {
+      "property": "boxShadow",
+      "value": "rgba(0, 0, 0, 0.133) 0px 9.66686px 9.66686px 0px",
+      "element": "DIV",
+      "class": "buttom"
+    },
+    {
+      "property": "color",
+      "value": "rgb(255, 0, 0)",
+      "element": "SPAN",
+      "class": ""
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(255, 0, 0)",
+      "element": "SPAN",
+      "class": ""
+    },
+    {
+      "property": "backgroundColor",
+      "value": "rgb(254, 0, 0)",
+      "element": "DIV",
+      "class": "heng"
+    },
+    {
+      "property": "boxShadow",
+      "value": "rgba(183, 189, 194, 0.3) 9.66686px 16.4331px 19.3331px 0px",
+      "element": "DIV",
+      "class": "heng"
+    },
+    {
+      "property": "backgroundColor",
+      "value": "rgb(245, 247, 249)",
+      "element": "DIV",
+      "class": "buttom"
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(238, 238, 238)",
+      "element": "DIV",
+      "class": "box"
+    },
+    {
+      "property": "color",
+      "value": "rgb(24, 24, 24)",
+      "element": "H4",
+      "class": ""
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(24, 24, 24)",
+      "element": "H4",
+      "class": ""
+    },
+    {
+      "property": "backgroundColor",
+      "value": "rgb(238, 238, 238)",
+      "element": "DIV",
+      "class": "heng"
+    },
+    {
+      "property": "color",
+      "value": "rgb(102, 102, 102)",
+      "element": "P",
+      "class": ""
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(102, 102, 102)",
+      "element": "P",
+      "class": ""
+    },
+    {
+      "property": "backgroundColor",
+      "value": "rgb(243, 243, 245)",
+      "element": "DIV",
+      "class": "liucheng"
+    },
+    {
+      "property": "color",
+      "value": "rgb(51, 51, 51)",
+      "element": "P",
+      "class": ""
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(51, 51, 51)",
+      "element": "P",
+      "class": ""
+    },
+    {
+      "property": "backgroundColor",
+      "value": "rgb(255, 0, 0)",
+      "element": "A",
+      "class": ""
+    },
+    {
+      "property": "backgroundColor",
+      "value": "rgba(255, 255, 255, 0.9)",
+      "element": "A",
+      "class": ""
+    },
+    {
+      "property": "color",
+      "value": "rgb(0, 0, 62)",
+      "element": "A",
+      "class": ""
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(0, 0, 62)",
+      "element": "A",
+      "class": ""
+    },
+    {
+      "property": "boxShadow",
+      "value": "rgba(255, 255, 255, 0.1) 9.66686px 16.4331px 19.3331px 0px, rgb(255, 255, 255) 0px 0.96686px 0px 0px",
+      "element": "A",
+      "class": ""
+    },
+    {
+      "property": "backgroundColor",
+      "value": "rgb(242, 245, 251)",
+      "element": "DIV",
+      "class": "onlineservice"
+    },
+    {
+      "property": "boxShadow",
+      "value": "rgba(0, 0, 0, 0.2) 0px 1.93314px 7.73314px 1.93314px",
+      "element": "DIV",
+      "class": "onlineservice"
+    },
+    {
+      "property": "color",
+      "value": "rgb(153, 153, 153)",
+      "element": "P",
+      "class": ""
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(153, 153, 153)",
+      "element": "P",
+      "class": ""
+    },
+    {
+      "property": "color",
+      "value": "rgb(254, 0, 0)",
+      "element": "SPAN",
+      "class": "tel"
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(254, 0, 0)",
+      "element": "SPAN",
+      "class": "tel"
+    },
+    {
+      "property": "backgroundColor",
+      "value": "rgb(254, 8, 8)",
+      "element": "A",
+      "class": ""
+    },
+    {
+      "property": "boxShadow",
+      "value": "rgba(254, 8, 8, 0.1) 9.66686px 16.4331px 19.3331px 0px, rgb(255, 255, 255) 0px 1.93314px 0px 0px",
+      "element": "A",
+      "class": ""
+    },
+    {
+      "property": "backgroundColor",
+      "value": "rgb(23, 23, 26)",
+      "element": "FOOTER",
+      "class": "footer"
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(28, 27, 27) rgb(28, 27, 27) rgb(47, 47, 49)",
+      "element": "DIV",
+      "class": "top"
+    },
+    {
+      "property": "backgroundColor",
+      "value": "rgb(231, 17, 21)",
+      "element": "DIV",
+      "class": "top"
+    },
+    {
+      "property": "color",
+      "value": "rgb(231, 17, 21)",
+      "element": "A",
+      "class": ""
+    },
+    {
+      "property": "borderColor",
+      "value": "rgb(231, 17, 21)",
+      "element": "A",
+      "class": ""
+    }
+  ],
+  "layout": {
+    "sections": [],
+    "grid_info": []
+  }
+}

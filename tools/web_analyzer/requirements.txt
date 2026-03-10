@@ -1,0 +1,35 @@
+# Web 网页分析工具依赖列表
+# Python 3.9+
+
+# 核心依赖
+crawl4ai==0.7.4
+playwright==1.58.0
+beautifulsoup4==4.14.3
+lxml==5.4.0
+
+# 网络请求
+requests==2.32.5
+aiohttp==3.13.3
+httpx==0.28.1
+
+# HTML 解析
+bs4==0.0.2
+html5lib==1.1
+
+# 图片处理
+Pillow==11.3.0
+
+# 数据处理
+pyyaml==6.0.3
+json5==0.9.25
+
+# 工具库
+python-dotenv==1.2.1
+fake-useragent==2.2.0
+rich==14.3.3
+
+# 可选：OCR（识别截图中的文字）
+# pytesseract==0.3.10
+
+# 可选：OpenCV（图片对比）
+# opencv-python==4.10.0.84
