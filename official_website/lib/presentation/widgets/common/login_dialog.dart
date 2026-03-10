@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:async';
 import 'register_dialog.dart';
 import 'customer_register_dialog.dart';
+import 'merchant_register_dialog.dart';
 import '../../../core/auth/auth_state.dart';
 
 /// 登录弹窗组件
@@ -309,8 +310,19 @@ class _LoginDialogState extends State<LoginDialog>
       }
     }
 
-    // 服务商户、后台管理：手机登录或微信扫码登录
-    if (_selectedUserType == 1 || _selectedUserType == 2) {
+    // 服务商户：支持服务商账号、手机登录、微信登录
+    if (_selectedUserType == 1) {
+      if (_selectedLoginMethod == 0) {
+        return _buildMerchantAccountLoginFormContent();
+      } else if (_selectedLoginMethod == 1) {
+        return _buildPhoneLoginFormContent();
+      } else {
+        return _buildWechatQRCodeFormContent();
+      }
+    }
+
+    // 后台管理：手机登录或微信扫码登录
+    if (_selectedUserType == 2) {
       if (_selectedLoginMethod == 0) {
         return _buildPhoneLoginFormContent();
       } else {
@@ -362,6 +374,94 @@ class _LoginDialogState extends State<LoginDialog>
           children: [
             const Text(
               '【都达网账号登录】代表同意',
+              style: TextStyle(
+                fontSize: 12,
+                color: Color(0xFF999999),
+                height: 1.4,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                debugPrint('点击用户协议');
+                // TODO: 跳转到用户协议页面
+              },
+              child: const Text(
+                '《用户协议》',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFFD93025),
+                  height: 1.4,
+                ),
+              ),
+            ),
+            const Text(
+              '、',
+              style: TextStyle(
+                fontSize: 12,
+                color: Color(0xFF999999),
+                height: 1.4,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                debugPrint('点击隐私政策');
+                // TODO: 跳转到隐私政策页面
+              },
+              child: const Text(
+                '《隐私政策》',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFFD93025),
+                  height: 1.4,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// 服务商账号登录表单内容（不含"其他登录方式"）
+  Widget _buildMerchantAccountLoginFormContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 账号输入框
+        const Text(
+          '服务商账号',
+          style: TextStyle(
+            fontSize: 14,
+            color: Color(0xFF666666),
+          ),
+        ),
+        const SizedBox(height: 8),
+        _buildAccountInput(),
+        const SizedBox(height: 16),
+
+        // 密码输入框
+        const Text(
+          '密码',
+          style: TextStyle(
+            fontSize: 14,
+            color: Color(0xFF666666),
+          ),
+        ),
+        const SizedBox(height: 8),
+        _buildPasswordInput(),
+        const SizedBox(height: 24),
+
+        // 登录按钮
+        _buildLoginButton(),
+        const SizedBox(height: 16),
+
+        // 【服务商账号登录】代表同意《用户协议》《隐私政策》
+        Wrap(
+          alignment: WrapAlignment.start,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            const Text(
+              '【服务商账号登录】代表同意',
               style: TextStyle(
                 fontSize: 12,
                 color: Color(0xFF999999),
@@ -1066,6 +1166,29 @@ class _LoginDialogState extends State<LoginDialog>
       return;
     }
 
+    // 服务商账号登录
+    if (_selectedUserType == 1 && _selectedLoginMethod == 0) {
+      final account = _accountController.text.trim();
+      final password = _passwordController.text.trim();
+
+      if (account.isEmpty) {
+        _showErrorDialog('请输入服务商账号');
+        return;
+      }
+
+      if (password.isEmpty) {
+        _showErrorDialog('请输入密码');
+        return;
+      }
+
+      // TODO: 实际项目中需要调用API验证账号密码
+      // 这里暂时直接登录成功
+      debugPrint('登录成功：用户类型=服务商户, 账号=$account');
+      authState.login(userType: UserType.merchant);
+      _showSuccessDialog();
+      return;
+    }
+
     // 手机登录
     final phone = _phoneController.text.trim();
     final code = _codeController.text.trim();
@@ -1207,7 +1330,48 @@ class _LoginDialogState extends State<LoginDialog>
       ];
     }
 
-    // 服务商户、后台管理：显示手机登录、微信登录
+    // 服务商户：显示服务商账号、手机登录、微信登录、注册按钮
+    if (_selectedUserType == 1) {
+      return [
+        _buildLoginMethodIcon(
+          icon: Icons.business_center,
+          label: '服务商账号',
+          isSelected: _selectedLoginMethod == 0,
+          onTap: () {
+            setState(() {
+              _selectedLoginMethod = 0;
+            });
+          },
+        ),
+        const SizedBox(width: 32),
+        _buildLoginMethodIcon(
+          icon: Icons.phone_outlined,
+          label: '手机登录',
+          isSelected: _selectedLoginMethod == 1,
+          onTap: () {
+            setState(() {
+              _selectedLoginMethod = 1;
+            });
+          },
+        ),
+        const SizedBox(width: 32),
+        _buildLoginMethodIcon(
+          icon: Icons.wechat,
+          label: '微信登录',
+          isSelected: _selectedLoginMethod == 2,
+          onTap: () {
+            setState(() {
+              _selectedLoginMethod = 2;
+            });
+          },
+        ),
+        const SizedBox(width: 32),
+        // 注册按钮
+        _buildRegisterButton(),
+      ];
+    }
+
+    // 后台管理：显示手机登录、微信登录
     List<Widget> buttons = [
       _buildLoginMethodIcon(
         icon: Icons.phone_outlined,
@@ -1277,6 +1441,9 @@ class _LoginDialogState extends State<LoginDialog>
     // 都达用户账号：显示客户注册弹窗
     if (_selectedUserType == 0) {
       showCustomerRegisterDialog(context);
+    } else if (_selectedUserType == 1) {
+      // 服务商户：显示服务商注册弹窗
+      showMerchantRegisterDialog(context);
     } else if (_selectedUserType == 2) {
       // 后台管理：显示后台注册弹窗
       showDialog(
