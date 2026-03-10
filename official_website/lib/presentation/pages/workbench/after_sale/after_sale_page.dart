@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 /// 售后工单状态
 enum AfterSaleStatus {
+  all('全部工单', Colors.grey),
   pending('待处理', Color(0xFFFF9800)),
   processing('处理中', Color(0xFF2196F3)),
   completed('已完成', Color(0xFF4CAF50)),

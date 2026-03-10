@@ -365,7 +365,11 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
                   child: GestureDetector(
                     onTap: () {
                       debugPrint('========== 点击子菜单：$subItem ==========');
-                      // 使用路由跳转，维护浏览器历史栈
+                      // 更新选中状态
+                      setState(() {
+                        _selectedSubMenuItem = subItem;
+                      });
+                      // 更新URL的query parameter
                       context.push('${AppRouter.merchantDashboard}?tab=$subItem');
                     },
                     child: Container(
