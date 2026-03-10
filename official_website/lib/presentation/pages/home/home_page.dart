@@ -14,24 +14,31 @@ class HomePage extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: ListView(
+      body: Column(
         children: [
-          // 轮播图 - 完全全屏，第一屏
-          SizedBox(
-            height: screenHeight,
-            child: const HomeHeroCarousel(),
-          ),
-
-          // 导航栏 - 在轮播图下面，需要滚动才能看到
+          // 导航栏 - 固定在顶部
           const UnifiedNavigationBar(
             currentPath: '/',
           ),
 
-          // 其他内容区域（后续添加）
-          // const SizedBox(height: 100, child: Center(child: Text('更多内容...'))),
+          // 内容区域（可滚动）
+          Expanded(
+            child: ListView(
+              children: [
+                // 轮播图 - 全屏显示
+                SizedBox(
+                  height: screenHeight,
+                  child: const HomeHeroCarousel(),
+                ),
 
-          // AppFooter - 在所有内容的最后
-          const AppFooter(),
+                // 其他内容区域（后续添加）
+                // const SizedBox(height: 100, child: Center(child: Text('更多内容...'))),
+
+                // AppFooter - 在所有内容的最后
+                const AppFooter(),
+              ],
+            ),
+          ),
         ],
       ),
     );
