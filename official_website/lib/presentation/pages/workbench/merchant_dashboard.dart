@@ -379,8 +379,8 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
                         subItem,
                         style: TextStyle(
                           fontSize: 15,
-                          color: _selectedMenuItem == subItem ? const Color(0xFFFFFFFF) : const Color(0xFFCCCCCC),
-                          fontWeight: _selectedMenuItem == subItem ? FontWeight.w500 : FontWeight.normal,
+                          color: _selectedSubMenuItem == subItem ? const Color(0xFFFFFFFF) : const Color(0xFFCCCCCC),
+                          fontWeight: _selectedSubMenuItem == subItem ? FontWeight.w500 : FontWeight.normal,
                         ),
                       ),
                     ),
