@@ -76,8 +76,17 @@ class _ProfilePageState extends State<ProfilePage> {
                         _buildFavoriteCourses(),
                         const SizedBox(height: 24),
 
-                        // 我的合作（仅商户身份显示）
-                        _buildCooperationCard(),
+                        // 我的关注（客户）
+                        _buildCustomerFollowCard(),
+                        const SizedBox(height: 24),
+
+                        // 我的租赁（客户）
+                        _buildCustomerLeasingCard(),
+                        const SizedBox(height: 24),
+
+                        // 我的合作卡片（客户）
+                        _buildCustomerCooperationCard(),
+                        const SizedBox(height: 24),
                       ],
                     ),
                   ),
@@ -962,5 +971,380 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildCooperationCard() {
     // 客户已经通过下拉菜单的"我的合作"访问，不再显示独立卡片
     return const SizedBox.shrink();
+  }
+
+  /// 客户：我的关注卡片
+  Widget _buildCustomerFollowCard() {
+    // 仅在客户身份下显示
+    if (authState.userType != UserType.customer) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFFE0E0E0),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '我的关注',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
+            ),
+          ),
+          const SizedBox(height: 20),
+          _buildFollowList(),
+        ],
+      ),
+    );
+  }
+
+  /// 客户：我的租赁卡片
+  Widget _buildCustomerLeasingCard() {
+    // 仅在客户身份下显示
+    if (authState.userType != UserType.customer) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFFE0E0E0),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '我的租赁',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
+            ),
+          ),
+          const SizedBox(height: 20),
+          _buildCustomerLeasingList(),
+        ],
+      ),
+    );
+  }
+
+  /// 构建客户租赁列表（我向他人租赁）
+  Widget _buildCustomerLeasingList() {
+    final leasingItems = [
+      {
+        'title': '电商小程序模板',
+        'provider': '某科技公司',
+        'period': '3个月',
+        'price': '¥299',
+        'status': '使用中',
+        'statusColor': 0xFF00C853,
+      },
+      {
+        'title': '餐饮系统小程序',
+        'provider': '某服务商',
+        'period': '6个月',
+        'price': '¥599',
+        'status': '使用中',
+        'statusColor': 0xFF00C853,
+      },
+      {
+        'title': '教育类小程序',
+        'provider': '某平台商',
+        'period': '1年',
+        'price': '¥999',
+        'status': '即将到期',
+        'statusColor': 0xFFFF9800,
+      },
+    ];
+
+    return Column(
+      children: leasingItems.map((item) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF5F5F5),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item['title'] as String,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '提供商：${item['provider']} | ${item['period']} - ${item['price']}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF666666),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: item['status'] == '使用中'
+                      ? const Color(0xFF00C853)
+                      : const Color(0xFFFF9800),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  item['status'] as String,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  /// 构建客户关注列表
+  Widget _buildFollowList() {
+    final followItems = [
+      {
+        'title': 'AI大模型技术',
+        'type': '小程序技术',
+        'time': '3天前关注',
+        'status': '已关注',
+        'statusColor': 0xFF2196F3,
+      },
+      {
+        'title': '电商解决方案',
+        'type': '业务合作',
+        'time': '1周前关注',
+        'status': '已关注',
+        'statusColor': 0xFF2196F3,
+      },
+      {
+        'title': '数据分析服务',
+        'type': '技术服务',
+        'time': '2周前关注',
+        'status': '已关注',
+        'statusColor': 0xFF2196F3,
+      },
+    ];
+
+    return Column(
+      children: followItems.map((item) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF5F5F5),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item['title'] as String,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '类型：${item['type']}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF666666),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      item['time'] as String,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF999999),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2196F3),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  item['status'] as String,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  /// 客户：我的合作卡片
+  Widget _buildCustomerCooperationCard() {
+    // 仅在客户身份下显示
+    if (authState.userType != UserType.customer) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFFE0E0E0),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '我的合作',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
+            ),
+          ),
+          const SizedBox(height: 20),
+          _buildCustomerCooperationList(),
+        ],
+      ),
+    );
+  }
+
+  /// 构建客户合作列表
+  Widget _buildCustomerCooperationList() {
+    final cooperationItems = [
+      {
+        'title': 'AI大模型小程序开发',
+        'type': '小程序合作',
+        'partner': '某科技公司',
+        'status': '洽谈中',
+        'statusColor': 0xFFFF9800,
+        'time': '2025-03-10'
+      },
+      {
+        'title': '数据分析平台定制',
+        'type': '业务合作',
+        'partner': '某电商平台',
+        'status': '已达成',
+        'statusColor': 0xFF00C853,
+        'time': '2025-02-15'
+      },
+      {
+        'title': '在线教育系统',
+        'type': '小程序租赁',
+        'partner': '某教育机构',
+        'status': '进行中',
+        'statusColor': 0xFF2196F3,
+        'time': '2025-01-20'
+      },
+    ];
+
+    return Column(
+      children: cooperationItems.map((item) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF5F5F5),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item['title'] as String,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '合作类型：${item['type']} | 合作方：${item['partner']}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF666666),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '时间：${item['time']}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF999999),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Color(item['statusColor'] as int),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  item['status'] as String,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
   }
 }
