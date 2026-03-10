@@ -331,10 +331,11 @@ class _PurchasePageState extends State<PurchasePage>
           // 搜索框
           Expanded(
             child: Container(
-              height: 40,
+              height: 48, // 增加高度
               decoration: BoxDecoration(
+                color: Colors.white, // 搜索框背景设为白色
                 border: Border.all(color: const Color(0xFFE0E0E0)),
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 children: [
@@ -342,11 +343,13 @@ class _PurchasePageState extends State<PurchasePage>
                     child: TextField(
                       decoration: const InputDecoration(
                         hintText: '搜索行业服务...',
-                        hintStyle: TextStyle(fontSize: 14, color: Color(0xFF999999)),
+                        hintStyle: TextStyle(fontSize: 15, color: Color(0xFF999999)),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        filled: true,
+                        fillColor: Colors.white, // TextField内部背景为白色
                       ),
-                      style: const TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 15),
                       onChanged: (value) {
                         setState(() {
                           _searchKeyword = value;
@@ -357,18 +360,18 @@ class _PurchasePageState extends State<PurchasePage>
                   // 搜索按钮
                   Container(
                     width: 80,
-                    height: 40,
+                    height: 48, // 与搜索框高度一致
                     decoration: const BoxDecoration(
                       color: Color(0xFFFF5000),
                       borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(4),
-                        bottomRight: Radius.circular(4),
+                        topRight: Radius.circular(8),
+                        bottomRight: Radius.circular(8),
                       ),
                     ),
                     child: const Icon(
                       Icons.search,
                       color: Colors.white,
-                      size: 20,
+                      size: 24, // 增大图标
                     ),
                   ),
                 ],
@@ -426,8 +429,8 @@ class _PurchasePageState extends State<PurchasePage>
   /// B. 构建一级行业导航栏
   Widget _buildTopIndustryBar() {
     return Container(
-      height: 80,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      height: 90, // 增加高度以适应更大的图标和文字
+      padding: const EdgeInsets.symmetric(horizontal: 120), // 与二级导航保持一致
       decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -439,7 +442,7 @@ class _PurchasePageState extends State<PurchasePage>
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween, // 均匀分布
         children: _industries.map((industry) {
           final isSelected = _selectedIndustry?.id == industry.id;
           return MouseRegion(
@@ -454,21 +457,27 @@ class _PurchasePageState extends State<PurchasePage>
                 });
               },
               child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? const Color(0xFF1890FF).withValues(alpha: 0.1)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       industry.icon,
-                      style: TextStyle(
-                        fontSize: 24,
+                      style: const TextStyle(
+                        fontSize: 32, // 增大图标
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Text(
                       industry.name,
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 16, // 增大文字
                         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                         color: isSelected ? const Color(0xFF1890FF) : const Color(0xFF333333),
                       ),
@@ -501,9 +510,9 @@ class _PurchasePageState extends State<PurchasePage>
     }
 
     return Container(
-      height: 40,
+      height: 50, // 增加高度
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 120), // 增加左右边距
+      padding: const EdgeInsets.symmetric(horizontal: 120),
       child: Row(
         children: _selectedIndustry!.subCategories.map((category) {
           final isSelected = _selectedSubCategory == category;
@@ -516,11 +525,18 @@ class _PurchasePageState extends State<PurchasePage>
                 });
               },
               child: Container(
-                margin: const EdgeInsets.only(right: 24),
+                margin: const EdgeInsets.only(right: 32),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? const Color(0xFF1890FF).withValues(alpha: 0.1)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(6),
+                ),
                 child: Text(
                   category,
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 15, // 增大文字
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     color: isSelected ? const Color(0xFF1890FF) : const Color(0xFF666666),
                   ),
@@ -583,8 +599,8 @@ class _PurchasePageState extends State<PurchasePage>
                             });
                           },
                           child: Container(
-                            margin: const EdgeInsets.only(right: 8),
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            margin: const EdgeInsets.only(right: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                             decoration: BoxDecoration(
                               color: isSelected ? Colors.white : const Color(0xFFF0F0F0),
                               borderRadius: BorderRadius.circular(16),
@@ -596,7 +612,7 @@ class _PurchasePageState extends State<PurchasePage>
                             child: Text(
                               tag,
                               style: TextStyle(
-                                fontSize: 13,
+                                fontSize: 14, // 增大文字
                                 fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
                                 color: isSelected ? const Color(0xFF1890FF) : const Color(0xFF666666),
                               ),
@@ -708,13 +724,13 @@ class _PurchasePageState extends State<PurchasePage>
             Text(
               label,
               style: const TextStyle(
-                fontSize: 14,
+                fontSize: 15, // 增大文字
                 color: Color(0xFF666666),
               ),
             ),
             const Icon(
               Icons.expand_more,
-              size: 16,
+              size: 18, // 增大图标
               color: Color(0xFF666666),
             ),
           ],
@@ -728,13 +744,15 @@ class _PurchasePageState extends State<PurchasePage>
     final filteredCards = _filteredCards;
     final crossAxisCount = _showFilterSidebar ? 4 : 5; // 根据侧边栏状态决定列数
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      padding: EdgeInsets.only(
-        left: 24,
-        right: _showFilterSidebar ? 324 : 24, // 为侧边栏留出空间
-      ),
+    return Container(
+      color: const Color(0xFFF5F7FA),
+      padding: const EdgeInsets.symmetric(horizontal: 120), // 添加左右边距，与导航栏保持一致
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        padding: EdgeInsets.only(
+          right: _showFilterSidebar ? 300 : 0, // 为侧边栏留出空间（300px侧边栏宽度）
+        ),
       child: filteredCards.isEmpty
           ? _buildEmptyState()
           : GridView.builder(
@@ -749,6 +767,7 @@ class _PurchasePageState extends State<PurchasePage>
                 return _buildServiceCard(filteredCards[index]);
               },
             ),
+      ),
     );
   }
 
