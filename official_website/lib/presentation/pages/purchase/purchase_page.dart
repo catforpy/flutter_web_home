@@ -330,51 +330,56 @@ class _PurchasePageState extends State<PurchasePage>
 
           // 搜索框
           Expanded(
-            child: Container(
-              height: 48, // 增加高度
-              decoration: BoxDecoration(
-                color: Colors.white, // 搜索框背景设为白色
-                border: Border.all(color: const Color(0xFFE0E0E0)),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        hintText: '搜索行业服务...',
-                        hintStyle: TextStyle(fontSize: 15, color: Color(0xFF999999)),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        filled: true,
-                        fillColor: Colors.white, // TextField内部背景为白色
-                      ),
-                      style: const TextStyle(fontSize: 15),
-                      onChanged: (value) {
-                        setState(() {
-                          _searchKeyword = value;
-                        });
-                      },
-                    ),
+            child: Center(
+              child: SizedBox(
+                width: 600, // 固定搜索框宽度
+                child: Container(
+                  height: 48, // 增加高度
+                  decoration: BoxDecoration(
+                    color: Colors.white, // 搜索框背景设为白色
+                    border: Border.all(color: const Color(0xFFE0E0E0)),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  // 搜索按钮
-                  Container(
-                    width: 80,
-                    height: 48, // 与搜索框高度一致
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFFF5000),
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(8),
-                        bottomRight: Radius.circular(8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            hintText: '搜索行业服务...',
+                            hintStyle: TextStyle(fontSize: 15, color: Color(0xFF999999)),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            filled: true,
+                            fillColor: Colors.white, // TextField内部背景为白色
+                          ),
+                          style: const TextStyle(fontSize: 15),
+                          onChanged: (value) {
+                            setState(() {
+                              _searchKeyword = value;
+                            });
+                          },
+                        ),
                       ),
-                    ),
-                    child: const Icon(
-                      Icons.search,
-                      color: Colors.white,
-                      size: 24, // 增大图标
-                    ),
+                      // 搜索按钮
+                      Container(
+                        width: 80,
+                        height: 48, // 与搜索框高度一致
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFFF5000),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8),
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.search,
+                          color: Colors.white,
+                          size: 24, // 增大图标
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
