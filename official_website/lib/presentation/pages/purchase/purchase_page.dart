@@ -429,7 +429,7 @@ class _PurchasePageState extends State<PurchasePage>
   /// B. 构建一级行业导航栏
   Widget _buildTopIndustryBar() {
     return Container(
-      height: 90, // 增加高度以适应更大的图标和文字
+      height: 100, // 增加高度避免溢出
       padding: const EdgeInsets.symmetric(horizontal: 120), // 与二级导航保持一致
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -457,7 +457,7 @@ class _PurchasePageState extends State<PurchasePage>
                 });
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6), // 减少vertical padding
                 decoration: BoxDecoration(
                   color: isSelected
                       ? const Color(0xFF1890FF).withValues(alpha: 0.1)
@@ -473,7 +473,7 @@ class _PurchasePageState extends State<PurchasePage>
                         fontSize: 32, // 增大图标
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 4), // 减少间距
                     Text(
                       industry.name,
                       style: TextStyle(
@@ -482,7 +482,7 @@ class _PurchasePageState extends State<PurchasePage>
                         color: isSelected ? const Color(0xFF1890FF) : const Color(0xFF333333),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6), // 减少间距
                     // 选中指示器
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
