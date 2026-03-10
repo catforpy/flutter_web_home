@@ -66,6 +66,8 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
         path: AppRouter.home,
         onTap: () => AppRouter.goToHome(context),
       ),
+      // 以下导航项暂时隐藏（保留代码，以后可能需要）
+      /*
       NavbarMenuItem(
         label: '定制服务',
         path: AppRouter.serve,
@@ -81,14 +83,17 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
         path: AppRouter.cases,
         onTap: () => AppRouter.goToCases(context),
       ),
+      */
     ];
 
-    // "合作"是下拉菜单，单独处理
+    // "合作"是下拉菜单，单独处理（暂时隐藏）
+    /*
     final contactItem = NavbarMenuItem(
       label: '联系',
       path: AppRouter.contact,
       onTap: () => AppRouter.goToContact(context),
     );
+    */
 
     // 工作台：客户、服务商和后台身份可见
     final List<NavbarMenuItem> items = [];
@@ -107,7 +112,7 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
       );
     }
 
-    items.add(contactItem);
+    // items.add(contactItem); // 暂时隐藏"联系"菜单项
     return items;
   }
 
@@ -160,8 +165,8 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
             spacing: 24,
             children: [
               ..._menuItems.map((item) => _buildMenuItem(item)),
-              // "合作"下拉菜单
-              _buildWeDropdown(),
+              // "合作"下拉菜单（暂时隐藏）
+              // _buildWeDropdown(),
             ],
           ),
 
