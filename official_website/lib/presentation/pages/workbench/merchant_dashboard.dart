@@ -8,6 +8,14 @@ import 'development/development_settings_content.dart';
 import 'audit_management_content.dart';
 import 'menu_navigation/menu_navigation_content.dart';
 import 'payment/payment_config_content.dart';
+import 'course_order/course_order_page.dart';
+import 'product_category/product_category_management_page.dart';
+import 'product_detail/product_detail_page.dart';
+import 'my_warehouse/my_warehouse_page.dart';
+import 'product_reviews/product_reviews_page.dart';
+import 'freight_template/freight_template_page.dart';
+import 'order_settings/order_settings_page.dart';
+import 'after_sale/after_sale_page.dart';
 import 'article_management/article_management_page.dart';
 import 'article_management/article_list_content.dart';
 import 'article_management/reward_records_content.dart';
@@ -222,9 +230,11 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
                 _buildMenuItem(Icons.shopping_cart, '订单管理', hasSubmenu: true,
                   submenu: ['课程订单', '商品订单', '租赁业务订单']),
                 _buildMenuItem(Icons.storefront, '商城管理', hasSubmenu: true,
-                  submenu: ['商品分类', '商品列表', '运费模板', '商品评价', '商城订单', '维权订单', '订单设置', '留言模版']),
+                  submenu: ['货架管理', '我的仓库', '商品评价', '运费模板', '订单设置']),
                 _buildMenuItem(Icons.people, '用户管理', hasSubmenu: true,
                   submenu: ['用户列表', '用户分类', '用户等级', '签到记录', '搜索历史管理']),
+                _buildMenuItem(Icons.headset_mic, '客服管理', hasSubmenu: true,
+                  submenu: ['售后处理', '维权订单', '客服话术', '咨询记录']),
                 _buildMenuItem(Icons.business_center, '业务管理', hasSubmenu: true,
                   submenu: ['租赁管理', '合作管理']),
                 _buildMenuItem(Icons.card_membership, '会员卡管理', hasSubmenu: true,
@@ -645,6 +655,26 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
       case '作者列表':
       case '作者列表':
       case '评论管理':
+
+      // 订单管理相关页面
+      case '课程订单':
+        return const CourseOrderContent();
+
+      // 商城管理相关页面
+      case '货架管理':
+        return const ProductCategoryManagementContent();
+      case '我的仓库':
+        return const MyWarehouseContent();
+      case '商品评价':
+        return const ProductReviewsContent();
+      case '运费模板':
+        return const FreightTemplateContent();
+      case '订单设置':
+        return const OrderSettingsContent();
+
+      // 客服管理相关页面
+      case '售后处理':
+        return const AfterSaleContent();
 
       // 页面管理相关页面
       case '导航页面管理':
