@@ -427,9 +427,9 @@ class _PurchasePageState extends State<PurchasePage>
   Widget _buildTopIndustryBar() {
     return Container(
       height: 80,
-      color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: const BoxDecoration(
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Color(0x0A000000),
