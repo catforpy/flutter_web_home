@@ -625,7 +625,7 @@ class _PurchasePageState extends State<PurchasePage>
                       gradient: LinearGradient(
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
-                        colors: [Colors.transparent, Color(0x00FFFFFF],
+                        colors: [Colors.transparent, Color(0x00FFFFFF)],
                       ),
                     ),
                     child: const Center(
