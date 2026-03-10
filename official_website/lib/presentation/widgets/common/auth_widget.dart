@@ -340,8 +340,38 @@ class _AuthWidgetState extends State<AuthWidget> {
         ];
 
       case UserType.merchant:
-        // 商户：空白占位
-        return [];
+        // 服务商：订单中心、模板管理、客户管理、我的授权、我的设置
+        return [
+          _buildMenuCard(
+            icon: Icons.shopping_bag_outlined,
+            label: '订单中心',
+            onTap: () {
+              debugPrint('点击订单中心');
+              _removeOverlay();
+              AppRouter.goToProfile(context);
+            },
+          ),
+          const SizedBox(height: 8),
+          _buildMenuCard(
+            icon: Icons.dashboard_outlined,
+            label: '模板管理',
+            onTap: () {
+              debugPrint('点击模板管理');
+              _removeOverlay();
+              AppRouter.goToProfile(context);
+            },
+          ),
+          const SizedBox(height: 8),
+          _buildMenuCard(
+            icon: Icons.settings_outlined,
+            label: '我的设置',
+            onTap: () {
+              debugPrint('点击我的设置');
+              _removeOverlay();
+              AppRouter.goToProfile(context);
+            },
+          ),
+        ];
 
       case UserType.backend:
         return [
@@ -419,8 +449,28 @@ class _AuthWidgetState extends State<AuthWidget> {
         ];
 
       case UserType.merchant:
-        // 商户：空白占位
-        return [];
+        // 服务商：客户管理、我的授权
+        return [
+          _buildMenuCard(
+            icon: Icons.people_outline,
+            label: '客户管理',
+            onTap: () {
+              debugPrint('点击客户管理');
+              _removeOverlay();
+              AppRouter.goToProfile(context);
+            },
+          ),
+          const SizedBox(height: 8),
+          _buildMenuCard(
+            icon: Icons.vpn_key_outlined,
+            label: '我的授权',
+            onTap: () {
+              debugPrint('点击我的授权');
+              _removeOverlay();
+              AppRouter.goToProfile(context);
+            },
+          ),
+        ];
 
       case UserType.backend:
         return [

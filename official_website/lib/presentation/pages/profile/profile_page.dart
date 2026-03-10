@@ -253,9 +253,23 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  /// 商户数据统计（空白占位）
+  /// 服务商数据统计
   Widget _buildMerchantPlaceholderStats() {
-    return const SizedBox.shrink();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        const SizedBox(width: 40),
+        _buildStatItem('156', '完成订单'),
+        const SizedBox(width: 40),
+        _buildStatItem('4.8', '服务评分'),
+        const SizedBox(width: 40),
+        _buildStatItem('98%', '满意度'),
+        const SizedBox(width: 40),
+        _buildStatItem('32', '模板数'),
+        const SizedBox(width: 40),
+        _buildStatItem('89', '客户数'),
+      ],
+    );
   }
 
   /// 后台数据统计
@@ -348,8 +362,8 @@ class _ProfilePageState extends State<ProfilePage> {
         // 客户：显示客户的"最近关注"
         return _buildCustomerRecentFollow();
       case UserType.merchant:
-        // 商户：空白占位
-        return _buildMerchantPlaceholderCard();
+        // 服务商：显示服务统计
+        return _buildMerchantServiceStats();
       case UserType.backend:
         return _buildBackendRecentTask();
       case null:
@@ -454,8 +468,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  /// 商户：空白占位卡片
-  Widget _buildMerchantPlaceholderCard() {
+  /// 服务商：服务统计卡片
+  Widget _buildMerchantServiceStats() {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -466,24 +480,77 @@ class _ProfilePageState extends State<ProfilePage> {
           width: 1,
         ),
       ),
-      child: const Center(
-        child: Column(
-          children: [
-            Icon(
-              Icons.build_outlined,
-              size: 48,
-              color: Color(0xFFCCCCCC),
-            ),
-            SizedBox(height: 16),
-            Text(
-              '商户功能重新设计中...',
-              style: TextStyle(
-                fontSize: 16,
-                color: Color(0xFF999999),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.analytics_outlined,
+                size: 24,
+                color: Color(0xFF2196F3),
               ),
+              const SizedBox(width: 12),
+              const Text(
+                '服务统计',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF333333),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatBox('156', '完成订单', Icons.shopping_bag_outlined, const Color(0xFF4CAF50)),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildStatBox('4.8', '服务评分', Icons.star, const Color(0xFFFFC107)),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildStatBox('98%', '客户满意度', Icons.thumb_up, const Color(0xFF2196F3)),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建统计框
+  Widget _buildStatBox(String value, String label, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 32, color: color),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: color,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              color: Color(0xFF666666),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -593,8 +660,8 @@ class _ProfilePageState extends State<ProfilePage> {
         // 客户：显示客户的"我的点赞"
         return _buildCustomerLikesCard();
       case UserType.merchant:
-        // 商户：空白占位
-        return _buildMerchantPlaceholderCard();
+        // 服务商：显示授权范围
+        return _buildMerchantAuthorizationScope();
       case UserType.backend:
         return _buildBackendRankingCard();
       case null:
@@ -836,8 +903,8 @@ class _ProfilePageState extends State<ProfilePage> {
         // 客户：显示客户的"我的收藏"
         return _buildCustomerFavoritesCard();
       case UserType.merchant:
-        // 商户：空白占位
-        return _buildMerchantPlaceholderCard();
+        // 服务商：显示我的模板
+        return _buildMerchantMyTemplates();
       case UserType.backend:
         return _buildBackendMessagesCard();
       case null:
@@ -1345,6 +1412,220 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         );
       }).toList(),
+    );
+  }
+
+  /// 服务商：授权范围卡片
+  Widget _buildMerchantAuthorizationScope() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFFE0E0E0),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '我的授权',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: _buildAuthScopeCard('授权模块', Icons.apps, ['课程管理', '商城管理', '营销工具']),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildAuthScopeCard('授权地区', Icons.location_on, ['全国', '华东地区', '华南地区']),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildAuthScopeCard('授权行业', Icons.business, ['教育培训', '电商零售', '生活服务']),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建授权范围卡片
+  Widget _buildAuthScopeCard(String title, IconData icon, List<String> items) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 20, color: const Color(0xFF2196F3)),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF333333),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...items.map((item) => Padding(
+                padding: const EdgeInsets.only(left: 28, bottom: 6),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF2196F3),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      item,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF666666),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+        ],
+      ),
+    );
+  }
+
+  /// 服务商：我的模板卡片
+  Widget _buildMerchantMyTemplates() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFFE0E0E0),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '我的模板',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
+            ),
+          ),
+          const SizedBox(height: 20),
+          _buildTemplateGrid(),
+        ],
+      ),
+    );
+  }
+
+  /// 构建模板网格
+  Widget _buildTemplateGrid() {
+    final templates = [
+      {'name': '电商小程序模板', 'uses': 156, 'rating': 4.8},
+      {'name': '餐饮系统模板', 'uses': 89, 'rating': 4.6},
+      {'name': '教育机构模板', 'uses': 67, 'rating': 4.9},
+      {'name': '健身场馆模板', 'uses': 45, 'rating': 4.7},
+    ];
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        crossAxisSpacing: 20,
+        mainAxisSpacing: 20,
+        childAspectRatio: 2.5,
+      ),
+      itemCount: templates.length,
+      itemBuilder: (context, index) {
+        final template = templates[index];
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF5F5F5),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: const Color(0xFFE0E0E0),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.dashboard, size: 20, color: Color(0xFF2196F3)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      template['name'] as String,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF333333),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Text(
+                    '使用 ${template['uses']}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF666666),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, size: 14, color: Color(0xFFFFC107)),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${template['rating']}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF666666),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

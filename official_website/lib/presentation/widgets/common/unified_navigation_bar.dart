@@ -90,12 +90,14 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
       onTap: () => AppRouter.goToContact(context),
     );
 
-    // 工作台：仅商户和后台身份可见
+    // 工作台：客户、服务商和后台身份可见
     final List<NavbarMenuItem> items = [];
     items.addAll(baseItems);
 
-    // 根据用户身份添加"工作台"（客户和后台可以访问）
-    if (authState.userType == UserType.customer || authState.userType == UserType.backend) {
+    // 根据用户身份添加"工作台"（客户、服务商和后台可以访问）
+    if (authState.userType == UserType.customer ||
+        authState.userType == UserType.merchant ||
+        authState.userType == UserType.backend) {
       items.add(
         NavbarMenuItem(
           label: '工作台',

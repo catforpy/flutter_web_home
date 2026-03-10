@@ -4,13 +4,13 @@ import '../../widgets/common/footer_widget.dart';
 import '../../routes/app_router.dart';
 import '../../../core/auth/auth_state.dart';
 import 'platform_initialization_page.dart';
-import 'merchant_dashboard.dart';
+import 'service_provider_workbench.dart';
 
 /// 工作台页面
 /// 根据用户身份显示不同的后台管理内容
-/// - 客户：管理自己的小程序、租赁、合作等（使用平台接入中心页面）
+/// - 客户（都达网账户）：管理自己的小程序、租赁、合作等（使用平台接入中心页面）
+/// - 服务商：管理授权业务、模板、客户等（使用服务商工作台）
 /// - 后台：管理整个平台（审核商户、数据分析、系统配置等）
-/// - 商户：无权限访问（功能重新设计中）
 class WorkbenchPage extends StatefulWidget {
   const WorkbenchPage({super.key});
 
@@ -46,6 +46,11 @@ class _WorkbenchPageState extends State<WorkbenchPage> {
       return const PlatformInitializationPage();
     }
 
+    // 服务商直接返回服务商工作台页面（有完整的 Scaffold）
+    if (authState.userType == UserType.merchant) {
+      return const ServiceProviderWorkbench();
+    }
+
     // 其他用户使用标准布局（导航栏 + 内容 + Footer）
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
@@ -79,17 +84,19 @@ class _WorkbenchPageState extends State<WorkbenchPage> {
     );
   }
 
-  /// 根据用户身份构建工作台内容（非客户）
+  /// 根据用户身份构建工作台内容（非客户、非服务商）
   Widget _buildWorkbenchContent() {
     switch (authState.userType) {
       case UserType.backend:
         return _buildBackendWorkbench();
       case UserType.merchant:
-      case null:
-        return _buildNoAccessPage();
+        // 服务商不会走到这里，上面已经直接返回了
+        return const SizedBox.shrink();
       case UserType.customer:
         // 客户不会走到这里，上面已经直接返回了
         return const SizedBox.shrink();
+      case null:
+        return _buildNoAccessPage();
     }
   }
 
