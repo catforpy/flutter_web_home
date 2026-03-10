@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 import 'register_dialog.dart';
+import 'customer_register_dialog.dart';
 import '../../../core/auth/auth_state.dart';
 
 /// 登录弹窗组件
@@ -18,7 +19,7 @@ class _LoginDialogState extends State<LoginDialog>
   int _selectedUserType = 0; // 0: 客户, 1: 商户, 2: 后台管理
 
   /// 当前选中的登录方式
-  int _selectedLoginMethod = 0; // 0: 手机验证码, 1: 微信扫码
+  int _selectedLoginMethod = 0; // 0: 都达网账号, 1: 手机登录, 2: 微信登录
 
   /// 发送验证码倒计时秒数
   int _countdown = 0;
@@ -29,6 +30,12 @@ class _LoginDialogState extends State<LoginDialog>
   /// 后台部门选择
   int? _selectedDepartment; // 0: 客服, 1: 销售, 2: 财务, 3: 技术
 
+  /// 都达网账号输入控制器
+  final TextEditingController _accountController = TextEditingController();
+
+  /// 密码输入控制器
+  final TextEditingController _passwordController = TextEditingController();
+
   /// 手机号输入控制器
   final TextEditingController _phoneController = TextEditingController();
 
@@ -36,6 +43,8 @@ class _LoginDialogState extends State<LoginDialog>
   final TextEditingController _codeController = TextEditingController();
 
   /// 焦点节点
+  final FocusNode _accountFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
   final FocusNode _phoneFocusNode = FocusNode();
   final FocusNode _codeFocusNode = FocusNode();
   final FocusNode _loginButtonFocusNode = FocusNode();
@@ -44,8 +53,12 @@ class _LoginDialogState extends State<LoginDialog>
   @override
   void dispose() {
     _timer?.cancel();
+    _accountController.dispose();
+    _passwordController.dispose();
     _phoneController.dispose();
     _codeController.dispose();
+    _accountFocusNode.dispose();
+    _passwordFocusNode.dispose();
     _phoneFocusNode.dispose();
     _codeFocusNode.dispose();
     _loginButtonFocusNode.dispose();
@@ -245,8 +258,19 @@ class _LoginDialogState extends State<LoginDialog>
 
   /// 构建登录表单内容
   Widget _buildLoginForm() {
-    // 客户、商户和后台 - 手机验证码登录或微信扫码登录
-    if (_selectedUserType == 0 || _selectedUserType == 1 || _selectedUserType == 2) {
+    // 都达用户账号：支持都达网账号、手机登录、微信登录
+    if (_selectedUserType == 0) {
+      if (_selectedLoginMethod == 0) {
+        return _buildAccountLoginForm();
+      } else if (_selectedLoginMethod == 1) {
+        return _buildPhoneLoginForm();
+      } else {
+        return _buildWechatQRCodeForm();
+      }
+    }
+
+    // 服务商户、后台管理：手机登录或微信扫码登录
+    if (_selectedUserType == 1 || _selectedUserType == 2) {
       if (_selectedLoginMethod == 0) {
         return _buildPhoneLoginForm();
       } else {
@@ -256,6 +280,187 @@ class _LoginDialogState extends State<LoginDialog>
 
     // 其他情况 - 显示占位内容
     return _buildPlaceholderForm();
+  }
+
+  /// 都达网账号登录表单
+  Widget _buildAccountLoginForm() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 账号输入框
+          const Text(
+            '都达网账号',
+            style: TextStyle(
+              fontSize: 14,
+              color: Color(0xFF666666),
+            ),
+          ),
+          const SizedBox(height: 8),
+          _buildAccountInput(),
+          const SizedBox(height: 16),
+
+          // 密码输入框
+          const Text(
+            '密码',
+            style: TextStyle(
+              fontSize: 14,
+              color: Color(0xFF666666),
+            ),
+          ),
+          const SizedBox(height: 8),
+          _buildPasswordInput(),
+          const SizedBox(height: 24),
+
+          // 登录按钮
+          _buildLoginButton(),
+          const SizedBox(height: 16),
+
+          // 【都达网账号登录】代表同意《用户协议》《隐私政策》
+          Wrap(
+            alignment: WrapAlignment.start,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              const Text(
+                '【都达网账号登录】代表同意',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF999999),
+                  height: 1.4,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  debugPrint('点击用户协议');
+                  // TODO: 跳转到用户协议页面
+                },
+                child: const Text(
+                  '《用户协议》',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFFD93025),
+                    height: 1.4,
+                  ),
+                ),
+              ),
+              const Text(
+                '、',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF999999),
+                  height: 1.4,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  debugPrint('点击隐私政策');
+                  // TODO: 跳转到隐私政策页面
+                },
+                child: const Text(
+                  '《隐私政策》',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFFD93025),
+                    height: 1.4,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // 其他登录方式
+          _buildOtherLoginMethodsForCustomer(),
+        ],
+      ),
+    );
+  }
+
+  /// 账号输入框
+  Widget _buildAccountInput() {
+    return Container(
+      height: 48,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          color: const Color(0xFFE0E0E0),
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: TextField(
+        controller: _accountController,
+        focusNode: _accountFocusNode,
+        decoration: const InputDecoration(
+          hintText: '请输入都达网账号',
+          hintStyle: TextStyle(
+            color: Color(0xFFCCCCCC),
+            fontSize: 15,
+          ),
+          border: InputBorder.none,
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          prefixIcon: Icon(
+            Icons.person_outline,
+            color: Color(0xFFCCCCCC),
+            size: 20,
+          ),
+        ),
+        style: const TextStyle(
+          fontSize: 15,
+          color: Color(0xFF999999),
+        ),
+        textInputAction: TextInputAction.next,
+        onSubmitted: (_) {
+          _passwordFocusNode.requestFocus();
+        },
+      ),
+    );
+  }
+
+  /// 密码输入框
+  Widget _buildPasswordInput() {
+    return Container(
+      height: 48,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          color: const Color(0xFFE0E0E0),
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: TextField(
+        controller: _passwordController,
+        focusNode: _passwordFocusNode,
+        obscureText: true,
+        decoration: const InputDecoration(
+          hintText: '请输入密码',
+          hintStyle: TextStyle(
+            color: Color(0xFFCCCCCC),
+            fontSize: 15,
+          ),
+          border: InputBorder.none,
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          prefixIcon: Icon(
+            Icons.lock_outlined,
+            color: Color(0xFFCCCCCC),
+            size: 20,
+          ),
+        ),
+        style: const TextStyle(
+          fontSize: 15,
+          color: Color(0xFF999999),
+        ),
+        textInputAction: TextInputAction.done,
+        onSubmitted: (_) {
+          _handleLogin();
+        },
+      ),
+    );
   }
 
   /// 手机验证码登录表单
@@ -810,6 +1015,30 @@ class _LoginDialogState extends State<LoginDialog>
 
   /// 处理登录
   void _handleLogin() {
+    // 都达网账号登录
+    if (_selectedUserType == 0 && _selectedLoginMethod == 0) {
+      final account = _accountController.text.trim();
+      final password = _passwordController.text.trim();
+
+      if (account.isEmpty) {
+        _showErrorDialog('请输入都达网账号');
+        return;
+      }
+
+      if (password.isEmpty) {
+        _showErrorDialog('请输入密码');
+        return;
+      }
+
+      // TODO: 实际项目中需要调用API验证账号密码
+      // 这里暂时直接登录成功
+      debugPrint('登录成功：用户类型=都达用户账号, 账号=$account');
+      authState.login(userType: UserType.customer);
+      _showSuccessDialog();
+      return;
+    }
+
+    // 手机登录
     final phone = _phoneController.text.trim();
     final code = _codeController.text.trim();
 
@@ -865,7 +1094,111 @@ class _LoginDialogState extends State<LoginDialog>
     }
   }
 
-  /// 其他登录方式
+  /// 其他登录方式（都达用户账号专用）
+  Widget _buildOtherLoginMethodsForCustomer() {
+    return Column(
+      children: [
+        // 分割线
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                height: 1,
+                color: const Color(0xFFE0E0E0),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                '其他登录方式',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Color(0xFF999999),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                height: 1,
+                color: const Color(0xFFE0E0E0),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+
+        // 图标按钮 + 注册按钮
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildLoginMethodIcon(
+              icon: Icons.person_outline,
+              label: '都达网账号',
+              isSelected: _selectedLoginMethod == 0,
+              onTap: () {
+                setState(() {
+                  _selectedLoginMethod = 0;
+                });
+              },
+            ),
+            const SizedBox(width: 32),
+            _buildLoginMethodIcon(
+              icon: Icons.phone_outlined,
+              label: '手机登录',
+              isSelected: _selectedLoginMethod == 1,
+              onTap: () {
+                setState(() {
+                  _selectedLoginMethod = 1;
+                });
+              },
+            ),
+            const SizedBox(width: 32),
+            _buildLoginMethodIcon(
+              icon: Icons.wechat,
+              label: '微信登录',
+              isSelected: _selectedLoginMethod == 2,
+              onTap: () {
+                setState(() {
+                  _selectedLoginMethod = 2;
+                });
+              },
+            ),
+            const SizedBox(width: 32),
+            // 注册按钮
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () {
+                  debugPrint('点击注册');
+                  _showRegisterDialog();
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: const Color(0xFFD93025),
+                      width: 1.5,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text(
+                    '注册',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFFD93025),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// 其他登录方式（服务商户、后台管理专用）
   Widget _buildOtherLoginMethods() {
     return Column(
       children: [
@@ -964,11 +1297,17 @@ class _LoginDialogState extends State<LoginDialog>
 
   /// 显示注册弹窗
   void _showRegisterDialog() {
-    showDialog(
-      context: context,
-      barrierColor: Colors.black.withValues(alpha: 0.5),
-      builder: (context) => const RegisterDialog(),
-    );
+    // 都达用户账号：显示客户注册弹窗
+    if (_selectedUserType == 0) {
+      showCustomerRegisterDialog(context);
+    } else if (_selectedUserType == 2) {
+      // 后台管理：显示后台注册弹窗
+      showDialog(
+        context: context,
+        barrierColor: Colors.black.withValues(alpha: 0.5),
+        builder: (context) => const RegisterDialog(),
+      );
+    }
   }
 
   /// 登录方式图标按钮
@@ -1149,17 +1488,28 @@ class _LoginDialogState extends State<LoginDialog>
           ),
           const SizedBox(height: 12),
 
-          // 图标按钮 + 注册按钮（仅后台显示）
+          // 图标按钮 + 注册按钮
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              _buildLoginMethodIcon(
+                icon: Icons.person_outline,
+                label: '都达网账号',
+                isSelected: false,
+                onTap: () {
+                  setState(() {
+                    _selectedLoginMethod = 0;
+                  });
+                },
+              ),
+              const SizedBox(width: 32),
               _buildLoginMethodIcon(
                 icon: Icons.phone_outlined,
                 label: '手机登录',
                 isSelected: false,
                 onTap: () {
                   setState(() {
-                    _selectedLoginMethod = 0;
+                    _selectedLoginMethod = 1;
                   });
                 },
               ),
@@ -1172,39 +1522,36 @@ class _LoginDialogState extends State<LoginDialog>
                   // 已经是微信登录，不需要切换
                 },
               ),
-              // 只有后台才显示注册按钮
-              if (_selectedUserType == 2) ...[
-                const SizedBox(width: 32),
-                // 注册按钮
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      debugPrint('点击注册');
-                      _showRegisterDialog();
-                    },
-                    child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: const Color(0xFFD93025),
-                          width: 1.5,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
+              const SizedBox(width: 32),
+              // 注册按钮
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () {
+                    debugPrint('点击注册');
+                    _showRegisterDialog();
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: const Color(0xFFD93025),
+                        width: 1.5,
                       ),
-                      child: const Text(
-                        '注册',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFFD93025),
-                          fontWeight: FontWeight.w600,
-                        ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      '注册',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFFD93025),
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
                 ),
-              ],
+              ),
             ],
           ),
         ],
