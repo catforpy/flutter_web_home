@@ -66,6 +66,26 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
         path: AppRouter.home,
         onTap: () => AppRouter.goToHome(context),
       ),
+      NavbarMenuItem(
+        label: '购买',
+        path: AppRouter.purchase,
+        onTap: () => AppRouter.goToPurchase(context),
+      ),
+      NavbarMenuItem(
+        label: '租赁',
+        path: AppRouter.lease,
+        onTap: () => AppRouter.goToLease(context),
+      ),
+      NavbarMenuItem(
+        label: '合作',
+        path: AppRouter.partnership,
+        onTap: () => AppRouter.goToPartnership(context),
+      ),
+      NavbarMenuItem(
+        label: '定制开发',
+        path: AppRouter.customDev,
+        onTap: () => AppRouter.goToCustomDev(context),
+      ),
       // 以下导航项暂时隐藏（保留代码，以后可能需要）
       /*
       NavbarMenuItem(

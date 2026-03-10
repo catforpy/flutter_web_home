@@ -14,6 +14,10 @@ import '../pages/profile/profile_page.dart';
 import '../pages/profile/account_settings_page.dart';
 import '../pages/cart/cart_page.dart';
 import '../pages/orders/orders_page.dart';
+import '../pages/purchase/purchase_page.dart';
+import '../pages/lease/lease_page.dart';
+import '../pages/partnership/partnership_page.dart';
+import '../pages/custom_dev/custom_dev_page.dart';
 import '../pages/workbench/workbench_page.dart';
 import '../pages/workbench/platform_initialization_page.dart';
 import '../pages/workbench/merchant_dashboard.dart';
@@ -31,6 +35,10 @@ import '../pages/home/home_page.dart';
 class AppRouter {
   // 路由路径常量
   static const String home = '/';
+  static const String purchase = '/purchase'; // 购买
+  static const String lease = '/lease'; // 租赁
+  static const String partnership = '/partnership'; // 合作
+  static const String customDev = '/custom-dev'; // 定制开发
   static const String serve = '/serve';
   static const String solutions = '/solutions';
   static const String cases = '/cases';
@@ -66,6 +74,34 @@ class AppRouter {
         path: home,
         name: 'home',
         builder: (context, state) => const HomePage(),
+      ),
+
+      // 购买页面路由
+      GoRoute(
+        path: purchase,
+        name: 'purchase',
+        builder: (context, state) => const PurchasePage(),
+      ),
+
+      // 租赁页面路由
+      GoRoute(
+        path: lease,
+        name: 'lease',
+        builder: (context, state) => const LeasePage(),
+      ),
+
+      // 合作页面路由
+      GoRoute(
+        path: partnership,
+        name: 'partnership',
+        builder: (context, state) => const PartnershipPage(),
+      ),
+
+      // 定制开发页面路由
+      GoRoute(
+        path: customDev,
+        name: 'customDev',
+        builder: (context, state) => const CustomDevPage(),
       ),
 
       // 服务页面路由
@@ -231,6 +267,26 @@ class AppRouter {
   /// 导航到首页（服务页面）
   static void goToHome(BuildContext context) {
     context.go(home);
+  }
+
+  /// 导航到购买页面
+  static void goToPurchase(BuildContext context) {
+    context.go(purchase);
+  }
+
+  /// 导航到租赁页面
+  static void goToLease(BuildContext context) {
+    context.go(lease);
+  }
+
+  /// 导航到合作页面
+  static void goToPartnership(BuildContext context) {
+    context.go(partnership);
+  }
+
+  /// 导航到定制开发页面
+  static void goToCustomDev(BuildContext context) {
+    context.go(customDev);
   }
 
   /// 导航到服务页面
