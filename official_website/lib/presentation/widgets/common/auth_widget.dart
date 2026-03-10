@@ -306,6 +306,7 @@ class _AuthWidgetState extends State<AuthWidget> {
   List<Widget> _buildLeftColumnItems() {
     switch (authState.userType) {
       case UserType.customer:
+        // 客户：订单中心 + 商户的"我的小程序"
         return [
           _buildMenuCard(
             icon: Icons.shopping_bag_outlined,
@@ -317,19 +318,6 @@ class _AuthWidgetState extends State<AuthWidget> {
             },
           ),
           const SizedBox(height: 8),
-          _buildMenuCard(
-            icon: Icons.settings_outlined,
-            label: '我的设置',
-            onTap: () {
-              debugPrint('点击我的设置');
-              _removeOverlay();
-              AppRouter.goToProfile(context);
-            },
-          ),
-        ];
-
-      case UserType.merchant:
-        return [
           _buildMenuCard(
             icon: Icons.phone_android,
             label: '我的小程序',
@@ -350,6 +338,10 @@ class _AuthWidgetState extends State<AuthWidget> {
             },
           ),
         ];
+
+      case UserType.merchant:
+        // 商户：空白占位
+        return [];
 
       case UserType.backend:
         return [
@@ -383,6 +375,7 @@ class _AuthWidgetState extends State<AuthWidget> {
   List<Widget> _buildRightColumnItems() {
     switch (authState.userType) {
       case UserType.customer:
+        // 客户：我的收藏、我的关注 + 商户的"我的租赁"、"我的合作"
         return [
           _buildMenuCard(
             icon: Icons.favorite_border,
@@ -403,10 +396,7 @@ class _AuthWidgetState extends State<AuthWidget> {
               AppRouter.goToProfile(context);
             },
           ),
-        ];
-
-      case UserType.merchant:
-        return [
+          const SizedBox(height: 8),
           _buildMenuCard(
             icon: Icons.cottage_outlined,
             label: '我的租赁',
@@ -427,6 +417,10 @@ class _AuthWidgetState extends State<AuthWidget> {
             },
           ),
         ];
+
+      case UserType.merchant:
+        // 商户：空白占位
+        return [];
 
       case UserType.backend:
         return [

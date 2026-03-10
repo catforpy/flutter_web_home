@@ -8,8 +8,9 @@ import 'merchant_dashboard.dart';
 
 /// 工作台页面
 /// 根据用户身份显示不同的后台管理内容
-/// - 商户：管理自己的小程序、租赁、合作等
+/// - 客户：管理自己的小程序、租赁、合作等（使用平台接入中心页面）
 /// - 后台：管理整个平台（审核商户、数据分析、系统配置等）
+/// - 商户：无权限访问（功能重新设计中）
 class WorkbenchPage extends StatefulWidget {
   const WorkbenchPage({super.key});
 
@@ -40,8 +41,8 @@ class _WorkbenchPageState extends State<WorkbenchPage> {
 
   @override
   Widget build(BuildContext context) {
-    // 商户直接返回平台接入中心页面（有完整的 Scaffold）
-    if (authState.userType == UserType.merchant) {
+    // 客户直接返回平台接入中心页面（有完整的 Scaffold）
+    if (authState.userType == UserType.customer) {
       return const PlatformInitializationPage();
     }
 
@@ -78,16 +79,16 @@ class _WorkbenchPageState extends State<WorkbenchPage> {
     );
   }
 
-  /// 根据用户身份构建工作台内容（非商户）
+  /// 根据用户身份构建工作台内容（非客户）
   Widget _buildWorkbenchContent() {
     switch (authState.userType) {
       case UserType.backend:
         return _buildBackendWorkbench();
-      case UserType.customer:
+      case UserType.merchant:
       case null:
         return _buildNoAccessPage();
-      case UserType.merchant:
-        // 商户不会走到这里，上面已经直接返回了
+      case UserType.customer:
+        // 客户不会走到这里，上面已经直接返回了
         return const SizedBox.shrink();
     }
   }
@@ -159,7 +160,7 @@ class _WorkbenchPageState extends State<WorkbenchPage> {
           ),
           const SizedBox(height: 12),
           const Text(
-            '工作台仅对商户和后台管理员开放',
+            '商户功能重新设计中...',
             style: TextStyle(
               fontSize: 16,
               color: Color(0xFF666666),

@@ -213,9 +213,11 @@ class _ProfilePageState extends State<ProfilePage> {
     // 根据用户身份显示不同的统计数据
     switch (authState.userType) {
       case UserType.customer:
+        // 客户：客户 + 商户的统计数据
         return _buildCustomerStats();
       case UserType.merchant:
-        return _buildMerchantStats();
+        // 商户：空白占位
+        return _buildMerchantPlaceholderStats();
       case UserType.backend:
         return _buildBackendStats();
       case null:
@@ -223,38 +225,28 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  /// 客户数据统计
+  /// 客户数据统计（合并商户内容）
   Widget _buildCustomerStats() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         const SizedBox(width: 40),
-        _buildStatItem('7380', '经验'),
+        _buildStatItem('15', '小程序'),  // 商户
         const SizedBox(width: 40),
-        _buildStatItem('32', '收藏'),
+        _buildStatItem('32', '收藏'),    // 客户
         const SizedBox(width: 40),
-        _buildStatItem('2', '关注'),
+        _buildStatItem('2', '关注'),     // 客户
         const SizedBox(width: 40),
-        _buildStatItem('0', '粉丝'),
+        _buildStatItem('238', '租赁'),   // 商户
+        const SizedBox(width: 40),
+        _buildStatItem('56', '合作'),    // 商户
       ],
     );
   }
 
-  /// 商户数据统计
-  Widget _buildMerchantStats() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        const SizedBox(width: 40),
-        _buildStatItem('15', '小程序'),
-        const SizedBox(width: 40),
-        _buildStatItem('238', '租赁'),
-        const SizedBox(width: 40),
-        _buildStatItem('56', '合作'),
-        const SizedBox(width: 40),
-        _buildStatItem('4.8', '评分'),
-      ],
-    );
+  /// 商户数据统计（空白占位）
+  Widget _buildMerchantPlaceholderStats() {
+    return const SizedBox.shrink();
   }
 
   /// 后台数据统计
@@ -344,9 +336,11 @@ class _ProfilePageState extends State<ProfilePage> {
     // 根据用户身份显示不同的内容
     switch (authState.userType) {
       case UserType.customer:
+        // 客户：显示客户的"最近关注"
         return _buildCustomerRecentFollow();
       case UserType.merchant:
-        return _buildMerchantRecentMiniProgram();
+        // 商户：空白占位
+        return _buildMerchantPlaceholderCard();
       case UserType.backend:
         return _buildBackendRecentTask();
       case null:
@@ -451,8 +445,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  /// 商户：我的小程序
-  Widget _buildMerchantRecentMiniProgram() {
+  /// 商户：空白占位卡片
+  Widget _buildMerchantPlaceholderCard() {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -463,87 +457,24 @@ class _ProfilePageState extends State<ProfilePage> {
           width: 1,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.phone_android,
-                size: 24,
-                color: Color(0xFF2196F3),
-              ),
-              const SizedBox(width: 12),
-              const Text(
-                '我的小程序',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF333333),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF5F5F5),
-              borderRadius: BorderRadius.circular(8),
+      child: const Center(
+        child: Column(
+          children: [
+            Icon(
+              Icons.build_outlined,
+              size: 48,
+              color: Color(0xFFCCCCCC),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        '电商购物小程序',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF333333),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '最后更新：2小时前',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: const Color(0xFF666666),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 20),
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      // TODO: 管理小程序
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2196F3),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Text(
-                        '管理',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            SizedBox(height: 16),
+            Text(
+              '商户功能重新设计中...',
+              style: TextStyle(
+                fontSize: 16,
+                color: Color(0xFF999999),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -650,9 +581,11 @@ class _ProfilePageState extends State<ProfilePage> {
     // 根据用户身份显示不同的内容
     switch (authState.userType) {
       case UserType.customer:
+        // 客户：显示客户的"我的点赞"
         return _buildCustomerLikesCard();
       case UserType.merchant:
-        return _buildMerchantMiniProgramsCard();
+        // 商户：空白占位
+        return _buildMerchantPlaceholderCard();
       case UserType.backend:
         return _buildBackendRankingCard();
       case null:
@@ -677,36 +610,6 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           const Text(
             '我的点赞',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF333333),
-            ),
-          ),
-          const SizedBox(height: 20),
-          _buildCourseGrid(),
-        ],
-      ),
-    );
-  }
-
-  /// 商户：我的小程序
-  Widget _buildMerchantMiniProgramsCard() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFE0E0E0),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            '我的小程序',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -921,9 +824,11 @@ class _ProfilePageState extends State<ProfilePage> {
     // 根据用户身份显示不同的内容
     switch (authState.userType) {
       case UserType.customer:
+        // 客户：显示客户的"我的收藏"
         return _buildCustomerFavoritesCard();
       case UserType.merchant:
-        return _buildMerchantLeasingCard();
+        // 商户：空白占位
+        return _buildMerchantPlaceholderCard();
       case UserType.backend:
         return _buildBackendMessagesCard();
       case null:
@@ -958,102 +863,6 @@ class _ProfilePageState extends State<ProfilePage> {
           _buildCourseGrid(),
         ],
       ),
-    );
-  }
-
-  /// 商户：我的租赁
-  Widget _buildMerchantLeasingCard() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFE0E0E0),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            '我的租赁',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF333333),
-            ),
-          ),
-          const SizedBox(height: 20),
-          _buildLeasingList(),
-        ],
-      ),
-    );
-  }
-
-  /// 构建商户租赁列表
-  Widget _buildLeasingList() {
-    final leasingItems = [
-      {'title': '电商小程序模板', 'period': '3个月', 'price': '¥299', 'status': '使用中'},
-      {'title': '餐饮系统小程序', 'period': '6个月', 'price': '¥599', 'status': '使用中'},
-      {'title': '教育类小程序', 'period': '1年', 'price': '¥999', 'status': '即将到期'},
-    ];
-
-    return Column(
-      children: leasingItems.map((item) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF5F5F5),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item['title']!,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF333333),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${item['period']} - ${item['price']}',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFF666666),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: item['status'] == '使用中'
-                      ? const Color(0xFF00C853)
-                      : const Color(0xFFFF9800),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  item['status']!,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
     );
   }
 
@@ -1149,128 +958,9 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  /// 构建我的合作卡片（仅商户身份）
+  /// 构建我的合作卡片（已废弃，现在隐藏）
   Widget _buildCooperationCard() {
-    // 仅在商户身份下显示
-    if (authState.userType != UserType.merchant) {
-      return const SizedBox.shrink();
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFE0E0E0),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            '我的合作',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF333333),
-            ),
-          ),
-          const SizedBox(height: 20),
-          _buildCooperationList(),
-        ],
-      ),
-    );
-  }
-
-  /// 构建商户合作列表
-  Widget _buildCooperationList() {
-    final cooperationItems = [
-      {
-        'title': 'AI大模型技术合作',
-        'partner': '某科技公司',
-        'status': '进行中',
-        'statusColor': 0xFF00C853,
-        'time': '2025-01-15'
-      },
-      {
-        'title': '小程序定制开发',
-        'partner': '某电商平台',
-        'status': '待确认',
-        'statusColor': 0xFFFF9800,
-        'time': '2025-02-20'
-      },
-      {
-        'title': '数据分析服务',
-        'partner': '某教育机构',
-        'status': '已完成',
-        'statusColor': 0xFF999999,
-        'time': '2024-12-10'
-      },
-    ];
-
-    return Column(
-      children: cooperationItems.map((item) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF5F5F5),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item['title'] as String,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF333333),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '合作方：${item['partner']}',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFF666666),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '时间：${item['time']}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF999999),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Color(item['statusColor'] as int),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  item['status'] as String,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
-    );
+    // 客户已经通过下拉菜单的"我的合作"访问，不再显示独立卡片
+    return const SizedBox.shrink();
   }
 }

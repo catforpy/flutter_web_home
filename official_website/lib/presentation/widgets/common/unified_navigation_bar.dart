@@ -94,8 +94,8 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
     final List<NavbarMenuItem> items = [];
     items.addAll(baseItems);
 
-    // 根据用户身份添加"工作台"
-    if (authState.userType == UserType.merchant || authState.userType == UserType.backend) {
+    // 根据用户身份添加"工作台"（客户和后台可以访问）
+    if (authState.userType == UserType.customer || authState.userType == UserType.backend) {
       items.add(
         NavbarMenuItem(
           label: '工作台',
