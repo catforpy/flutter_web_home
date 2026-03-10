@@ -185,7 +185,21 @@ class _LoginDialogState extends State<LoginDialog>
             // 登录表单内容（使用 SizedBox 限制高度）
             SizedBox(
               height: 400,
-              child: _buildLoginForm(),
+              child: Column(
+                children: [
+                  // 表单内容区域（可滚动）
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: _buildLoginFormContent(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // 底部固定的"其他登录方式"区域
+                  _buildOtherLoginMethods(),
+                ],
+              ),
             ),
           ],
         ),
@@ -261,20 +275,20 @@ class _LoginDialogState extends State<LoginDialog>
     // 都达用户账号：支持都达网账号、手机登录、微信登录
     if (_selectedUserType == 0) {
       if (_selectedLoginMethod == 0) {
-        return _buildAccountLoginForm();
+        return _buildAccountLoginFormContent();
       } else if (_selectedLoginMethod == 1) {
-        return _buildPhoneLoginForm();
+        return _buildPhoneLoginFormContent();
       } else {
-        return _buildWechatQRCodeForm();
+        return _buildWechatQRCodeFormContent();
       }
     }
 
     // 服务商户、后台管理：手机登录或微信扫码登录
     if (_selectedUserType == 1 || _selectedUserType == 2) {
       if (_selectedLoginMethod == 0) {
-        return _buildPhoneLoginForm();
+        return _buildPhoneLoginFormContent();
       } else {
-        return _buildWechatQRCodeForm();
+        return _buildWechatQRCodeFormContent();
       }
     }
 
@@ -282,97 +296,117 @@ class _LoginDialogState extends State<LoginDialog>
     return _buildPlaceholderForm();
   }
 
-  /// 都达网账号登录表单
-  Widget _buildAccountLoginForm() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 账号输入框
-          const Text(
-            '都达网账号',
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF666666),
-            ),
+  /// 构建表单内容区域（不含"其他登录方式"）
+  Widget _buildLoginFormContent() {
+    // 都达用户账号：支持都达网账号、手机登录、微信登录
+    if (_selectedUserType == 0) {
+      if (_selectedLoginMethod == 0) {
+        return _buildAccountLoginFormContent();
+      } else if (_selectedLoginMethod == 1) {
+        return _buildPhoneLoginFormContent();
+      } else {
+        return _buildWechatQRCodeFormContent();
+      }
+    }
+
+    // 服务商户、后台管理：手机登录或微信扫码登录
+    if (_selectedUserType == 1 || _selectedUserType == 2) {
+      if (_selectedLoginMethod == 0) {
+        return _buildPhoneLoginFormContent();
+      } else {
+        return _buildWechatQRCodeFormContent();
+      }
+    }
+
+    // 其他情况 - 显示占位内容
+    return _buildPlaceholderForm();
+  }
+
+  /// 都达网账号登录表单内容（不含"其他登录方式"）
+  Widget _buildAccountLoginFormContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 账号输入框
+        const Text(
+          '都达网账号',
+          style: TextStyle(
+            fontSize: 14,
+            color: Color(0xFF666666),
           ),
-          const SizedBox(height: 8),
-          _buildAccountInput(),
-          const SizedBox(height: 16),
+        ),
+        const SizedBox(height: 8),
+        _buildAccountInput(),
+        const SizedBox(height: 16),
 
-          // 密码输入框
-          const Text(
-            '密码',
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF666666),
-            ),
+        // 密码输入框
+        const Text(
+          '密码',
+          style: TextStyle(
+            fontSize: 14,
+            color: Color(0xFF666666),
           ),
-          const SizedBox(height: 8),
-          _buildPasswordInput(),
-          const SizedBox(height: 24),
+        ),
+        const SizedBox(height: 8),
+        _buildPasswordInput(),
+        const SizedBox(height: 24),
 
-          // 登录按钮
-          _buildLoginButton(),
-          const SizedBox(height: 16),
+        // 登录按钮
+        _buildLoginButton(),
+        const SizedBox(height: 16),
 
-          // 【都达网账号登录】代表同意《用户协议》《隐私政策》
-          Wrap(
-            alignment: WrapAlignment.start,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              const Text(
-                '【都达网账号登录】代表同意',
+        // 【都达网账号登录】代表同意《用户协议》《隐私政策》
+        Wrap(
+          alignment: WrapAlignment.start,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            const Text(
+              '【都达网账号登录】代表同意',
+              style: TextStyle(
+                fontSize: 12,
+                color: Color(0xFF999999),
+                height: 1.4,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                debugPrint('点击用户协议');
+                // TODO: 跳转到用户协议页面
+              },
+              child: const Text(
+                '《用户协议》',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Color(0xFF999999),
+                  color: Color(0xFFD93025),
                   height: 1.4,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  debugPrint('点击用户协议');
-                  // TODO: 跳转到用户协议页面
-                },
-                child: const Text(
-                  '《用户协议》',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFFD93025),
-                    height: 1.4,
-                  ),
-                ),
+            ),
+            const Text(
+              '、',
+              style: TextStyle(
+                fontSize: 12,
+                color: Color(0xFF999999),
+                height: 1.4,
               ),
-              const Text(
-                '、',
+            ),
+            GestureDetector(
+              onTap: () {
+                debugPrint('点击隐私政策');
+                // TODO: 跳转到隐私政策页面
+              },
+              child: const Text(
+                '《隐私政策》',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Color(0xFF999999),
+                  color: Color(0xFFD93025),
                   height: 1.4,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  debugPrint('点击隐私政策');
-                  // TODO: 跳转到隐私政策页面
-                },
-                child: const Text(
-                  '《隐私政策》',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFFD93025),
-                    height: 1.4,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-
-          // 其他登录方式
-          _buildOtherLoginMethodsForCustomer(),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -463,111 +497,105 @@ class _LoginDialogState extends State<LoginDialog>
     );
   }
 
-  /// 手机验证码登录表单
-  Widget _buildPhoneLoginForm() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 后台管理：部门选择
-          if (_selectedUserType == 2) ...[
-            const Text(
-              '选择部门',
-              style: TextStyle(
-                fontSize: 14,
-                color: Color(0xFF666666),
-              ),
-            ),
-            const SizedBox(height: 8),
-            _buildDepartmentDropdown(),
-            const SizedBox(height: 16),
-          ],
-
-          // 手机号输入框
+  /// 手机验证码登录表单内容（不含"其他登录方式"）
+  Widget _buildPhoneLoginFormContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 后台管理：部门选择
+        if (_selectedUserType == 2) ...[
           const Text(
-            '手机号',
+            '选择部门',
             style: TextStyle(
               fontSize: 14,
               color: Color(0xFF666666),
             ),
           ),
           const SizedBox(height: 8),
-          _buildPhoneInput(),
+          _buildDepartmentDropdown(),
           const SizedBox(height: 16),
-
-          // 验证码输入框
-          const Text(
-            '验证码',
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF666666),
-            ),
-          ),
-          const SizedBox(height: 8),
-          _buildVerificationCodeInput(),
-          const SizedBox(height: 24),
-
-          // 登录按钮
-          _buildLoginButton(),
-          const SizedBox(height: 16),
-
-          // 【手机验证码登录】代表同意《用户协议》《隐私政策》
-          Wrap(
-            alignment: WrapAlignment.start,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              const Text(
-                '【手机验证码登录】代表同意',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF999999),
-                  height: 1.4,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  debugPrint('点击用户协议');
-                  // TODO: 跳转到用户协议页面
-                },
-                child: const Text(
-                  '《用户协议》',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFFD93025),
-                    height: 1.4,
-                  ),
-                ),
-              ),
-              const Text(
-                '、',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF999999),
-                  height: 1.4,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  debugPrint('点击隐私政策');
-                  // TODO: 跳转到隐私政策页面
-                },
-                child: const Text(
-                  '《隐私政策》',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFFD93025),
-                    height: 1.4,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-
-          // 其他登录方式
-          _buildOtherLoginMethods(),
         ],
-      ),
+
+        // 手机号输入框
+        const Text(
+          '手机号',
+          style: TextStyle(
+            fontSize: 14,
+            color: Color(0xFF666666),
+          ),
+        ),
+        const SizedBox(height: 8),
+        _buildPhoneInput(),
+        const SizedBox(height: 16),
+
+        // 验证码输入框
+        const Text(
+          '验证码',
+          style: TextStyle(
+            fontSize: 14,
+            color: Color(0xFF666666),
+          ),
+        ),
+        const SizedBox(height: 8),
+        _buildVerificationCodeInput(),
+        const SizedBox(height: 24),
+
+        // 登录按钮
+        _buildLoginButton(),
+        const SizedBox(height: 16),
+
+        // 【手机验证码登录】代表同意《用户协议》《隐私政策》
+        Wrap(
+          alignment: WrapAlignment.start,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            const Text(
+              '【手机验证码登录】代表同意',
+              style: TextStyle(
+                fontSize: 12,
+                color: Color(0xFF999999),
+                height: 1.4,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                debugPrint('点击用户协议');
+                // TODO: 跳转到用户协议页面
+              },
+              child: const Text(
+                '《用户协议》',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFFD93025),
+                  height: 1.4,
+                ),
+              ),
+            ),
+            const Text(
+              '、',
+              style: TextStyle(
+                fontSize: 12,
+                color: Color(0xFF999999),
+                height: 1.4,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                debugPrint('点击隐私政策');
+                // TODO: 跳转到隐私政策页面
+              },
+              child: const Text(
+                '《隐私政策》',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFFD93025),
+                  height: 1.4,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -1094,8 +1122,8 @@ class _LoginDialogState extends State<LoginDialog>
     }
   }
 
-  /// 其他登录方式（都达用户账号专用）
-  Widget _buildOtherLoginMethodsForCustomer() {
+  /// 其他登录方式（固定在底部，根据用户类型显示不同选项）
+  Widget _buildOtherLoginMethods() {
     return Column(
       children: [
         // 分割线
@@ -1130,168 +1158,117 @@ class _LoginDialogState extends State<LoginDialog>
         // 图标按钮 + 注册按钮
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildLoginMethodIcon(
-              icon: Icons.person_outline,
-              label: '都达网账号',
-              isSelected: _selectedLoginMethod == 0,
-              onTap: () {
-                setState(() {
-                  _selectedLoginMethod = 0;
-                });
-              },
-            ),
-            const SizedBox(width: 32),
-            _buildLoginMethodIcon(
-              icon: Icons.phone_outlined,
-              label: '手机登录',
-              isSelected: _selectedLoginMethod == 1,
-              onTap: () {
-                setState(() {
-                  _selectedLoginMethod = 1;
-                });
-              },
-            ),
-            const SizedBox(width: 32),
-            _buildLoginMethodIcon(
-              icon: Icons.wechat,
-              label: '微信登录',
-              isSelected: _selectedLoginMethod == 2,
-              onTap: () {
-                setState(() {
-                  _selectedLoginMethod = 2;
-                });
-              },
-            ),
-            const SizedBox(width: 32),
-            // 注册按钮
-            MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: GestureDetector(
-                onTap: () {
-                  debugPrint('点击注册');
-                  _showRegisterDialog();
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const Color(0xFFD93025),
-                      width: 1.5,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Text(
-                    '注册',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFFD93025),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          children: _buildLoginMethodButtons(),
         ),
       ],
     );
   }
 
-  /// 其他登录方式（服务商户、后台管理专用）
-  Widget _buildOtherLoginMethods() {
-    return Column(
-      children: [
-        // 分割线
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                height: 1,
-                color: const Color(0xFFE0E0E0),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                '其他登录方式',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Color(0xFF999999),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                height: 1,
-                color: const Color(0xFFE0E0E0),
-              ),
-            ),
-          ],
+  /// 构建登录方式按钮列表
+  List<Widget> _buildLoginMethodButtons() {
+    // 都达用户账号：显示都达网账号、手机登录、微信登录、注册按钮
+    if (_selectedUserType == 0) {
+      return [
+        _buildLoginMethodIcon(
+          icon: Icons.person_outline,
+          label: '都达网账号',
+          isSelected: _selectedLoginMethod == 0,
+          onTap: () {
+            setState(() {
+              _selectedLoginMethod = 0;
+            });
+          },
         ),
-        const SizedBox(height: 20),
+        const SizedBox(width: 32),
+        _buildLoginMethodIcon(
+          icon: Icons.phone_outlined,
+          label: '手机登录',
+          isSelected: _selectedLoginMethod == 1,
+          onTap: () {
+            setState(() {
+              _selectedLoginMethod = 1;
+            });
+          },
+        ),
+        const SizedBox(width: 32),
+        _buildLoginMethodIcon(
+          icon: Icons.wechat,
+          label: '微信登录',
+          isSelected: _selectedLoginMethod == 2,
+          onTap: () {
+            setState(() {
+              _selectedLoginMethod = 2;
+            });
+          },
+        ),
+        const SizedBox(width: 32),
+        // 注册按钮
+        _buildRegisterButton(),
+      ];
+    }
 
-        // 图标按钮 + 注册按钮（仅后台显示）
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildLoginMethodIcon(
-              icon: Icons.phone_outlined,
-              label: '手机登录',
-              isSelected: _selectedLoginMethod == 0,
-              onTap: () {
-                setState(() {
-                  _selectedLoginMethod = 0;
-                });
-              },
+    // 服务商户、后台管理：显示手机登录、微信登录
+    List<Widget> buttons = [
+      _buildLoginMethodIcon(
+        icon: Icons.phone_outlined,
+        label: '手机登录',
+        isSelected: _selectedLoginMethod == 0,
+        onTap: () {
+          setState(() {
+            _selectedLoginMethod = 0;
+          });
+        },
+      ),
+      const SizedBox(width: 32),
+      _buildLoginMethodIcon(
+        icon: Icons.wechat,
+        label: '微信登录',
+        isSelected: _selectedLoginMethod == 1,
+        onTap: () {
+          setState(() {
+            _selectedLoginMethod = 1;
+          });
+        },
+      ),
+    ];
+
+    // 后台管理：显示注册按钮
+    if (_selectedUserType == 2) {
+      buttons.add(const SizedBox(width: 32));
+      buttons.add(_buildRegisterButton());
+    }
+
+    return buttons;
+  }
+
+  /// 构建注册按钮
+  Widget _buildRegisterButton() {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () {
+          debugPrint('点击注册');
+          _showRegisterDialog();
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: const Color(0xFFD93025),
+              width: 1.5,
             ),
-            const SizedBox(width: 32),
-            _buildLoginMethodIcon(
-              icon: Icons.wechat,
-              label: '微信登录',
-              isSelected: _selectedLoginMethod == 1,
-              onTap: () {
-                setState(() {
-                  _selectedLoginMethod = 1;
-                });
-              },
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Text(
+            '注册',
+            style: TextStyle(
+              fontSize: 14,
+              color: Color(0xFFD93025),
+              fontWeight: FontWeight.w600,
             ),
-            // 只有后台才显示注册按钮
-            if (_selectedUserType == 2) ...[
-              const SizedBox(width: 32),
-              // 注册按钮
-              MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () {
-                    debugPrint('点击注册');
-                    _showRegisterDialog();
-                  },
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: const Color(0xFFD93025),
-                        width: 1.5,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Text(
-                      '注册',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFFD93025),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ],
+          ),
         ),
-      ],
+      ),
     );
   }
 
@@ -1362,200 +1339,120 @@ class _LoginDialogState extends State<LoginDialog>
     );
   }
 
-  /// 微信扫码登录
-  Widget _buildWechatQRCodeForm() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 16),
+  /// 微信扫码登录表单内容（不含"其他登录方式"）
+  Widget _buildWechatQRCodeFormContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 16),
 
-          // 标题
-          const Text(
-            '微信一键登录',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF333333),
-            ),
+        // 标题
+        const Text(
+          '微信一键登录',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF333333),
           ),
-          const SizedBox(height: 6),
+        ),
+        const SizedBox(height: 6),
 
-          // 副标题
-          const Text(
-            '关注后自动登录',
-            style: TextStyle(
-              fontSize: 13,
-              color: Color(0xFF999999),
+        // 副标题
+        const Text(
+          '关注后自动登录',
+          style: TextStyle(
+            fontSize: 13,
+            color: Color(0xFF999999),
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // 后台登录：部门选择（仅后台显示）
+        if (_selectedUserType == 2) ...[
+          Align(
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: 300,
+              child: _buildDepartmentDropdown(),
             ),
           ),
           const SizedBox(height: 24),
+        ],
 
-          // 后台登录：部门选择（仅后台显示）
-          if (_selectedUserType == 2) ...[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: SizedBox(
-                width: 300,
-                child: _buildDepartmentDropdown(),
-              ),
-            ),
-            const SizedBox(height: 24),
-          ],
-
-          // 二维码占位
-          Container(
-            width: 160,
-            height: 160,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF5F5F5),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: const Color(0xFFE0E0E0),
-                width: 1,
-              ),
-            ),
-            child: const Center(
-              child: Icon(
-                Icons.qr_code_2,
-                size: 80,
-                color: Color(0xFF999999),
-              ),
+        // 二维码占位
+        Container(
+          width: 160,
+          height: 160,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF5F5F5),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: const Color(0xFFE0E0E0),
+              width: 1,
             ),
           ),
-          const SizedBox(height: 12),
-
-          // 【扫码登录】代表同意...
-          Wrap(
-            alignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              const Text(
-                '【扫码登录】代表同意',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF999999),
-                  height: 1.4,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  debugPrint('点击用户协议');
-                  // TODO: 跳转到用户协议页面
-                },
-                child: const Text(
-                  '《用户协议》',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFFD93025),
-                    height: 1.4,
-                  ),
-                ),
-              ),
-              const Text(
-                '、',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF999999),
-                  height: 1.4,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  debugPrint('点击隐私政策');
-                  // TODO: 跳转到隐私政策页面
-                },
-                child: const Text(
-                  '《隐私政策》',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFFD93025),
-                    height: 1.4,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-
-          // 其他登录方式
-          const Text(
-            '其他登录方式',
-            style: TextStyle(
-              fontSize: 12,
+          child: const Center(
+            child: Icon(
+              Icons.qr_code_2,
+              size: 80,
               color: Color(0xFF999999),
             ),
           ),
-          const SizedBox(height: 12),
+        ),
+        const SizedBox(height: 12),
 
-          // 图标按钮 + 注册按钮
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildLoginMethodIcon(
-                icon: Icons.person_outline,
-                label: '都达网账号',
-                isSelected: false,
-                onTap: () {
-                  setState(() {
-                    _selectedLoginMethod = 0;
-                  });
-                },
+        // 【扫码登录】代表同意...
+        Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            const Text(
+              '【扫码登录】代表同意',
+              style: TextStyle(
+                fontSize: 12,
+                color: Color(0xFF999999),
+                height: 1.4,
               ),
-              const SizedBox(width: 32),
-              _buildLoginMethodIcon(
-                icon: Icons.phone_outlined,
-                label: '手机登录',
-                isSelected: false,
-                onTap: () {
-                  setState(() {
-                    _selectedLoginMethod = 1;
-                  });
-                },
-              ),
-              const SizedBox(width: 32),
-              _buildLoginMethodIcon(
-                icon: Icons.wechat,
-                label: '微信登录',
-                isSelected: true,
-                onTap: () {
-                  // 已经是微信登录，不需要切换
-                },
-              ),
-              const SizedBox(width: 32),
-              // 注册按钮
-              MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () {
-                    debugPrint('点击注册');
-                    _showRegisterDialog();
-                  },
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: const Color(0xFFD93025),
-                        width: 1.5,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Text(
-                      '注册',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFFD93025),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+            ),
+            GestureDetector(
+              onTap: () {
+                debugPrint('点击用户协议');
+                // TODO: 跳转到用户协议页面
+              },
+              child: const Text(
+                '《用户协议》',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFFD93025),
+                  height: 1.4,
                 ),
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+            const Text(
+              '、',
+              style: TextStyle(
+                fontSize: 12,
+                color: Color(0xFF999999),
+                height: 1.4,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                debugPrint('点击隐私政策');
+                // TODO: 跳转到隐私政策页面
+              },
+              child: const Text(
+                '《隐私政策》',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFFD93025),
+                  height: 1.4,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
