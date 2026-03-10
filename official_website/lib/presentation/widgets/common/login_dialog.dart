@@ -191,9 +191,9 @@ class _LoginDialogState extends State<LoginDialog>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildTabItem('客户', 0),
-          _buildTabItem('商户', 1),
-          _buildTabItem('后台', 2),
+          _buildTabItem('都达用户账号', 0),
+          _buildTabItem('服务商户', 1),
+          _buildTabItem('管理', 2),
         ],
       ),
     );
