@@ -1029,7 +1029,7 @@ class _ProfilePageState extends State<ProfilePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            '我的租赁',
+            '我租赁的',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -1241,7 +1241,7 @@ class _ProfilePageState extends State<ProfilePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            '我的合作',
+            '我合作的',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,

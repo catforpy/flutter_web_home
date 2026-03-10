@@ -399,7 +399,7 @@ class _AuthWidgetState extends State<AuthWidget> {
           const SizedBox(height: 8),
           _buildMenuCard(
             icon: Icons.cottage_outlined,
-            label: '我的租赁',
+            label: '我租赁的',
             onTap: () {
               debugPrint('点击我的租赁');
               _removeOverlay();
@@ -409,7 +409,7 @@ class _AuthWidgetState extends State<AuthWidget> {
           const SizedBox(height: 8),
           _buildMenuCard(
             icon: Icons.handshake_outlined,
-            label: '我的合作',
+            label: '我合作的',
             onTap: () {
               debugPrint('点击我的合作');
               _removeOverlay();
