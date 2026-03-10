@@ -274,13 +274,6 @@ class _PurchasePageState extends State<PurchasePage>
 
   @override
   Widget build(BuildContext context) {
-    // 延迟执行动画，确保布局完成
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_showFilterSidebar) {
-        _filterAnimationController.forward();
-      }
-    });
-
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: Column(
