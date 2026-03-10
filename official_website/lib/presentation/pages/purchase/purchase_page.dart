@@ -442,7 +442,7 @@ class _PurchasePageState extends State<PurchasePage>
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // 均匀分布
+        mainAxisAlignment: MainAxisAlignment.center, // 居中显示
         children: _industries.map((industry) {
           final isSelected = _selectedIndustry?.id == industry.id;
           return MouseRegion(
@@ -457,6 +457,7 @@ class _PurchasePageState extends State<PurchasePage>
                 });
               },
               child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 12), // 使用固定的水平间距
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6), // 减少vertical padding
                 decoration: BoxDecoration(
                   color: isSelected
