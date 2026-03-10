@@ -503,7 +503,7 @@ class _PurchasePageState extends State<PurchasePage>
     return Container(
       height: 40,
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 120), // 增加左右边距
       child: Row(
         children: _selectedIndustry!.subCategories.map((category) {
           final isSelected = _selectedSubCategory == category;
@@ -540,7 +540,7 @@ class _PurchasePageState extends State<PurchasePage>
     return Container(
       height: 50,
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 120), // 增加左右边距
       child: Row(
         children: [
           // 左侧排序区
@@ -752,196 +752,9 @@ class _PurchasePageState extends State<PurchasePage>
     );
   }
 
-  /// 构建服务卡片
+  /// 构建服务卡片（使用案例页面的样式）
   Widget _buildServiceCard(ServiceCard card) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () {
-          debugPrint('点击服务：${card.title}');
-        },
-        child: Container(
-          width: 260,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 封面图
-              Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F5),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    topRight: Radius.circular(8),
-                  ),
-                ),
-                child: card.coverImage.isNotEmpty
-                    ? Image.network(
-                        card.coverImage,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Center(
-                            child: Icon(Icons.image, size: 48, color: Color(0xFFCCCCCC)),
-                          );
-                        },
-                      )
-                    : const Center(
-                        child: Icon(Icons.business_center, size: 48, color: Color(0xFFCCCCCC)),
-                      ),
-              ),
-
-              // 内容区域
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 标题
-                    Text(
-                      card.title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF333333),
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    // 标签行
-                    Wrap(
-                      spacing: 4,
-                      runSpacing: 4,
-                      children: card.tags.take(3).map((tag) {
-                        return Text(
-                          '#$tag',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Color(0xFF999999),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    // 服务商信息
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 10,
-                          backgroundColor: const Color(0xFF1890FF),
-                          child: Text(
-                            card.providerName.substring(0, 1),
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            card.providerName,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFF999999),
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFF5000).withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(2),
-                            border: Border.all(
-                              color: const Color(0xFFFF5000).withValues(alpha: 0.3),
-                            ),
-                          ),
-                          child: const Text(
-                            '企',
-                            style: TextStyle(
-                              fontSize: 9,
-                              color: Color(0xFFFF5000),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const Spacer(),
-
-                    // 底部栏
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // 价格/起订量
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '¥${card.price.toStringAsFixed(0)}',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFFFF5000),
-                              ),
-                            ),
-                            Text(
-                              '${card.priceUnit} · ${card.minOrder}起订',
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: Color(0xFF999999),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // 立即咨询按钮
-                        MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: GestureDetector(
-                            onTap: () {
-                              debugPrint('立即咨询：${card.title}');
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: const Color(0xFF1890FF)),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: const Text(
-                                '立即咨询',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFF1890FF),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    return _PurchaseServiceCard(serviceCard: card);
   }
 
   /// 构建空状态
@@ -973,39 +786,46 @@ class _PurchasePageState extends State<PurchasePage>
     return AnimatedBuilder(
       animation: _filterSlideAnimation,
       builder: (context, child) {
-        return Positioned(
-          right: 0,
-          top: 0,
-          bottom: 0,
-          child: GestureDetector(
-            onTap: () {
-              // 点击遮罩关闭侧边栏
-              setState(() {
-                _showFilterSidebar = false;
-                _filterAnimationController.reverse();
-              });
-            },
-            child: Container(
-              width: 300 + (320 * _filterSlideAnimation.value),
-              color: Colors.black.withValues(alpha: 0.5 * _filterSlideAnimation.value),
-              child: Stack(
-                children: [
-                  // 侧边栏内容
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
+        return GestureDetector(
+          onTap: () {
+            // 点击空白处关闭侧边栏
+            setState(() {
+              _showFilterSidebar = false;
+              _filterAnimationController.reverse();
+            });
+          },
+          child: Container(
+            color: Colors.black.withValues(alpha: 0.5 * _filterSlideAnimation.value),
+            child: Stack(
+              children: [
+                // 侧边栏主体
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: GestureDetector(
+                    onTap: () {}, // 阻止事件冒泡，不关闭侧边栏
                     child: Container(
-                      width: 300,
-                      color: Colors.white,
+                      width: 320,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0x1A000000),
+                            blurRadius: 10,
+                            offset: Offset(-2, 0),
+                          ),
+                        ],
+                      ),
                       child: Column(
                         children: [
-                          // 侧边栏标题
+                          // 标题栏
                           Container(
-                            padding: const EdgeInsets.all(16),
+                            height: 60,
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
                             decoration: const BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: Color(0xFFE0E0E0)),
+                                bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1),
                               ),
                             ),
                             child: Row(
@@ -1014,7 +834,7 @@ class _PurchasePageState extends State<PurchasePage>
                                 const Text(
                                   '筛选条件',
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF333333),
                                   ),
@@ -1030,8 +850,8 @@ class _PurchasePageState extends State<PurchasePage>
                                     },
                                     child: const Icon(
                                       Icons.close,
-                                      size: 20,
-                                      color: Color(0xFF666666),
+                                      size: 24,
+                                      color: Color(0xFF999999),
                                     ),
                                   ),
                                 ),
@@ -1039,25 +859,41 @@ class _PurchasePageState extends State<PurchasePage>
                             ),
                           ),
 
-                          // 筛选项内容
+                          // 筛选内容区（可滚动）
                           Expanded(
-                            child: ListView(
-                              padding: const EdgeInsets.all(16),
-                              children: [
-                                _buildFilterSection('所在地', ['全国', '北京', '上海', '深圳', '杭州']),
-                                _buildFilterSection('服务等级', ['全部', '金牌服务商', '银牌服务商', '认证服务商']),
-                                _buildFilterSection('认证类型', ['全部', '企业认证', '个人认证', '实名认证']),
-                                _buildFilterSection('价格区间', ['全部', '1000以下', '1000-5000', '5000-10000', '10000以上']),
-                              ],
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.all(24),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // 价格区间
+                                  _buildFilterSection('价格区间', ['不限', '100以下', '100-500', '500-1000', '1000以上']),
+
+                                  const SizedBox(height: 24),
+
+                                  // 服务评分
+                                  _buildFilterSection('服务评分', ['不限', '4星以上', '5星']),
+
+                                  const SizedBox(height: 24),
+
+                                  // 起订量
+                                  _buildFilterSection('起订量', ['不限', '1件起', '10件起', '100件起']),
+
+                                  const SizedBox(height: 24),
+
+                                  // 服务商类型
+                                  _buildFilterSection('服务商类型', ['不限', '个人', '企业', '旗舰店']),
+                                ],
+                              ),
                             ),
                           ),
 
-                          // 底部操作按钮
+                          // 底部按钮区
                           Container(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(24),
                             decoration: const BoxDecoration(
                               border: Border(
-                                top: BorderSide(color: Color(0xFFE0E0E0)),
+                                top: BorderSide(color: Color(0xFFE0E0E0), width: 1),
                               ),
                             ),
                             child: Row(
@@ -1067,55 +903,56 @@ class _PurchasePageState extends State<PurchasePage>
                                     cursor: SystemMouseCursors.click,
                                     child: GestureDetector(
                                       onTap: () {
-                                        // 重置筛选
                                         setState(() {
                                           _selectedTags.clear();
                                         });
                                       },
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                        height: 44,
                                         decoration: BoxDecoration(
                                           border: Border.all(color: const Color(0xFFE0E0E0)),
                                           borderRadius: BorderRadius.circular(4),
                                         ),
-                                        child: const Text(
-                                          '重置',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Color(0xFF666666),
+                                        child: const Center(
+                                          child: Text(
+                                            '重置',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Color(0xFF666666),
+                                            ),
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 12),
+                                const SizedBox(width: 16),
                                 Expanded(
+                                  flex: 2,
                                   child: MouseRegion(
                                     cursor: SystemMouseCursors.click,
                                     child: GestureDetector(
                                       onTap: () {
-                                        // 应用筛选
                                         setState(() {
                                           _showFilterSidebar = false;
                                           _filterAnimationController.reverse();
                                         });
                                       },
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                        height: 44,
                                         decoration: BoxDecoration(
                                           color: const Color(0xFF1890FF),
                                           borderRadius: BorderRadius.circular(4),
                                         ),
-                                        child: const Text(
-                                          '确定',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
+                                        child: const Center(
+                                          child: Text(
+                                            '应用筛选',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
                                       ),
                                     ),
@@ -1128,8 +965,8 @@ class _PurchasePageState extends State<PurchasePage>
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
@@ -1137,7 +974,7 @@ class _PurchasePageState extends State<PurchasePage>
     );
   }
 
-  /// 构建筛选区域
+  /// 构建筛选区块
   Widget _buildFilterSection(String title, List<String> options) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1145,8 +982,8 @@ class _PurchasePageState extends State<PurchasePage>
         Text(
           title,
           style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
             color: Color(0xFF333333),
           ),
         ),
@@ -1155,24 +992,27 @@ class _PurchasePageState extends State<PurchasePage>
           spacing: 8,
           runSpacing: 8,
           children: options.map((option) {
+            final isSelected = false;
             return MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () {
-                  // TODO: 应用筛选
-                  debugPrint('筛选：$option');
+                  // TODO: 实现筛选逻辑
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFE0E0E0)),
+                    color: isSelected ? const Color(0xFF1890FF).withValues(alpha: 0.1) : Colors.white,
+                    border: Border.all(
+                      color: isSelected ? const Color(0xFF1890FF) : const Color(0xFFE0E0E0),
+                    ),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     option,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFF666666),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isSelected ? const Color(0xFF1890FF) : const Color(0xFF333333),
                     ),
                   ),
                 ),
@@ -1180,8 +1020,312 @@ class _PurchasePageState extends State<PurchasePage>
             );
           }).toList(),
         ),
-        const SizedBox(height: 20),
       ],
+    );
+  }
+}
+
+/// 服务卡片组件（使用案例页面的样式，带鼠标跟随效果）
+class _PurchaseServiceCard extends StatefulWidget {
+  final ServiceCard serviceCard;
+
+  const _PurchaseServiceCard({required this.serviceCard});
+
+  @override
+  State<_PurchaseServiceCard> createState() => _PurchaseServiceCardState();
+}
+
+class _PurchaseServiceCardState extends State<_PurchaseServiceCard>
+    with SingleTickerProviderStateMixin {
+  bool _isHovered = false;
+  Offset _mousePosition = Offset.zero;
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    )..repeat();
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.3).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _opacityAnimation = Tween<double>(begin: 0.8, end: 0.3).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      onHover: (event) {
+        if (_isHovered) {
+          RenderBox? box = context.findRenderObject() as RenderBox?;
+          if (box != null) {
+            final localPosition = box.globalToLocal(event.position);
+            if ((localPosition - _mousePosition).distance > 10) {
+              setState(() {
+                _mousePosition = localPosition;
+              });
+            }
+          }
+        }
+      },
+      child: GestureDetector(
+        onTap: () {
+          debugPrint('点击服务：${widget.serviceCard.title}');
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
+          height: 380,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: _isHovered ? 0.15 : 0.08),
+                blurRadius: _isHovered ? 20 : 12,
+                offset: Offset(0, _isHovered ? 8 : 4),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Stack(
+              children: [
+                // 背景图片
+                Positioned.fill(
+                  child: Image.network(
+                    widget.serviceCard.coverImage.isNotEmpty
+                        ? widget.serviceCard.coverImage
+                        : 'https://picsum.photos/260/380?random=${widget.serviceCard.id}',
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey.withValues(alpha: 0.2),
+                        child: const Center(
+                          child: Icon(Icons.business_center, size: 48, color: Colors.grey),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                // 半透明蒙层（悬停时显示）
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  color: _isHovered
+                      ? Colors.black.withValues(alpha: 0.3)
+                      : Colors.transparent,
+                ),
+
+                // 鼠标跟随的红色光圈（悬停时显示）
+                if (_isHovered)
+                  Positioned(
+                    left: _mousePosition.dx - 30,
+                    top: _mousePosition.dy - 40,
+                    child: AnimatedBuilder(
+                      animation: _controller,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: _scaleAnimation.value,
+                          child: Opacity(
+                            opacity: _opacityAnimation.value,
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: const RadialGradient(
+                                  colors: [
+                                    Color(0xFFFF6B6B),
+                                    Color(0xFFD93025),
+                                  ],
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFFD93025).withValues(alpha: 0.6),
+                                    blurRadius: 15,
+                                    spreadRadius: 5,
+                                  ),
+                                ],
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  '咨询',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                // 内容层
+                Positioned.fill(
+                  child: Padding(
+                    padding: EdgeInsets.all(_isHovered ? 20 : 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // 左上角：服务商Logo
+                        AnimatedScale(
+                          scale: _isHovered ? 0.75 : 1.0,
+                          duration: const Duration(milliseconds: 180),
+                          curve: Curves.easeOut,
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.2),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                widget.serviceCard.providerName.substring(0, 1),
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1890FF),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // 底部信息
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // 标签行（悬停时显示）
+                            AnimatedSize(
+                              duration: const Duration(milliseconds: 180),
+                              curve: Curves.easeOut,
+                              child: _isHovered
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(bottom: 8),
+                                      child: Wrap(
+                                        spacing: 4,
+                                        runSpacing: 4,
+                                        children: widget.serviceCard.tags.take(3).map((tag) {
+                                          return Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white.withValues(alpha: 0.2),
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            child: Text(
+                                              tag,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
+                            ),
+
+                            // 标题 + 价格 Row
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.serviceCard.title,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        widget.serviceCard.providerName,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      '¥${widget.serviceCard.price.toStringAsFixed(0)}',
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${widget.serviceCard.priceUnit}起',
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
