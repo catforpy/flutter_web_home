@@ -101,12 +101,94 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
     final tabParam = state.uri.queryParameters['tab'];
     debugPrint('========== _updateSelectedTabFromRoute: tabParam = $tabParam ==========');
     if (tabParam != null && tabParam != _selectedSubMenuItem) {
+      // 查找tabParam对应的父菜单
+      final parentMenu = _findParentMenuForSubItem(tabParam);
+
       setState(() {
-        _selectedMenuItem = tabParam;
+        // 更新父菜单和子菜单的选中状态
+        _selectedMenuItem = parentMenu ?? tabParam;
         _selectedSubMenuItem = tabParam;
-        debugPrint('========== _selectedSubMenuItem 更新为: $tabParam ==========');
+
+        // 确保父菜单是展开的
+        if (parentMenu != null) {
+          _expandedMenus.add(parentMenu);
+        }
+
+        debugPrint('========== _selectedMenuItem 更新为: $_selectedMenuItem ==========');
+        debugPrint('========== _selectedSubMenuItem 更新为: $_selectedSubMenuItem ==========');
       });
     }
+  }
+
+  /// 查找子菜单项对应的父菜单
+  String? _findParentMenuForSubItem(String subItem) {
+    // 定义子菜单到父菜单的映射关系
+    final Map<String, String> subItemToParent = {
+      // 小程序管理
+      '开发设置': '小程序管理',
+      '审核管理': '小程序管理',
+      '菜单导航': '小程序管理',
+      '订阅消息': '小程序管理',
+      '跳转小程序': '小程序管理',
+      '开发者模式': '小程序管理',
+      // 配置管理
+      '支付配置': '配置管理',
+      '分享海报设置': '配置管理',
+      '客服设置': '配置管理',
+      '短信设置': '配置管理',
+      '音视频存储': '配置管理',
+      '广告位配置': '配置管理',
+      // 模块管理
+      '文章管理': '模块管理',
+      '留言管理': '模块管理',
+      '启动图管理': '模块管理',
+      '活动页配置': '模块管理',
+      '经典语录管理': '模块管理',
+      // 页面管理
+      '导航页面管理': '页面管理',
+      '功能页面管理': '页面管理',
+      '个人中心管理': '页面管理',
+      // 课程管理
+      '课程分类': '课程管理',
+      '课程列表': '课程管理',
+      '讲师管理': '课程管理',
+      '课程问答管理': '课程管理',
+      '评论管理': '课程管理',
+      // 订单管理
+      '课程订单': '订单管理',
+      '商品订单': '订单管理',
+      '租赁业务订单': '订单管理',
+      // 商城管理
+      '货架管理': '商城管理',
+      '我的仓库': '商城管理',
+      '商品评价': '商城管理',
+      '运费模板': '商城管理',
+      '订单设置': '商城管理',
+      // 用户管理
+      '用户列表': '用户管理',
+      '用户分类': '用户管理',
+      '用户等级': '用户管理',
+      '签到记录': '用户管理',
+      '搜索历史管理': '用户管理',
+      // 客服管理
+      '售后处理': '客服管理',
+      '维权订单': '客服管理',
+      '客服话术': '客服管理',
+      '咨询记录': '客服管理',
+      // 业务管理
+      '租赁管理': '业务管理',
+      '合作管理': '业务管理',
+      // 会员卡管理
+      '会员卡': '会员卡管理',
+      '储值卡': '会员卡管理',
+      '会员对话码': '会员卡管理',
+      // 营销工具
+      '优惠券': '营销工具',
+      '拼团': '营销工具',
+      '秒杀': '营销工具',
+    };
+
+    return subItemToParent[subItem];
   }
 
   @override
@@ -365,10 +447,23 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
                   child: GestureDetector(
                     onTap: () {
                       debugPrint('========== 点击子菜单：$subItem ==========');
-                      // 更新选中状态
+                      // 查找父菜单
+                      final parentMenu = _findParentMenuForSubItem(subItem);
+
                       setState(() {
+                        // 更新父菜单和子菜单的选中状态
+                        _selectedMenuItem = parentMenu ?? label;
                         _selectedSubMenuItem = subItem;
+
+                        // 确保父菜单是展开的
+                        if (parentMenu != null) {
+                          _expandedMenus.add(parentMenu);
+                        }
+
+                        debugPrint('========== _selectedMenuItem: $_selectedMenuItem ==========');
+                        debugPrint('========== _selectedSubMenuItem: $_selectedSubMenuItem ==========');
                       });
+
                       // 更新URL的query parameter
                       context.push('${AppRouter.merchantDashboard}?tab=$subItem');
                     },
