@@ -165,22 +165,34 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
                 ),
               ),
 
-              // 4. 主内容区 + 侧边栏（白色背景，向上覆盖）
+              // 4. 主内容区 + 项目服务卡片 + 侧边栏（三个独立卡片，向上覆盖）
               SliverToBoxAdapter(
                 child: Transform.translate(
                   offset: const Offset(0, -400),
-                  child: Container(
-                    color: Colors.white,
-                    child: Center(
-                      child: Container(
-                        constraints: const BoxConstraints(maxWidth: 1800),
-                        child: Row(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 60),
+                    child: Column(
+                      children: [
+                        // 三个独立卡片并排显示
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // 左侧：主内容区
+                            // 左侧：主内容区（独立白色卡片）
                             Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(60),
+                              child: Container(
+                                margin: const EdgeInsets.only(top: 60),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.06),
+                                      blurRadius: 16,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                padding: const EdgeInsets.all(40),
                                 child: Column(
                                   children: [
                                     _buildCaseImageSection(),
@@ -190,7 +202,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
                                     _buildProjectResultsSection(),
                                     _buildUserReviewsSection(),
                                     _buildEffectShowcaseSection(),
-                                    _buildServicesSection(),
                                     _buildMoreCasesSection(),
                                     _buildAdvantagesSection(),
                                     _buildCTASection(),
@@ -200,19 +211,19 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
                               ),
                             ),
 
-                            const SizedBox(width: 40),
+                            const SizedBox(width: 20),
 
-                            // 右侧：Sticky侧边栏
+                            // 右侧：Sticky侧边栏（更宽，独立白色卡片）
                             SizedBox(
-                              width: 280,
+                              width: 450, // 从280px增加到450px，更宽
                               child: Padding(
-                                padding: const EdgeInsets.only(right: 60, top: 60),
+                                padding: const EdgeInsets.only(top: 60),
                                 child: _buildStickySidebar(),
                               ),
                             ),
                           ],
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ),
