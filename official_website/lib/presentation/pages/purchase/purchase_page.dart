@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:official_website/presentation/pages/purchase/service_detail_page.dart';
 
 /// 行业分类数据模型
 class IndustryCategory {
@@ -1119,6 +1120,17 @@ class _PurchaseServiceCardState extends State<_PurchaseServiceCard>
       child: GestureDetector(
         onTap: () {
           debugPrint('点击服务：${widget.serviceCard.title}');
+          // 导航到详情页
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ServiceDetailPage(
+                serviceId: widget.serviceCard.id,
+                title: widget.serviceCard.title,
+                providerName: widget.serviceCard.providerName,
+              ),
+            ),
+          );
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
