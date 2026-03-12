@@ -26,6 +26,9 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
   // 记录滚动位置，用于判断滚动方向
   double _lastScrollOffset = 0;
 
+  // 右侧卡片区域的粘滞动画状态
+  double _rightSidebarOffset = 0.0;
+
   @override
   void initState() {
     super.initState();
@@ -57,6 +60,51 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
       } else if (offset < 20) {
         _isNavbarTransparent = true;
         _isNavbarShrunk = false;
+      }
+
+      // 右侧卡片的粘滞动画逻辑
+      const double mainContentOffset = 400.0; // 主内容区向上偏移（Transform.translate）
+      const double stickyTopPosition = 100.0; // 吸顶时距离屏幕顶部
+      const double rightCardInitialTop = 60.0; // 右侧卡片初始 top
+      const double screenHeight = 900.0; // 屏幕高度
+      const double mainContentHeight = 7000.0; // 主内容高度（估计）
+
+      // 阶段1: offset < 400
+      // 右侧卡片跟随主内容一起移动（相对位置不变）
+      // 实际上什么都不用做，因为它们在同一个 Stack 里
+
+      // 阶段2: 400 <= offset < 6700 (约)
+      // 右侧卡片吸顶在导航栏下方
+      // 需要计算正确的 offset
+
+      // 阶段3: offset >= 6700
+      // 右侧卡片底部和主内容底部对齐，一起滑出
+
+      if (offset < mainContentOffset) {
+        // 阶段1: 跟随滚动
+        // 右侧卡片和主内容区域在同一个 Stack 里，初始 top 都是 60
+        // 它们会自然地保持相对位置，一起随滚动移动
+        // 不需要任何额外的 offset！
+        _rightSidebarOffset = 0.0;
+      } else if (offset >= mainContentOffset && offset < mainContentHeight - screenHeight + stickyTopPosition) {
+        // 阶段2: 吸顶固定
+        // 右侧卡片要固定在距离屏幕顶部 stickyTopPosition (100px) 的位置
+        // Stack 已经向上滚动了 offset
+        // 右侧卡片实际屏幕位置 = rightCardInitialTop + _rightSidebarOffset - offset
+        // 设实际位置 = stickyTopPosition：
+        // 60 + _rightSidebarOffset - offset = 100
+        // _rightSidebarOffset = 100 + offset - 60 = offset + 40
+        _rightSidebarOffset = stickyTopPosition + offset - rightCardInitialTop;
+      } else {
+        // 阶段3: 底部对齐，一起滑出
+        final double stage3StartOffset = mainContentHeight - screenHeight + stickyTopPosition;
+        final double extraScroll = offset - stage3StartOffset;
+
+        // 在阶段3开始时的 offset
+        final double baseOffset = stickyTopPosition + stage3StartOffset - rightCardInitialTop;
+
+        // 继续向上移动
+        _rightSidebarOffset = baseOffset - extraScroll;
       }
 
       _lastScrollOffset = offset;
@@ -165,65 +213,64 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
                 ),
               ),
 
-              // 4. 主内容区 + 项目服务卡片 + 侧边栏（三个独立卡片，向上覆盖）
+              // 4. 主内容区 + 右侧卡片区域（使用Stack分层）
               SliverToBoxAdapter(
                 child: Transform.translate(
                   offset: const Offset(0, -400),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 60),
-                    child: Column(
-                      children: [
-                        // 三个独立卡片并排显示
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // 左侧：主内容区（独立白色卡片）
-                            Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(top: 60),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.06),
-                                      blurRadius: 16,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                padding: const EdgeInsets.all(40),
-                                child: Column(
-                                  children: [
-                                    _buildCaseImageSection(),
-                                    _buildProjectIntroSection(),
-                                    _buildCoreFeaturesSection(),
-                                    _buildTechArchitectureSection(),
-                                    _buildProjectResultsSection(),
-                                    _buildUserReviewsSection(),
-                                    _buildEffectShowcaseSection(),
-                                    _buildMoreCasesSection(),
-                                    _buildAdvantagesSection(),
-                                    _buildCTASection(),
-                                    _buildFooterSection(),
-                                  ],
-                                ),
+                    child: SizedBox(
+                      // 指定高度，让Stack有边界
+                      height: 8000, // 预估高度，包含主内容区和侧边栏
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          // 层1: 主内容区域（右侧留空 470px = 450px卡片 + 20px gap）
+                          Positioned(
+                            left: 0,
+                            right: 470, // 右侧留空
+                            top: 0,
+                            bottom: 0,
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 60),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.06),
+                                    blurRadius: 16,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              padding: const EdgeInsets.all(40),
+                              child: Column(
+                                children: [
+                                  _buildCaseImageSection(),
+                                  _buildProjectIntroSection(),
+                                  _buildCoreFeaturesSection(),
+                                  _buildTechArchitectureSection(),
+                                  _buildProjectResultsSection(),
+                                  _buildUserReviewsSection(),
+                                  _buildEffectShowcaseSection(),
+                                  _buildMoreCasesSection(),
+                                  _buildAdvantagesSection(),
+                                  _buildCTASection(),
+                                  _buildFooterSection(),
+                                ],
                               ),
                             ),
+                          ),
 
-                            const SizedBox(width: 20),
-
-                            // 右侧：Sticky侧边栏（更宽，独立白色卡片）
-                            SizedBox(
-                              width: 450, // 从280px增加到450px，更宽
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 60),
-                                child: _buildStickySidebar(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                          // 层2: 右侧卡片区域（一个完整的白色卡片）
+                          Positioned(
+                            right: 0,
+                            top: 60 + _rightSidebarOffset, // 初始位置 top: 60，加上滚动偏移
+                            child: _buildRightSidebarCard(),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -336,49 +383,10 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
     );
   }
 
-  /// 主内容（包含主内容区和侧边栏）
-  Widget _buildMainContent() {
+  /// 构建右侧卡片（一个完整的白色卡片，包含所有内容）
+  Widget _buildRightSidebarCard() {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 1800),
-      padding: const EdgeInsets.symmetric(horizontal: 60),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 左侧主内容
-          Expanded(
-            child: Column(
-              children: [
-                _buildCaseImageSection(),
-                _buildProjectIntroSection(),
-                _buildCoreFeaturesSection(),
-                _buildTechArchitectureSection(),
-                _buildProjectResultsSection(),
-                _buildUserReviewsSection(),
-                _buildEffectShowcaseSection(),
-                _buildServicesSection(),
-                _buildMoreCasesSection(),
-                _buildAdvantagesSection(),
-                _buildCTASection(),
-                _buildFooterSection(),
-              ],
-            ),
-          ),
-
-          const SizedBox(width: 40),
-
-          // 5. 右侧Sticky侧边栏
-          SizedBox(
-            width: 280,
-            child: _buildStickySidebar(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 5. Sticky侧边栏
-  Widget _buildStickySidebar() {
-    return Container(
+      width: 450,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -390,62 +398,13 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
           ),
         ],
       ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 项目服务
-            _buildSidebarSection(
-              '项目服务',
-              [
-                '原创视觉设计',
-                '交互体验优化',
-                '响应式布局',
-                '性能优化',
-                '数据可视化',
-                '智能推荐算法',
-                '实时位置服务',
-                '多端适配',
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // 探索更多
-            _buildExploreMore(),
-
-            const SizedBox(height: 24),
-
-            // 案例导航
-            _buildCaseNavigation(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSidebarSection(String title, List<String> items) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 24),
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE8E8E8)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 项目服务部分
           Text(
-            title,
+            '项目服务',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -453,7 +412,16 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
             ),
           ),
           const SizedBox(height: 16),
-          ...items.map((item) => Padding(
+          ...[
+            '原创视觉设计',
+            '交互体验优化',
+            '响应式布局',
+            '性能优化',
+            '数据可视化',
+            '智能推荐算法',
+            '实时位置服务',
+            '多端适配',
+          ].map((item) => Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Row(
                   children: [
@@ -475,33 +443,13 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
                   ],
                 ),
               )),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildExploreMore() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 24),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE8E8E8)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
+          const SizedBox(height: 24),
+
+          // 探索更多部分
+          Text(
             '探索更多',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Color(0xFF333333),
@@ -513,6 +461,51 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
           _buildExploreButton('技术方案', Icons.code_outlined),
           const SizedBox(height: 12),
           _buildExploreButton('联系我们', Icons.contact_phone_outlined),
+
+          const SizedBox(height: 24),
+
+          // 案例导航部分
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF1890FF), Color(0xFF40A9FF)],
+              ),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF1890FF).withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '案例导航',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildNavButton('上一个', Icons.arrow_back_ios_new, () {}),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildNavButton('下一个', Icons.arrow_forward_ios, () {}),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -543,50 +536,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildCaseNavigation() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1890FF), Color(0xFF40A9FF)],
-        ),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF1890FF).withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            '案例导航',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: _buildNavButton('上一个', Icons.arrow_back_ios_new, () {}),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildNavButton('下一个', Icons.arrow_forward_ios, () {}),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
@@ -1011,65 +960,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
                 ),
               );
             }),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildServicesSection() {
-    final services = [
-      '界面设计', '交互开发', '数据集成', '测试部署',
-      '性能优化', '用户培训', '技术支持', '持续迭代',
-    ];
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 60),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            '项目服务',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF333333)),
-          ),
-          const SizedBox(height: 32),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              childAspectRatio: 2.5,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-            ),
-            itemCount: services.length,
-            itemBuilder: (context, index) {
-              return Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFE8E8E8)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    services[index],
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF333333),
-                    ),
-                  ),
-                ),
-              );
-            },
           ),
         ],
       ),
