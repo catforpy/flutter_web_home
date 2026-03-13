@@ -270,26 +270,28 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
                 children: [
                   // 背景图片
                   Positioned.fill(
-                    child: Image.asset(
-                      'assets/284a0007c2c9e73207ff885f70fa4c40.jpeg',
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Color(0xFF52C41A),
-                                Color(0xFFD4B106),
-                                Color(0xFFFAFAFA),
-                                Colors.white,
-                              ],
-                              stops: [0.0, 0.3, 0.7, 1.0],
+                    child: IgnorePointer(
+                      child: Image.asset(
+                        'assets/284a0007c2c9e73207ff885f70fa4c40.jpeg',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Color(0xFF52C41A),
+                                  Color(0xFFD4B106),
+                                  Color(0xFFFAFAFA),
+                                  Colors.white,
+                                ],
+                                stops: [0.0, 0.3, 0.7, 1.0],
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
 
@@ -310,18 +312,20 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    child: Container(
-                      height: 400,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.white.withValues(alpha: 0.0),
-                            Colors.white.withValues(alpha: 0.3),
-                            Colors.white.withValues(alpha: 0.7),
-                            Colors.white,
-                          ],
+                    child: IgnorePointer(
+                      child: Container(
+                        height: 400,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.white.withValues(alpha: 0.0),
+                              Colors.white.withValues(alpha: 0.3),
+                              Colors.white.withValues(alpha: 0.7),
+                              Colors.white,
+                            ],
+                          ),
                         ),
                       ),
                     ),
