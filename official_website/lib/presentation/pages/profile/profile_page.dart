@@ -25,6 +25,9 @@ class _ProfilePageState extends State<ProfilePage> {
   // 注册小程序弹窗控制
   bool _showRegisterMiniProgramDialog = false;
 
+  // 添加公司弹窗控制
+  bool _showAddCompanyDialog = false;
+
   @override
   void initState() {
     super.initState();
@@ -115,6 +118,28 @@ class _ProfilePageState extends State<ProfilePage> {
                 onClose: () {
                   setState(() {
                     _showRegisterMiniProgramDialog = false;
+                  });
+                },
+              ),
+
+            // 添加公司弹窗
+            if (_showAddCompanyDialog)
+              AddCompanyDialog(
+                onSubmit: (companyInfo) {
+                  setState(() {
+                    _showAddCompanyDialog = false;
+                  });
+                  // TODO: 保存公司信息到后端
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('公司信息已提交'),
+                      backgroundColor: Color(0xFF52C41A),
+                    ),
+                  );
+                },
+                onClose: () {
+                  setState(() {
+                    _showAddCompanyDialog = false;
                   });
                 },
               ),
@@ -461,7 +486,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onTap: () {
-                    // TODO: 添加公司
+                    setState(() {
+                      _showAddCompanyDialog = true;
+                    });
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -1302,5 +1329,494 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+}
 
+/// 添加公司弹窗
+class AddCompanyDialog extends StatefulWidget {
+  final Function(Map<String, dynamic>) onSubmit;
+  final VoidCallback onClose;
+
+  const AddCompanyDialog({
+    super.key,
+    required this.onSubmit,
+    required this.onClose,
+  });
+
+  @override
+  State<AddCompanyDialog> createState() => _AddCompanyDialogState();
+}
+
+class _AddCompanyDialogState extends State<AddCompanyDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _companyNameController = TextEditingController();
+  final _creditCodeController = TextEditingController();
+  final _legalPersonNameController = TextEditingController();
+  final _legalPersonPhoneController = TextEditingController();
+  final _managerNameController = TextEditingController();
+  final _managerPhoneController = TextEditingController();
+  final _businessScopeController = TextEditingController();
+
+  String _companyType = '企业'; // 企业或个体工商户
+  String? _businessLicensePath;
+  String? _idCardPath;
+
+  @override
+  void dispose() {
+    _companyNameController.dispose();
+    _creditCodeController.dispose();
+    _legalPersonNameController.dispose();
+    _legalPersonPhoneController.dispose();
+    _managerNameController.dispose();
+    _managerPhoneController.dispose();
+    _businessScopeController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: GestureDetector(
+        onTap: widget.onClose,
+        child: Container(
+          color: Colors.black.withValues(alpha: 0.5),
+          width: double.infinity,
+          height: double.infinity,
+          child: Center(
+            child: GestureDetector(
+              onTap: () {}, // 阻止冒泡
+              child: Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 600,
+                  minWidth: 400,
+                  maxHeight: 700,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 标题栏
+                    _buildHeader(),
+
+                    // 内容区
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildCompanyTypeSelector(),
+                              const SizedBox(height: 20),
+                              _buildTextField('企业名称', '请输入企业名称', _companyNameController, required: true),
+                              const SizedBox(height: 16),
+                              _buildTextField('统一社会信用代码', '请输入18位统一社会信用代码', _creditCodeController,
+                                required: true,
+                                maxLength: 18,
+                                inputType: TextInputType.text),
+                              const SizedBox(height: 16),
+                              _buildUploadField('营业执照照片', _businessLicensePath, () {
+                                // TODO: 上传营业执照
+                                setState(() {
+                                  _businessLicensePath = 'placeholder';
+                                });
+                              }),
+                              const SizedBox(height: 16),
+                              _buildTextField('法人姓名', '请输入法人姓名', _legalPersonNameController, required: true),
+                              const SizedBox(height: 16),
+                              _buildUploadField('法人身份证', _idCardPath, () {
+                                // TODO: 上传身份证
+                                setState(() {
+                                  _idCardPath = 'placeholder';
+                                });
+                              }),
+                              const SizedBox(height: 16),
+                              _buildTextField('法人手机号', '请输入法人手机号', _legalPersonPhoneController,
+                                required: true,
+                                inputType: TextInputType.phone),
+                              const SizedBox(height: 16),
+                              _buildTextField('管理人员姓名', '请输入管理人员姓名', _managerNameController, required: true),
+                              const SizedBox(height: 16),
+                              _buildTextField('管理人员手机号', '请输入管理人员手机号', _managerPhoneController,
+                                required: true,
+                                inputType: TextInputType.phone),
+                              const SizedBox(height: 16),
+                              _buildTextareaField('经营范围', '请输入经营范围（可选）', _businessScopeController,
+                                maxLines: 3,
+                                maxLength: 500),
+                              const SizedBox(height: 20),
+                              _buildTipsBox(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // 底部按钮
+                    _buildFooter(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Color(0xFFF0F0F0), width: 1),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              const Text(
+                '添加公司',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF333333),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF7E6),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: const Color(0xFFFFA940)),
+                ),
+                child: const Text(
+                  '未完善',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFFFFA940),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: widget.onClose,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCompanyTypeSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '企业类型',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF333333),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            _buildTypeRadio('企业', '企业'),
+            const SizedBox(width: 32),
+            _buildTypeRadio('个体工商户', '个体工商户'),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTypeRadio(String label, String value) {
+    return Row(
+      children: [
+        Radio<String>(
+          value: value,
+          groupValue: _companyType,
+          onChanged: (value) {
+            setState(() {
+              _companyType = value!;
+            });
+          },
+          activeColor: const Color(0xFF1890FF),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            color: _companyType == value ? const Color(0xFF333333) : const Color(0xFF666666),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextField(
+    String label,
+    String hint,
+    TextEditingController controller, {
+    bool required = false,
+    int? maxLength,
+    TextInputType? inputType,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$label${required ? " *" : ""}',
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF333333),
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          keyboardType: inputType,
+          maxLength: maxLength,
+          validator: (value) {
+            if (required && (value == null || value.isEmpty)) {
+              return '请输入$label';
+            }
+            if (label.contains('手机号') && value != null && value.isNotEmpty) {
+              final phoneRegex = RegExp(r'^1[3-9]\d{9}$');
+              if (!phoneRegex.hasMatch(value)) {
+                return '请输入正确的手机号码';
+              }
+            }
+            if (label.contains('信用代码') && value != null && value.isNotEmpty) {
+              if (value.length != 18) {
+                return '统一社会信用代码应为18位';
+              }
+            }
+            return null;
+          },
+          style: const TextStyle(color: Color(0xFF333333)),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: const TextStyle(color: Color(0xFF999999)),
+            filled: true,
+            fillColor: Colors.white,
+            border: const OutlineInputBorder(),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFE0E0E0)),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF1890FF)),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 12,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextareaField(
+    String label,
+    String hint,
+    TextEditingController controller, {
+    int maxLines = 3,
+    int? maxLength,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF333333),
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          maxLines: maxLines,
+          maxLength: maxLength,
+          style: const TextStyle(color: Color(0xFF333333)),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: const TextStyle(color: Color(0xFF999999)),
+            filled: true,
+            fillColor: Colors.white,
+            border: const OutlineInputBorder(),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFE0E0E0)),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF1890FF)),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 12,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUploadField(String label, String? filePath, VoidCallback onUpload) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$label *',
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF333333),
+          ),
+        ),
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: onUpload,
+          child: Container(
+            height: 120,
+            decoration: BoxDecoration(
+              color: filePath != null ? const Color(0xFFF5F5F5) : Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: filePath != null ? const Color(0xFF1890FF) : const Color(0xFFE0E0E0),
+                width: 1,
+              ),
+            ),
+            child: filePath != null
+                ? const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.check_circle, size: 40, color: Color(0xFF52C41A)),
+                        SizedBox(height: 8),
+                        Text('已上传', style: TextStyle(color: Color(0xFF52C41A))),
+                      ],
+                    ),
+                  )
+                : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.upload_file, size: 32, color: Color(0xFF999999)),
+                        const SizedBox(height: 8),
+                        Text('点击上传', style: TextStyle(color: Color(0xFF999999))),
+                      ],
+                    ),
+                  ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTipsBox() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF7E6),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: const Color(0xFFFFA940)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text(
+            '⚠️ 温馨提示',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFFFFA940),
+            ),
+          ),
+          SizedBox(height: 8),
+          Text('• 当前未进行实名验证和银行卡信息填写', style: TextStyle(fontSize: 12, color: Color(0xFF666666))),
+          Text('• 提交后可在公司详情页继续完善', style: TextStyle(fontSize: 12, color: Color(0xFF666666))),
+          Text('• 经营范围为可选，后续可上传资质后添加', style: TextStyle(fontSize: 12, color: Color(0xFF666666))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooter() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: const BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Color(0xFFF0F0F0), width: 1),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          TextButton(
+            onPressed: widget.onClose,
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            ),
+            child: const Text(
+              '取消',
+              style: TextStyle(fontSize: 14),
+            ),
+          ),
+          const SizedBox(width: 16),
+          ElevatedButton(
+            onPressed: _submitForm,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1890FF),
+              disabledBackgroundColor: const Color(0xFFCCCCCC),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+            ),
+            child: const Text(
+              '提交',
+              style: TextStyle(fontSize: 14, color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _submitForm() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final companyInfo = {
+      'companyType': _companyType,
+      'companyName': _companyNameController.text,
+      'creditCode': _creditCodeController.text,
+      'legalPersonName': _legalPersonNameController.text,
+      'legalPersonPhone': _legalPersonPhoneController.text,
+      'managerName': _managerNameController.text,
+      'managerPhone': _managerPhoneController.text,
+      'businessScope': _businessScopeController.text,
+      'businessLicensePath': _businessLicensePath,
+      'idCardPath': _idCardPath,
+    };
+
+    widget.onSubmit(companyInfo);
+  }
 }
