@@ -442,16 +442,16 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildMyCompanyTab() {
     return Column(
       children: [
-        // 第一行：我的公司
+        // 第一行：项目展厅
+        _buildMyAppSection(),
+        const SizedBox(height: 24),
+
+        // 第二行：我的公司
         _buildMyCompanySection(),
         const SizedBox(height: 24),
 
-        // 第二行：我的小程序
+        // 第三行：我的小程序
         _buildMyMiniProgramSection(),
-        const SizedBox(height: 24),
-
-        // 第三行：我的app
-        _buildMyAppSection(),
       ],
     );
   }
