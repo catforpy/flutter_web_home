@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 /// 智慧景区导览 - 完整实现版本
 ///
@@ -11,7 +12,7 @@ class ScenicSpotGuideComplete extends StatefulWidget {
   State<ScenicSpotGuideComplete> createState() => _ScenicSpotGuideCompleteState();
 }
 
-class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
+class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with TickerProviderStateMixin {
   // 导航栏状态
   bool _isNavbarTransparent = true;
   bool _isNavbarShrunk = false;
@@ -26,13 +27,41 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
   // 记录滚动位置，用于判断滚动方向
   double _lastScrollOffset = 0;
 
+  // 平滑动画Ticker
+  Ticker? _smoothTicker;
+  bool _needsSmoothing = false;
+
   // 右侧卡片区域的粘滞动画状态
   double _rightSidebarOffset = 0.0;
+
+  // GlobalKey用于获取实际的渲染位置
+  final GlobalKey _mainContentKey = GlobalKey();
+  final GlobalKey _rightCardKey = GlobalKey();
+
+  // 阶段2锁定状态（避免动效抖动）
+  bool _isStage2Locked = false;
+  double _lockedSidebarOffset = 0.0;
+
+  // 平滑过渡相关
+  double _currentSmoothOffset = 0.0; // 当前平滑后的offset
+  double _targetRawOffset = 0.0; // 目标原始offset
+  final double _smoothFactor = 0.15; // 平滑因子（0.1-0.2之间，越小越平滑但延迟越高）
+
+  // 是否已初始化
+  bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+
+    // 创建平滑动画ticker
+    _smoothTicker = createTicker(_onSmoothTick);
+
+    // 延迟初始化右侧卡片位置（等待widget完全build后）
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeRightSidebarPosition();
+    });
 
     // 延迟启动数字动画
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -42,9 +71,56 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
     });
   }
 
+  // 初始化右侧卡片位置 - 让它和主内容区域对齐
+  void _initializeRightSidebarPosition() {
+    final RenderBox? mainContentBox = _mainContentKey.currentContext?.findRenderObject() as RenderBox?;
+    if (mainContentBox != null && mounted) {
+      final double mainContentScreenPosition = mainContentBox.localToGlobal(Offset.zero).dy;
+
+      // 计算让右侧卡片和主内容区域对齐的offset
+      // 右侧卡片top = 100 + _rightSidebarOffset
+      // 主内容top + 60 = mainContentScreenPosition + 60
+      // 要对齐：100 + _rightSidebarOffset = mainContentScreenPosition + 60
+      // _rightSidebarOffset = mainContentScreenPosition - 40
+      final double initialOffset = mainContentScreenPosition - 40.0;
+
+      setState(() {
+        _rightSidebarOffset = initialOffset;
+        _currentSmoothOffset = initialOffset;
+        _targetRawOffset = initialOffset;
+        _isInitialized = true;
+      });
+    }
+  }
+
+  // 平滑动画的ticker回调（每帧调用）
+  void _onSmoothTick(Duration elapsed) {
+    if (!_needsSmoothing) {
+      return;
+    }
+
+    // 计算插值
+    final double delta = _targetRawOffset - _currentSmoothOffset;
+
+    // 如果差距很小，停止平滑动画
+    if (delta.abs() < 0.5) {
+      _currentSmoothOffset = _targetRawOffset;
+      _rightSidebarOffset = _currentSmoothOffset;
+      _needsSmoothing = false;
+      setState(() {});
+      return;
+    }
+
+    // 应用插值
+    _currentSmoothOffset += delta * _smoothFactor;
+    _rightSidebarOffset = _currentSmoothOffset;
+    setState(() {});
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
+    _smoothTicker?.dispose();
     super.dispose();
   }
 
@@ -62,52 +138,123 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
         _isNavbarShrunk = false;
       }
 
-      // 右侧卡片的粘滞动画逻辑
-      const double mainContentOffset = 400.0; // 主内容区向上偏移（Transform.translate）
-      const double stickyTopPosition = 100.0; // 吸顶时距离屏幕顶部
-      const double rightCardInitialTop = 60.0; // 右侧卡片初始 top
+      // 右侧卡片的粘滞动画逻辑（右侧卡片现在在外层Stack）
+      const double navbarHeight = 100.0; // 导航栏高度
       const double screenHeight = 900.0; // 屏幕高度
-      const double mainContentHeight = 7000.0; // 主内容高度（估计）
+      const double mainContentHeight = 7000.0; // 主内容高度
 
-      // 阶段1: offset < 400
-      // 右侧卡片跟随主内容一起移动（相对位置不变）
-      // 实际上什么都不用做，因为它们在同一个 Stack 里
+      // 获取主内容区域的实际渲染坐标（用于阶段判断）
+      final RenderBox? mainContentBox = _mainContentKey.currentContext?.findRenderObject() as RenderBox?;
+      final RenderBox? rightCardBox = _rightCardKey.currentContext?.findRenderObject() as RenderBox?;
 
-      // 阶段2: 400 <= offset < 6700 (约)
-      // 右侧卡片吸顶在导航栏下方
-      // 需要计算正确的 offset
+      if (mainContentBox != null && rightCardBox != null) {
+        final double mainContentScreenPosition = mainContentBox.localToGlobal(Offset.zero).dy;
+        final double mainContentActualHeight = mainContentBox.size.height;
+        final double rightCardHeight = rightCardBox.size.height;
 
-      // 阶段3: offset >= 6700
-      // 右侧卡片底部和主内容底部对齐，一起滑出
+        // 计算主内容区域底部的屏幕位置
+        final double mainContentBottomFromScreenTop = mainContentScreenPosition + mainContentActualHeight;
 
-      if (offset < mainContentOffset) {
-        // 阶段1: 跟随滚动
-        // 右侧卡片和主内容区域在同一个 Stack 里，初始 top 都是 60
-        // 它们会自然地保持相对位置，一起随滚动移动
-        // 不需要任何额外的 offset！
-        _rightSidebarOffset = 0.0;
-      } else if (offset >= mainContentOffset && offset < mainContentHeight - screenHeight + stickyTopPosition) {
-        // 阶段2: 吸顶固定
-        // 右侧卡片要固定在距离屏幕顶部 stickyTopPosition (100px) 的位置
-        // Stack 已经向上滚动了 offset
-        // 右侧卡片实际屏幕位置 = rightCardInitialTop + _rightSidebarOffset - offset
-        // 设实际位置 = stickyTopPosition：
-        // 60 + _rightSidebarOffset - offset = 100
-        // _rightSidebarOffset = 100 + offset - 60 = offset + 40
-        _rightSidebarOffset = stickyTopPosition + offset - rightCardInitialTop;
-      } else {
-        // 阶段3: 底部对齐，一起滑出
-        final double stage3StartOffset = mainContentHeight - screenHeight + stickyTopPosition;
-        final double extraScroll = offset - stage3StartOffset;
+        // 定义阶段判断条件
+        final bool shouldStage1 = mainContentScreenPosition > navbarHeight;
+        final bool shouldStage3 = mainContentBottomFromScreenTop < screenHeight;
 
-        // 在阶段3开始时的 offset
-        final double baseOffset = stickyTopPosition + stage3StartOffset - rightCardInitialTop;
+        // 计算目标offset
+        double targetOffset;
+        if (shouldStage1) {
+          // 阶段1: 计算目标offset
+          targetOffset = mainContentScreenPosition - 40.0;
+          _isStage2Locked = false;
+        } else if (shouldStage3) {
+          // 阶段3: 底部对齐
+          targetOffset = mainContentBottomFromScreenTop - navbarHeight - rightCardHeight;
+          _isStage2Locked = false;
+        } else {
+          // 阶段2: 吸顶固定
+          targetOffset = 0.0;
+          _isStage2Locked = true;
+        }
 
-        // 继续向上移动
-        _rightSidebarOffset = baseOffset - extraScroll;
+        // 应用平滑过渡（针对鼠标滚轮优化）
+        if (shouldStage1) {
+          // 阶段1：使用ticker驱动的平滑动画
+          _targetRawOffset = targetOffset;
+
+          // 检查是否是首次显示（_currentSmoothOffset和_targetRawOffset差距很大）
+          final bool isFirstShow = (_currentSmoothOffset - _targetRawOffset).abs() > 500;
+
+          if (isFirstShow) {
+            // 首次显示：立即设置到正确位置，不要动画
+            _currentSmoothOffset = _targetRawOffset;
+            _rightSidebarOffset = _currentSmoothOffset;
+            _needsSmoothing = false;
+          } else {
+            // 正常滚动：使用平滑动画
+            if (!_needsSmoothing) {
+              _needsSmoothing = true;
+              _smoothTicker?.start();
+            }
+          }
+        } else {
+          // 阶段2和3：快速响应，不使用平滑
+          _needsSmoothing = false;
+          _rightSidebarOffset = targetOffset;
+          _currentSmoothOffset = targetOffset;
+        }
       }
 
       _lastScrollOffset = offset;
+
+      // 获取实际的渲染坐标
+      if (offset.toInt() % 100 == 0 && offset > 0) {
+        // 获取主内容区域的实际位置
+        final RenderBox? mainContentBox = _mainContentKey.currentContext?.findRenderObject() as RenderBox?;
+        final RenderBox? rightCardBox = _rightCardKey.currentContext?.findRenderObject() as RenderBox?;
+
+        if (mainContentBox != null && rightCardBox != null) {
+          // 获取相对于屏幕的实际位置
+          final mainContentPosition = mainContentBox.localToGlobal(Offset.zero);
+          final rightCardPosition = rightCardBox.localToGlobal(Offset.zero);
+
+          // 计算Positioned的top值
+          final double rightCardTopInStack = 60.0 + _rightSidebarOffset;
+          final double mainContentScreenPosition = mainContentPosition.dy;
+          final double mainContentBottomPosition = mainContentScreenPosition + mainContentHeight;
+
+          // 判断阶段
+          final String stage;
+          if (mainContentScreenPosition > navbarHeight) {
+            stage = "1(跟随)";
+          } else if (mainContentBottomPosition < screenHeight) {
+            stage = "3(底部对齐)";
+          } else {
+            stage = "2(吸顶-固定)";
+          }
+
+          print('╔══════════════════════════════════════════════════════════════════╗');
+          print('║ 📊 offset=${offset.toStringAsFixed(0)}  阶段=$stage                    ');
+          print('╠══════════════════════════════════════════════════════════════════╣');
+          print('║ 【主内容区域】                                                    ');
+          print('║  顶部: ${mainContentScreenPosition.toStringAsFixed(1)}px  |  底部: ${mainContentBottomPosition.toStringAsFixed(1)}px');
+          print('║ 【右侧卡片】                                                      ');
+          print('║  顶部: ${rightCardPosition.dy.toStringAsFixed(1)}px  |  Positioned.top: ${rightCardTopInStack.toStringAsFixed(1)}px');
+          print('║ 【相对距离】                                                      ');
+          print('║  ${(rightCardPosition.dy - mainContentPosition.dy).toStringAsFixed(1)}px');
+          if (stage == "1(跟随)") {
+            print('║ 【跟随逻辑】基于offset计算：${_rightSidebarOffset.toStringAsFixed(1)}  主内容位置：${mainContentScreenPosition.toStringAsFixed(1)}px    ');
+            print('║ 【目标】右侧卡片应该在主内容下方60px：${(mainContentScreenPosition + 60).toStringAsFixed(1)}px    ');
+            print('║ 【实际】右侧卡片实际在：${rightCardPosition.dy.toStringAsFixed(1)}px    ');
+            if (((rightCardPosition.dy - mainContentPosition.dy) - 60).abs() > 5) {
+              print('║ ⚠️  误差过大！说明offset计算公式需要调整！                                      ');
+            }
+          } else if (stage == "2(吸顶-固定)") {
+            print('║ 【固定状态】${_isStage2Locked ? "已锁定(禁用动效)" : "未锁定"}  offset=${_rightSidebarOffset.toStringAsFixed(1)}   ');
+          } else if (stage == "3(底部对齐)") {
+            print('║ 【底部对齐】跟随主内容底部一起滑出                                   ');
+          }
+          print('╚══════════════════════════════════════════════════════════════════╝');
+        }
+      }
     });
   }
 
@@ -116,6 +263,19 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
       _visitorTimeValue = 185;
       _conversionRateValue = 68.5;
     });
+  }
+
+  // 判断是否应该显示右侧卡片
+  bool _shouldShowRightSidebar() {
+    // 初始状态不显示，只有滚动后才显示
+    // 使用scroll offset判断，避免在build时查询RenderObject
+    if (_scrollController.hasClients) {
+      final double offset = _scrollController.offset;
+      // 当滚动超过一定距离后才显示右侧卡片
+      // 例如：滚动超过150px后显示
+      return offset > 150.0;
+    }
+    return false;
   }
 
   @override
@@ -145,6 +305,16 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
               ),
             ),
           ),
+
+          // === 右侧卡片（独立于CustomScrollView，实现真正的fixed效果）===
+          // 只有当主内容区域接近/进入屏幕时才显示
+          if (_shouldShowRightSidebar())
+            Positioned(
+              key: _rightCardKey,
+              right: 60, // 和主内容区域的padding一致
+              top: 100 + _rightSidebarOffset, // 导航栏高度 + 动态offset
+              child: _buildRightSidebarCard(),
+            ),
 
           // === 上层：CustomScrollView（包含导航栏和内容）===
           CustomScrollView(
@@ -232,6 +402,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
                             top: 0,
                             bottom: 0,
                             child: Container(
+                              key: _mainContentKey,
                               margin: const EdgeInsets.only(top: 60),
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -261,13 +432,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> {
                                 ],
                               ),
                             ),
-                          ),
-
-                          // 层2: 右侧卡片区域（一个完整的白色卡片）
-                          Positioned(
-                            right: 0,
-                            top: 60 + _rightSidebarOffset, // 初始位置 top: 60，加上滚动偏移
-                            child: _buildRightSidebarCard(),
                           ),
                         ],
                       ),
