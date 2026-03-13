@@ -295,10 +295,12 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
 
                   // 强高斯模糊层
                   Positioned.fill(
-                    child: BackdropFilter(
-                      filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                      child: Container(
-                        color: Colors.white.withValues(alpha: 0.1),
+                    child: IgnorePointer(
+                      child: BackdropFilter(
+                        filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                        child: Container(
+                          color: Colors.white.withValues(alpha: 0.1),
+                        ),
                       ),
                     ),
                   ),
