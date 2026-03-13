@@ -340,27 +340,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
             ),
           ),
 
-          // === 右侧卡片（独立于CustomScrollView，实现真正的fixed效果）===
-          // 只有当主内容区域接近/进入屏幕时才显示
-          if (_shouldShowRightSidebar())
-            Positioned(
-              key: _rightCardKey,
-              right: 60, // 和主内容区域的padding一致
-              top: 100 + _rightSidebarOffset, // 导航栏高度 + 动态offset
-              child: MouseRegion(
-                onEnter: (_) {
-                  print('>>> 鼠标进入右侧卡片区域');
-                },
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    print('>>> 点击了右侧卡片容器');
-                  },
-                  child: _buildRightSidebarCard(context),
-                ),
-              ),
-            ),
-
           // === 上层：CustomScrollView（包含导航栏和内容）===
           CustomScrollView(
             controller: _scrollController,
@@ -523,6 +502,27 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
                   _showRegisterDialog = false;
                 });
               },
+            ),
+
+          // === 右侧卡片（放在最后，确保在最上层）===
+          // 只有当主内容区域接近/进入屏幕时才显示
+          if (_shouldShowRightSidebar())
+            Positioned(
+              key: _rightCardKey,
+              right: 60, // 和主内容区域的padding一致
+              top: 100 + _rightSidebarOffset, // 导航栏高度 + 动态offset
+              child: MouseRegion(
+                onEnter: (_) {
+                  print('>>> 鼠标进入右侧卡片区域');
+                },
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    print('>>> 点击了右侧卡片容器');
+                  },
+                  child: _buildRightSidebarCard(context),
+                ),
+              ),
             ),
         ],
       ),
