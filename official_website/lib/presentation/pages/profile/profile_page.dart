@@ -22,7 +22,6 @@ class _ProfilePageState extends State<ProfilePage> {
   final ScrollController _scrollController = ScrollController();
   int _selectedTabIndex = 0; // 0: 我的公司, 1: 我在销售, 2: 我在租赁, 3: 我在合作
   int _miniProgramFilterIndex = 0; // 0: 全部, 1: 已上架, 2: 开发中
-  int _appFilterIndex = 0; // 0: 全部, 1: 已上架, 2: 开发中
 
   // 注册小程序弹窗控制
   bool _showRegisterMiniProgramDialog = false;
@@ -972,21 +971,26 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ShowcasePage(),
-                      ),
-                    );
-                  },
-                  child: const Text(
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ShowcasePage(),
+                  ),
+                );
+              },
+              child: const Row(
+                children: [
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 18,
+                    color: Color(0xFF1890FF),
+                  ),
+                  SizedBox(width: 8),
+                  Text(
                     '项目展厅',
                     style: TextStyle(
                       fontSize: 20,
@@ -995,219 +999,23 @@ class _ProfilePageState extends State<ProfilePage> {
                       decoration: TextDecoration.underline,
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-          const SizedBox(height: 20),
-
-          // 筛选标签栏
-          _buildFilterTabs(
-            filterIndex: _appFilterIndex,
-            onFilterChanged: (index) {
-              setState(() {
-                _appFilterIndex = index;
-              });
-            },
+          const SizedBox(height: 12),
+          Text(
+            '点击浏览所有项目案例',
+            style: TextStyle(
+              fontSize: 14,
+              color: Color(0xFF999999),
+            ),
           ),
-
-          const SizedBox(height: 20),
-          _buildAppList(),
         ],
       ),
     );
   }
 
-  /// 构建app列表
-  Widget _buildAppList() {
-    // 所有app数据
-    final allApps = [
-      {
-        'name': '都达办公app',
-        'icon': '💼',
-        'status': '已上架',
-        'statusColor': 0xFF00C853,
-        'platform': 'iOS/Android',
-        'downloads': '3.5k',
-      },
-      {
-        'name': '项目管理工具',
-        'icon': '📋',
-        'status': '开发中',
-        'statusColor': 0xFFFF9800,
-        'platform': 'Android',
-        'downloads': '0',
-      },
-      {
-        'name': '在线协作平台',
-        'icon': '👥',
-        'status': '已上架',
-        'statusColor': 0xFF00C853,
-        'platform': 'iOS/Android',
-        'downloads': '8.2k',
-      },
-      {
-        'name': '数据分析app',
-        'icon': '📊',
-        'status': '开发中',
-        'statusColor': 0xFFFF9800,
-        'platform': 'iOS',
-        'downloads': '0',
-      },
-      {
-        'name': '智能考勤系统',
-        'icon': '⏰',
-        'status': '已上架',
-        'statusColor': 0xFF00C853,
-        'platform': 'Android',
-        'downloads': '1.8k',
-      },
-    ];
-
-    // 根据筛选条件过滤
-    List<Map<String, dynamic>> filteredApps;
-    switch (_appFilterIndex) {
-      case 0: // 全部
-        filteredApps = allApps;
-        break;
-      case 1: // 已上架
-        filteredApps = allApps.where((a) => a['status'] == '已上架').toList();
-        break;
-      case 2: // 开发中
-        filteredApps = allApps.where((a) => a['status'] == '开发中').toList();
-        break;
-      default:
-        filteredApps = allApps;
-    }
-
-    if (filteredApps.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.all(40),
-        child: Center(
-          child: Column(
-            children: [
-              const Icon(
-                Icons.phone_android_outlined,
-                size: 64,
-                color: Color(0xFFCCCCCC),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                '没有${_filterTabs[_appFilterIndex]}的app',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Color(0xFF999999),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
-        childAspectRatio: 1.5,
-      ),
-      itemCount: filteredApps.length,
-      itemBuilder: (context, index) {
-        final app = filteredApps[index];
-        return Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF5F5F5),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: const Color(0xFFE0E0E0),
-              width: 1,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    app['icon'] as String,
-                    style: const TextStyle(fontSize: 32),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          app['name'] as String,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF333333),
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          app['platform'] as String,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Color(0xFF999999),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.download_outlined,
-                        size: 14,
-                        color: Color(0xFF999999),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        app['downloads'] as String,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFF999999),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Color(app['statusColor'] as int),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      app['status'] as String,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 
   /// 我在销售标签页内容
   Widget _buildMySalesTab() {
