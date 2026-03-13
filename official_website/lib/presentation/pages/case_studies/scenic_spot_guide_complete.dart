@@ -50,6 +50,11 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   // 是否已初始化
   bool _isInitialized = false;
 
+  // 滚动简介动画相关
+  late AnimationController _scrollingBioController;
+  late AnimationController _titleSlideController;
+  late Animation<double> _titleSlideAnimation;
+
   @override
   void initState() {
     super.initState();
@@ -58,15 +63,36 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
     // 创建平滑动画ticker
     _smoothTicker = createTicker(_onSmoothTick);
 
+    // 初始化滚动简介动画
+    _scrollingBioController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 20),
+    )..repeat();
+
+    // 初始化标题和数据卡片的向上移动动画（100px）
+    _titleSlideController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+
+    _titleSlideAnimation = Tween<double>(
+      begin: 0.0,
+      end: -100.0,
+    ).animate(CurvedAnimation(
+      parent: _titleSlideController,
+      curve: Curves.easeInOut,
+    ));
+
     // 延迟初始化右侧卡片位置（等待widget完全build后）
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeRightSidebarPosition();
     });
 
-    // 延迟启动数字动画
+    // 延迟启动数字动画和标题滑动动画
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
         _animateNumbers();
+        _titleSlideController.forward();
       }
     });
   }
@@ -121,6 +147,8 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   void dispose() {
     _scrollController.dispose();
     _smoothTicker?.dispose();
+    _scrollingBioController.dispose();
+    _titleSlideController.dispose();
     super.dispose();
   }
 
@@ -340,43 +368,59 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // 左侧标题
+                        // 左侧标题 + 滚动简介
                         Expanded(
                           flex: 3,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                          const Text(
-                            '智慧景区导览',
-                            style: TextStyle(
-                              fontSize: 72,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              height: 1.2,
-                            ),
+                          child: AnimatedBuilder(
+                            animation: _titleSlideAnimation,
+                            builder: (context, child) {
+                              return Transform.translate(
+                                offset: Offset(0, _titleSlideAnimation.value),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      '智慧景区导览',
+                                      style: TextStyle(
+                                        fontSize: 72,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        height: 1.2,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      'Case Show',
+                                      style: TextStyle(
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.white,
+                                        letterSpacing: 4,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 24),
+                                    // 滚动简介区域
+                                    _buildScrollingBio(),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Case Show',
-                            style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.white,
-                              letterSpacing: 4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
 
-                    const SizedBox(width: 40),
+                        const SizedBox(width: 40),
 
-                    // 右侧统计卡片
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: _buildStatisticsCard(),
-                    ),
+                        // 右侧统计卡片（也要向上移动）
+                        AnimatedBuilder(
+                          animation: _titleSlideAnimation,
+                          builder: (context, child) {
+                            return Transform.translate(
+                              offset: Offset(0, _titleSlideAnimation.value),
+                              child: _buildStatisticsCard(),
+                            );
+                          },
+                        ),
                   ],
                 ),
                   ),
@@ -1479,6 +1523,114 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
         ),
       ),
     );
+  }
+
+  /// 滚动简介组件（类似歌词滚动）
+  Widget _buildScrollingBio() {
+    // 简介文本内容
+    const String bioText = '''本项目为某5A级景区打造的一站式智慧导览系统，通过AR技术、实时定位、智能推荐等创新功能，为游客提供沉浸式的游览体验。
+系统采用先进的地理信息系统（GIS）和增强现实（AR）技术，结合大数据分析平台，实现了智能路径规划、实时语音讲解、AR场景重现、社交分享等核心功能。
+智能路径规划：根据游客兴趣、时间、体力等因素，自动生成最优游览路线，避免拥堵，提升游览效率。
+实时语音讲解：采用AI语音合成技术，为游客提供多语言、多风格的语音讲解服务，让文化历史更加生动。
+AR场景重现：通过AR技术，将历史场景、文物故事以虚拟现实的方式呈现，让游客身临其境感受文化魅力。
+社交分享功能：游客可以记录游览轨迹、分享精彩瞬间，与好友互动交流，增强游览的趣味性和传播力。
+系统上线后，景区游客满意度提升45%，平均游览时长增加30分钟，有效转化率提升至68.5%，成为智慧旅游建设的标杆项目。
+项目荣获"2022年度最佳智慧旅游解决方案"奖，被多家媒体报道，在全国范围内推广使用。
+''';
+
+    // 将文本分割成行
+    final List<String> lines = bioText.split('\n');
+
+    return ClipRect(
+      child: SizedBox(
+        height: 100, // 固定高度，显示2-3行
+        child: AnimatedBuilder(
+          animation: _scrollingBioController,
+          builder: (context, child) {
+            // 使用更平滑的动画曲线
+            final double curvedValue = Curves.linear.transform(_scrollingBioController.value);
+            final double scrollOffset = curvedValue * (lines.length * 42); // 总滚动距离
+
+            return SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              child: Transform.translate(
+                offset: Offset(0, -scrollOffset),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 原始内容
+                    ...lines.map((line) => Padding(
+                      padding: const EdgeInsets.only(bottom: 6), // 固定行间距
+                      child: Text(
+                        line,
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white,
+                          height: 1.2,
+                        ),
+                      ),
+                    )),
+                    // 重复一次内容实现无缝循环
+                    ...lines.map((line) => Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Text(
+                        line,
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white,
+                          height: 1.2,
+                        ),
+                      ),
+                    )),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  /// 自动换行：将长文本根据最大宽度分割成多行
+  List<String> _wrapText(String text, {required double maxWidth}) {
+    final TextStyle style = const TextStyle(
+      fontSize: 32,
+      fontWeight: FontWeight.w300,
+    );
+
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+      maxLines: 1,
+    );
+
+    final List<String> lines = [];
+    final List<String> words = text.split(''); // 按字符分割
+    String currentLine = '';
+
+    for (int i = 0; i < words.length; i++) {
+      final String testLine = currentLine + words[i];
+      textPainter.text = TextSpan(text: testLine, style: style);
+      textPainter.layout();
+
+      if (textPainter.width <= maxWidth) {
+        currentLine = testLine;
+      } else {
+        if (currentLine.isNotEmpty) {
+          lines.add(currentLine);
+        }
+        currentLine = words[i];
+      }
+    }
+
+    if (currentLine.isNotEmpty) {
+      lines.add(currentLine);
+    }
+
+    return lines;
   }
 }
 
