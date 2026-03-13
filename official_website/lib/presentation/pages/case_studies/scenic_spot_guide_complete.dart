@@ -257,8 +257,13 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Stack(
-        children: [
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          print('>>> Stack根层被点击');
+        },
+        child: Stack(
+          children: [
           // === 底层：全屏背景图片 + 高斯模糊 + 底部白色渐变 ===
           Positioned(
             top: 0,
@@ -520,6 +525,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
               },
             ),
         ],
+      ),
       ),
     );
   }
