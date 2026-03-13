@@ -1,10 +1,8 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:official_website/presentation/widgets/workbench/register_mini_program_dialog.dart';
-import 'package:official_website/domain/models/mini_program_registration.dart';
 
 /// 智慧景区导览 - 完整实现版本
 ///
@@ -38,13 +36,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   // GlobalKey用于获取实际的渲染位置
   final GlobalKey _mainContentKey = GlobalKey();
   final GlobalKey _rightCardKey = GlobalKey();
-
-  // 阶段2锁定状态（避免动效抖动）
-  bool _isStage2Locked = false;
-  double _lockedSidebarOffset = 0.0;
-
-  // 是否已初始化
-  bool _isInitialized = false;
 
   // 滚动简介动画相关
   late AnimationController _scrollingBioController;
@@ -134,7 +125,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
 
       setState(() {
         _rightSidebarOffset = initialOffset;
-        _isInitialized = true;
       });
     }
   }
@@ -164,7 +154,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
       // 右侧卡片的粘滞动画逻辑（右侧卡片现在在外层Stack）
       const double navbarHeight = 100.0; // 导航栏高度
       const double screenHeight = 900.0; // 屏幕高度
-      const double mainContentHeight = 7000.0; // 主内容高度
 
       // 获取主内容区域的实际渲染坐标（用于阶段判断）
       final RenderBox? mainContentBox = _mainContentKey.currentContext?.findRenderObject() as RenderBox?;
@@ -187,15 +176,12 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
         if (shouldStage1) {
           // 阶段1: 计算目标offset
           targetOffset = mainContentScreenPosition - 40.0;
-          _isStage2Locked = false;
         } else if (shouldStage3) {
           // 阶段3: 底部对齐
           targetOffset = mainContentBottomFromScreenTop - navbarHeight - rightCardHeight;
-          _isStage2Locked = false;
         } else {
           // 阶段2: 吸顶固定
           targetOffset = 0.0;
-          _isStage2Locked = true;
         }
 
         // 直接设置offset，不使用平滑动画
@@ -203,34 +189,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
       }
 
       _lastScrollOffset = offset;
-
-      // 获取实际的渲染坐标
-      if (offset.toInt() % 100 == 0 && offset > 0) {
-        // 获取主内容区域的实际位置
-        final RenderBox? mainContentBox = _mainContentKey.currentContext?.findRenderObject() as RenderBox?;
-        final RenderBox? rightCardBox = _rightCardKey.currentContext?.findRenderObject() as RenderBox?;
-
-        if (mainContentBox != null && rightCardBox != null) {
-          // 获取相对于屏幕的实际位置
-          final mainContentPosition = mainContentBox.localToGlobal(Offset.zero);
-          final rightCardPosition = rightCardBox.localToGlobal(Offset.zero);
-
-          // 计算Positioned的top值
-          final double rightCardTopInStack = 60.0 + _rightSidebarOffset;
-          final double mainContentScreenPosition = mainContentPosition.dy;
-          final double mainContentBottomPosition = mainContentScreenPosition + mainContentHeight;
-
-          // 判断阶段
-          final String stage;
-          if (mainContentScreenPosition > navbarHeight) {
-            stage = "1(跟随)";
-          } else if (mainContentBottomPosition < screenHeight) {
-            stage = "3(底部对齐)";
-          } else {
-            stage = "2(吸顶-固定)";
-          }
-        }
-      }
     });
   }
 
@@ -259,9 +217,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
     return Material(
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap: () {
-          print('>>> Stack根层被点击');
-        },
+        onTap: () {},
         child: Stack(
           children: [
           // === 底层：全屏背景图片 + 高斯模糊 + 底部白色渐变 ===
@@ -512,14 +468,10 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
               right: 60, // 和主内容区域的padding一致
               top: 100 + _rightSidebarOffset, // 导航栏高度 + 动态offset
               child: MouseRegion(
-                onEnter: (_) {
-                  print('>>> 鼠标进入右侧卡片区域');
-                },
+                onEnter: (_) {},
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    print('>>> 点击了右侧卡片容器');
-                  },
+                  onTap: () {},
                   child: _buildRightSidebarCard(context),
                 ),
               ),
@@ -709,7 +661,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
           ),
           const SizedBox(height: 16),
           _buildExploreButton('查看', Icons.article_outlined, onTap: () {
-            print('点击了查看按钮');
             _showQRCodeDialog(context);
           }),
           const SizedBox(height: 12),
@@ -718,7 +669,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
           _buildExploreButton('项目入厅', Icons.contact_phone_outlined),
           const SizedBox(height: 12),
           _buildExploreButton('我想购买', Icons.shopping_cart_outlined, onTap: () {
-            print('点击了我想购买按钮');
             setState(() {
               _showRegisterDialog = true;
             });
@@ -777,19 +727,8 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   Widget _buildExploreButton(String label, IconData icon, {VoidCallback? onTap}) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      onEnter: (_) {
-        print('>>> 鼠标进入按钮: $label');
-      },
       child: GestureDetector(
-        onTap: () {
-          print('>>> 点击了按钮: $label');
-          if (onTap != null) {
-            print('>>> 执行onTap回调');
-            onTap();
-          } else {
-            print('>>> onTap为null，没有回调');
-          }
-        },
+        onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
@@ -916,14 +855,8 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   Widget _buildNavButton(String label, IconData icon, VoidCallback onTap) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      onEnter: (_) {
-        print('>>> 鼠标进入导航按钮: $label');
-      },
       child: GestureDetector(
-        onTap: () {
-          print('>>> 点击了导航按钮: $label');
-          onTap();
-        },
+        onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
@@ -1848,45 +1781,6 @@ AR场景重现：通过AR技术，将历史场景、文物故事以虚拟现实�
         ),
       ),
     );
-  }
-
-  /// 自动换行：将长文本根据最大宽度分割成多行
-  List<String> _wrapText(String text, {required double maxWidth}) {
-    final TextStyle style = const TextStyle(
-      fontSize: 32,
-      fontWeight: FontWeight.w300,
-    );
-
-    final TextPainter textPainter = TextPainter(
-      text: TextSpan(text: text, style: style),
-      textDirection: TextDirection.ltr,
-      maxLines: 1,
-    );
-
-    final List<String> lines = [];
-    final List<String> words = text.split(''); // 按字符分割
-    String currentLine = '';
-
-    for (int i = 0; i < words.length; i++) {
-      final String testLine = currentLine + words[i];
-      textPainter.text = TextSpan(text: testLine, style: style);
-      textPainter.layout();
-
-      if (textPainter.width <= maxWidth) {
-        currentLine = testLine;
-      } else {
-        if (currentLine.isNotEmpty) {
-          lines.add(currentLine);
-        }
-        currentLine = words[i];
-      }
-    }
-
-    if (currentLine.isNotEmpty) {
-      lines.add(currentLine);
-    }
-
-    return lines;
   }
 }
 
