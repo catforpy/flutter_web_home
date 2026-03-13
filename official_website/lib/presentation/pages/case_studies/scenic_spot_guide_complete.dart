@@ -612,21 +612,23 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
 
   /// 构建右侧卡片（一个完整的白色卡片，包含所有内容）
   Widget _buildRightSidebarCard(BuildContext context) {
-    return Container(
-      width: 450,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(20),
-      child: Column(
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        width: 450,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(20),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 项目服务部分
@@ -744,6 +746,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
             ),
           ),
         ],
+      ),
       ),
     );
   }
