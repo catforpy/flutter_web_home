@@ -8,6 +8,7 @@ import '../../routes/app_router.dart';
 import '../../../core/auth/auth_state.dart';
 import '../../../domain/models/mini_program_registration.dart';
 import 'company_detail_page.dart';
+import '../showcase/showcase_page.dart';
 
 /// 个人中心页面 - 慕课网风格
 class ProfilePage extends StatefulWidget {
@@ -974,44 +975,24 @@ class _ProfilePageState extends State<ProfilePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                '我的app',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF333333),
-                ),
-              ),
               MouseRegion(
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onTap: () {
-                    // TODO: 添加app
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ShowcasePage(),
+                      ),
+                    );
                   },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1890FF),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          size: 18,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 6),
-                        Text(
-                          '添加app',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                  child: const Text(
+                    '项目展厅',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1890FF),
+                      decoration: TextDecoration.underline,
                     ),
                   ),
                 ),
