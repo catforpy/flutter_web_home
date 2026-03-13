@@ -1,0 +1,995 @@
+import 'package:flutter/material.dart';
+import '../../widgets/common/auth_widget.dart';
+import '../../models/service_models.dart';
+
+/// 合作页面
+class PartnershipPage extends StatefulWidget {
+  const PartnershipPage({super.key});
+
+  @override
+  State<PartnershipPage> createState() => _PartnershipPageState();
+}
+
+class _PartnershipPageState extends State<PartnershipPage>
+    with SingleTickerProviderStateMixin {
+  // 选中的一级行业
+  IndustryCategory? _selectedIndustry;
+
+  // 选中的二级分类
+  String? _selectedSubCategory;
+
+  // 搜索关键词
+  String _searchKeyword = '';
+
+  // 是否显示筛选侧边栏
+  bool _showFilterSidebar = false;
+
+  // 筛选侧边栏动画控制器
+  late AnimationController _filterAnimationController;
+  late Animation<double> _filterSlideAnimation;
+
+  // 一级行业数据（合作相关）
+  final List<IndustryCategory> _industries = [
+    IndustryCategory(
+      id: 'channel',
+      name: '渠道合作',
+      icon: '🤝',
+      subCategories: ['所有服务', '代理商', '经销商', '分销商', '渠道商'],
+    ),
+    IndustryCategory(
+      id: 'technology',
+      name: '技术合作',
+      icon: '💡',
+      subCategories: ['所有服务', '技术转让', '技术入股', '联合研发', '技术咨询'],
+    ),
+    IndustryCategory(
+      id: 'investment',
+      name: '投资合作',
+      icon: '💰',
+      subCategories: ['所有服务', '天使投资', 'VC投资', 'PE投资', '战略投资'],
+    ),
+    IndustryCategory(
+      id: 'business',
+      name: '商务合作',
+      icon: '📊',
+      subCategories: ['所有服务', '品牌联名', '市场推广', '异业合作', '流量互换'],
+    ),
+    IndustryCategory(
+      id: 'supply',
+      name: '供应链合作',
+      icon: '🏭',
+      subCategories: ['所有服务', '原材料供应', '生产加工', '物流配送', '仓储服务'],
+    ),
+    IndustryCategory(
+      id: 'service',
+      name: '服务外包',
+      icon: '🎯',
+      subCategories: ['所有服务', '客服外包', '设计外包', '开发外包', '运营外包'],
+    ),
+  ];
+
+  // 标签数据
+  final List<String> _allTags = [
+    '长期', '短期', '合资', '分成', '一次性', '佣金制',
+    '股权', '现金', '资源置换', '独家', '非独家'
+  ];
+
+  // 当前选中的标签
+  final Set<String> _selectedTags = {};
+
+  // 模拟服务卡片数据（合作相关）
+  final List<ServiceCard> _serviceCards = [
+    ServiceCard(
+      id: 'p001',
+      title: '区域代理商招募',
+      coverImage: '',
+      tags: ['代理商', '长期', '佣金制'],
+      providerName: '都达科技有限公司',
+      providerAvatar: '',
+      price: 50000.0,
+      priceUnit: '年',
+      minOrder: 1,
+      category: '代理商',
+    ),
+    ServiceCard(
+      id: 'p002',
+      title: '短视频技术入股合作',
+      coverImage: '',
+      tags: ['技术入股', '合资', '股权'],
+      providerName: '创新科技工作室',
+      providerAvatar: '',
+      price: 100000.0,
+      priceUnit: '项目',
+      minOrder: 1,
+      category: '技术入股',
+    ),
+    ServiceCard(
+      id: 'p003',
+      title: '品牌联名推广合作',
+      coverImage: '',
+      tags: ['品牌联名', '资源置换', '短期'],
+      providerName: '品牌营销策划公司',
+      providerAvatar: '',
+      price: 30000.0,
+      priceUnit: '次',
+      minOrder: 1,
+      category: '品牌联名',
+    ),
+    ServiceCard(
+      id: 'p004',
+      title: '天使投资项目对接',
+      coverImage: '',
+      tags: ['天使投资', '股权', '长期'],
+      providerName: '创业投资孵化器',
+      providerAvatar: '',
+      price: 500000.0,
+      priceUnit: '股',
+      minOrder: 1,
+      category: '天使投资',
+    ),
+    ServiceCard(
+      id: 'p005',
+      title: '客服外包服务合作',
+      coverImage: '',
+      tags: ['客服外包', '长期', '一次性'],
+      providerName: '专业客服外包中心',
+      providerAvatar: '',
+      price: 8000.0,
+      priceUnit: '月',
+      minOrder: 6,
+      category: '客服外包',
+    ),
+    ServiceCard(
+      id: 'p006',
+      title: 'APP开发技术合作',
+      coverImage: '',
+      tags: ['技术转让', '一次性', '合资'],
+      providerName: '移动互联网技术公司',
+      providerAvatar: '',
+      price: 150000.0,
+      priceUnit: '项目',
+      minOrder: 1,
+      category: '技术转让',
+    ),
+    ServiceCard(
+      id: 'p007',
+      title: '全国分销商招募',
+      coverImage: '',
+      tags: ['分销商', '独家', '长期'],
+      providerName: '都达电商集团',
+      providerAvatar: '',
+      price: 30000.0,
+      priceUnit: '年',
+      minOrder: 1,
+      category: '分销商',
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // 默认选中第一个行业
+    if (_industries.isNotEmpty) {
+      _selectedIndustry = _industries[0]; // 渠道合作
+      _selectedSubCategory = '代理商';
+    }
+
+    // 初始化筛选侧边栏动画
+    _filterAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _filterSlideAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _filterAnimationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _filterAnimationController.dispose();
+    super.dispose();
+  }
+
+  /// 获取筛选后的服务卡片
+  List<ServiceCard> get _filteredCards {
+    var filtered = List<ServiceCard>.from(_serviceCards);
+
+    // 按二级分类筛选
+    if (_selectedSubCategory != null && _selectedSubCategory != '所有服务') {
+      filtered = filtered.where((card) => card.category == _selectedSubCategory).toList();
+    }
+
+    // 按标签筛选
+    if (_selectedTags.isNotEmpty) {
+      filtered = filtered.where((card) {
+        return card.tags.any((tag) => _selectedTags.contains(tag));
+      }).toList();
+    }
+
+    // 按关键词搜索
+    if (_searchKeyword.isNotEmpty) {
+      final keyword = _searchKeyword.toLowerCase();
+      filtered = filtered.where((card) {
+        return card.title.toLowerCase().contains(keyword) ||
+               card.tags.any((tag) => tag.toLowerCase().contains(keyword));
+      }).toList();
+    }
+
+    return filtered;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
+      body: Column(
+        children: [
+          // A. 顶部通栏 Header
+          _buildHeader(),
+
+          // B. 一级行业导航栏
+          _buildTopIndustryBar(),
+
+          // C. 二级细分导航条
+          _buildSubCategoryBar(),
+
+          // D. 筛选与标签工具栏
+          _buildFilterToolbar(),
+
+          // E. 主体内容展示区
+          Expanded(
+            child: Stack(
+              children: [
+                // 服务卡片网格
+                _buildServiceGrid(),
+
+                // F. 筛选侧边栏（覆盖层）
+                if (_showFilterSidebar)
+                  _buildFilterSidebar(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// A. 构建顶部通栏 Header
+  Widget _buildHeader() {
+    return Container(
+      height: 60,
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Row(
+        children: [
+          // Logo
+          const Text(
+            '都达 Douda',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
+            ),
+          ),
+
+          const SizedBox(width: 40),
+
+          // 搜索框
+          Expanded(
+            child: Center(
+              child: SizedBox(
+                width: 600,
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: const Color(0xFFE0E0E0)),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            hintText: '搜索合作项目...',
+                            hintStyle: TextStyle(fontSize: 15, color: Color(0xFF999999)),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                          style: const TextStyle(fontSize: 15),
+                          onChanged: (value) {
+                            setState(() {
+                              _searchKeyword = value;
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: 80,
+                        height: 48,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFFF5000),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8),
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.search,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 40),
+
+          // 用户功能区
+          Row(
+            children: [
+              const AuthWidget(),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// B. 构建一级行业导航栏
+  Widget _buildTopIndustryBar() {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      child: Row(
+        children: [
+          const Text(
+            '合作分类：',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xFF333333)),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: _industries.map((industry) {
+                  final isSelected = _selectedIndustry?.id == industry.id;
+                  return MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedIndustry = industry;
+                          _selectedSubCategory = industry.subCategories.isNotEmpty
+                              ? industry.subCategories[0]
+                              : null;
+                        });
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 24),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: isSelected ? const Color(0xFFFF5000) : const Color(0xFFF5F5F5),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              industry.icon,
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              industry.name,
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: isSelected ? Colors.white : const Color(0xFF333333),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// C. 构建二级细分导航条
+  Widget _buildSubCategoryBar() {
+    if (_selectedIndustry == null) return const SizedBox.shrink();
+
+    final subCategories = _selectedIndustry!.subCategories;
+
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      child: Row(
+        children: [
+          const Text(
+            '细分类型：',
+            style: TextStyle(fontSize: 14, color: Color(0xFF666666)),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: subCategories.map((subCat) {
+                  final isSelected = _selectedSubCategory == subCat;
+                  return MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedSubCategory = subCat;
+                        });
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: isSelected ? const Color(0xFF1890FF) : Colors.transparent,
+                              width: isSelected ? 2 : 1,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          subCat,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
+                            color: isSelected ? const Color(0xFF1890FF) : const Color(0xFF666666),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// D. 构建筛选与标签工具栏
+  Widget _buildFilterToolbar() {
+    final filteredCards = _filteredCards;
+
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Row(
+        children: [
+          // 标签滚动区域
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Stack(
+                children: [
+                  Row(
+                    children: _allTags.map((tag) {
+                      final isSelected = _selectedTags.contains(tag);
+                      return MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (isSelected) {
+                                _selectedTags.remove(tag);
+                              } else {
+                                _selectedTags.add(tag);
+                              }
+                            });
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: isSelected ? const Color(0xFFE6F7FF) : Colors.white,
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: isSelected ? const Color(0xFF1890FF) : const Color(0xFFE0E0E0),
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              tag,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
+                                color: isSelected ? const Color(0xFF1890FF) : const Color(0xFF666666),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 24),
+
+          // 右侧筛选按钮
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _showFilterSidebar = !_showFilterSidebar;
+                  if (_showFilterSidebar) {
+                    _filterAnimationController.forward();
+                  } else {
+                    _filterAnimationController.reverse();
+                  }
+                });
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFFE0E0E0)),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.tune_outlined,
+                      size: 18,
+                      color: _showFilterSidebar ? const Color(0xFF1890FF) : const Color(0xFF666666),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      '筛选',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: _showFilterSidebar ? const Color(0xFF1890FF) : const Color(0xFF666666),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 16),
+
+          // 结果数量
+          Text(
+            '共 ${filteredCards.length} 个合作',
+            style: const TextStyle(
+              fontSize: 14,
+              color: Color(0xFF999999),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// E. 构建服务卡片网格
+  Widget _buildServiceGrid() {
+    final filteredCards = _filteredCards;
+
+    if (filteredCards.isEmpty) {
+      return _buildEmptyState();
+    }
+
+    return Container(
+      color: const Color(0xFFF5F7FA),
+      padding: const EdgeInsets.all(24),
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+          childAspectRatio: 0.75,
+        ),
+        itemCount: filteredCards.length,
+        itemBuilder: (context, index) {
+          return _buildServiceCard(filteredCards[index]);
+        },
+      ),
+    );
+  }
+
+  /// 构建服务卡片
+  Widget _buildServiceCard(ServiceCard card) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 封面图
+          Expanded(
+            flex: 3,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+              child: Container(
+                color: const Color(0xFFF5F5F5),
+                child: card.coverImage.isNotEmpty
+                    ? Image.network(
+                        card.coverImage,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Center(
+                            child: Icon(Icons.handshake, size: 40, color: Color(0xFFCCCCCC)),
+                          );
+                        },
+                      )
+                    : const Center(
+                        child: Icon(Icons.handshake, size: 40, color: Color(0xFFCCCCCC)),
+                      ),
+              ),
+            ),
+          ),
+
+          // 信息区
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 标题
+                  Text(
+                    card.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF333333),
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  // 标签
+                  Wrap(
+                    spacing: 4,
+                    children: card.tags.take(2).map((tag) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF0F0F0),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          tag,
+                          style: const TextStyle(fontSize: 11, color: Color(0xFF999999)),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
+                  const Spacer(),
+
+                  // 服务商和价格
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          card.providerName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 12, color: Color(0xFF999999)),
+                        ),
+                      ),
+                      Text(
+                        '¥${card.price.toStringAsFixed(0)}/${card.priceUnit}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFFF5000),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建空状态
+  Widget _buildEmptyState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.search_off,
+            size: 64,
+            color: Color(0xFFCCCCCC),
+          ),
+          SizedBox(height: 16),
+          Text(
+            '暂无相关合作',
+            style: TextStyle(
+              fontSize: 16,
+              color: Color(0xFF999999),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// F. 构建筛选侧边栏
+  Widget _buildFilterSidebar() {
+    return AnimatedBuilder(
+      animation: _filterSlideAnimation,
+      builder: (context, child) {
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              _showFilterSidebar = false;
+              _filterAnimationController.reverse();
+            });
+          },
+          child: Container(
+            color: Colors.black.withValues(alpha: 0.5 * _filterSlideAnimation.value),
+            child: Stack(
+              children: [
+                // 侧边栏主体
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      width: 320,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0x1A000000),
+                            blurRadius: 10,
+                            offset: Offset(-2, 0),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          // 标题栏
+                          Container(
+                            height: 60,
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  '筛选条件',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF333333),
+                                  ),
+                                ),
+                                MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _showFilterSidebar = false;
+                                        _filterAnimationController.reverse();
+                                      });
+                                    },
+                                    child: const Icon(
+                                      Icons.close,
+                                      size: 24,
+                                      color: Color(0xFF999999),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // 筛选内容区
+                          Expanded(
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.all(24),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildFilterSection('投资金额', ['不限', '10万以下', '10-50万', '50-100万', '100万以上']),
+                                  const SizedBox(height: 24),
+                                  _buildFilterSection('合作方式', ['不限', '合资', '股权', '佣金制', '资源置换']),
+                                  const SizedBox(height: 24),
+                                  _buildFilterSection('合作期限', ['不限', '短期', '长期', '一次性', '永久']),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // 底部按钮区
+                          Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                top: BorderSide(color: Color(0xFFE0E0E0), width: 1),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: MouseRegion(
+                                    cursor: SystemMouseCursors.click,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _selectedTags.clear();
+                                        });
+                                      },
+                                      child: Container(
+                                        height: 44,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: const Color(0xFFE0E0E0)),
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            '重置',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Color(0xFF666666),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  flex: 2,
+                                  child: MouseRegion(
+                                    cursor: SystemMouseCursors.click,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _showFilterSidebar = false;
+                                          _filterAnimationController.reverse();
+                                        });
+                                      },
+                                      child: Container(
+                                        height: 44,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF1890FF),
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            '应用筛选',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 构建筛选区块
+  Widget _buildFilterSection(String title, List<String> options) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF333333),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: options.map((option) {
+            final isSelected = _selectedTags.contains(option);
+            return MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (isSelected) {
+                      _selectedTags.remove(option);
+                    } else {
+                      _selectedTags.add(option);
+                    }
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: isSelected ? const Color(0xFFE6F7FF) : const Color(0xFFF5F5F5),
+                    border: Border.all(
+                      color: isSelected ? const Color(0xFF1890FF) : const Color(0xFFE0E0E0),
+                    ),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    option,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isSelected ? const Color(0xFF1890FF) : const Color(0xFF666666),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+}

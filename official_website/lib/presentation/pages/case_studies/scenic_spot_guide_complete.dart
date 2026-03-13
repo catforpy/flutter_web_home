@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 /// 智慧景区导览 - 完整实现版本
 ///
@@ -54,6 +55,31 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   late AnimationController _scrollingBioController;
   late AnimationController _titleSlideController;
   late Animation<double> _titleSlideAnimation;
+
+  // 轮播图相关
+  int _currentCarouselIndex = 0;
+  final List<MediaItem> _carouselItems = [
+    MediaItem(
+      type: MediaType.image,
+      url: 'https://picsum.photos/1400/800?random=101',
+      title: '智慧景区导览 - 首页效果',
+    ),
+    MediaItem(
+      type: MediaType.image,
+      url: 'https://picsum.photos/1400/800?random=102',
+      title: '地图导航功能展示',
+    ),
+    MediaItem(
+      type: MediaType.image,
+      url: 'https://picsum.photos/1400/800?random=103',
+      title: '语音讲解功能',
+    ),
+    MediaItem(
+      type: MediaType.image,
+      url: 'https://picsum.photos/1400/800?random=104',
+      title: 'AR导览体验',
+    ),
+  ];
 
   @override
   void initState() {
@@ -787,33 +813,118 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 400,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
+          // 轮播图展示
+          Column(
+            children: [
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 500,
+                  viewportFraction: 0.8,
+                  enlargeCenterPage: true,
+                  enableInfiniteScroll: true,
+                  autoPlay: true,
+                  autoPlayInterval: const Duration(seconds: 5),
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      _currentCarouselIndex = index;
+                    });
+                  },
                 ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                'https://picsum.photos/1400/800?random=100',
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
+                items: _carouselItems.map((item) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.15),
+                              blurRadius: 20,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Stack(
+                            children: [
+                              // 内容
+                              Positioned.fill(
+                                child: item.type == MediaType.video
+                                    ? const Center(
+                                        child: Icon(
+                                          Icons.play_circle_outline,
+                                          size: 80,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Image.network(
+                                        item.url,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Container(
+                                            color: Colors.grey.withValues(alpha: 0.2),
+                                            child: const Center(
+                                              child: Icon(Icons.error, size: 48, color: Colors.grey),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                              ),
+
+                              // 标题标签
+                              Positioned(
+                                bottom: 20,
+                                left: 20,
+                                right: 20,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withValues(alpha: 0.6),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    item.title,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }).toList(),
+              ),
+
+              const SizedBox(height: 24),
+
+              // 轮播指示器
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: _carouselItems.asMap().entries.map((entry) {
                   return Container(
-                    color: const Color(0xFFF5F5F5),
-                    child: const Center(
-                      child: Icon(Icons.image, size: 64, color: Colors.grey),
+                    width: 8,
+                    height: 8,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentCarouselIndex == entry.key
+                          ? const Color(0xFF1890FF)
+                          : const Color(0xFFE0E0E0),
                     ),
                   );
-                },
+                }).toList(),
               ),
-            ),
+            ],
           ),
           const SizedBox(height: 20),
           Row(
@@ -1804,4 +1915,22 @@ class _TechBadge extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 媒体类型枚举
+enum MediaType { image, video }
+
+/// 媒体项
+class MediaItem {
+  final MediaType type;
+  final String url;
+  final String? thumbnail;
+  final String title;
+
+  MediaItem({
+    required this.type,
+    required this.url,
+    this.thumbnail,
+    required this.title,
+  });
 }
