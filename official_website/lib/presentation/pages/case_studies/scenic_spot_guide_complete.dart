@@ -292,29 +292,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
           } else {
             stage = "2(吸顶-固定)";
           }
-
-          print('╔══════════════════════════════════════════════════════════════════╗');
-          print('║ 📊 offset=${offset.toStringAsFixed(0)}  阶段=$stage                    ');
-          print('╠══════════════════════════════════════════════════════════════════╣');
-          print('║ 【主内容区域】                                                    ');
-          print('║  顶部: ${mainContentScreenPosition.toStringAsFixed(1)}px  |  底部: ${mainContentBottomPosition.toStringAsFixed(1)}px');
-          print('║ 【右侧卡片】                                                      ');
-          print('║  顶部: ${rightCardPosition.dy.toStringAsFixed(1)}px  |  Positioned.top: ${rightCardTopInStack.toStringAsFixed(1)}px');
-          print('║ 【相对距离】                                                      ');
-          print('║  ${(rightCardPosition.dy - mainContentPosition.dy).toStringAsFixed(1)}px');
-          if (stage == "1(跟随)") {
-            print('║ 【跟随逻辑】基于offset计算：${_rightSidebarOffset.toStringAsFixed(1)}  主内容位置：${mainContentScreenPosition.toStringAsFixed(1)}px    ');
-            print('║ 【目标】右侧卡片应该在主内容下方60px：${(mainContentScreenPosition + 60).toStringAsFixed(1)}px    ');
-            print('║ 【实际】右侧卡片实际在：${rightCardPosition.dy.toStringAsFixed(1)}px    ');
-            if (((rightCardPosition.dy - mainContentPosition.dy) - 60).abs() > 5) {
-              print('║ ⚠️  误差过大！说明offset计算公式需要调整！                                      ');
-            }
-          } else if (stage == "2(吸顶-固定)") {
-            print('║ 【固定状态】${_isStage2Locked ? "已锁定(禁用动效)" : "未锁定"}  offset=${_rightSidebarOffset.toStringAsFixed(1)}   ');
-          } else if (stage == "3(底部对齐)") {
-            print('║ 【底部对齐】跟随主内容底部一起滑出                                   ');
-          }
-          print('╚══════════════════════════════════════════════════════════════════╝');
         }
       }
     });
@@ -422,7 +399,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
               key: _rightCardKey,
               right: 60, // 和主内容区域的padding一致
               top: 100 + _rightSidebarOffset, // 导航栏高度 + 动态offset
-              child: _buildRightSidebarCard(),
+              child: _buildRightSidebarCard(context),
             ),
 
           // === 上层：CustomScrollView（包含导航栏和内容）===
@@ -697,7 +674,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   }
 
   /// 构建右侧卡片（一个完整的白色卡片，包含所有内容）
-  Widget _buildRightSidebarCard() {
+  Widget _buildRightSidebarCard(BuildContext context) {
     return Container(
       width: 450,
       decoration: BoxDecoration(
@@ -769,13 +746,17 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
             ),
           ),
           const SizedBox(height: 16),
-          _buildExploreButton('查看', Icons.article_outlined, onTap: () => _showQRCodeDialog(context)),
+          _buildExploreButton('查看', Icons.article_outlined, onTap: () {
+            print('点击了查看按钮');
+            _showQRCodeDialog(context);
+          }),
           const SizedBox(height: 12),
           _buildExploreButton('关注', Icons.code_outlined),
           const SizedBox(height: 12),
           _buildExploreButton('项目入厅', Icons.contact_phone_outlined),
           const SizedBox(height: 12),
           _buildExploreButton('我想购买', Icons.shopping_cart_outlined, onTap: () {
+            print('点击了我想购买按钮');
             setState(() {
               _showRegisterDialog = true;
             });
