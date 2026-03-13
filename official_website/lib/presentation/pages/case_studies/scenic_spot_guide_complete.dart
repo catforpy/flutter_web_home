@@ -77,7 +77,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
 
     _titleSlideAnimation = Tween<double>(
       begin: 0.0,
-      end: -33.0, // 100rpx约等于33px
+      end: 33.0, // 100rpx约等于33px，向下移动
     ).animate(CurvedAnimation(
       parent: _titleSlideController,
       curve: Curves.easeInOut,
