@@ -7,6 +7,7 @@ import '../../widgets/workbench/register_mini_program_dialog.dart';
 import '../../routes/app_router.dart';
 import '../../../core/auth/auth_state.dart';
 import '../../../domain/models/mini_program_registration.dart';
+import 'company_detail_page.dart';
 
 /// 个人中心页面 - 慕课网风格
 class ProfilePage extends StatefulWidget {
@@ -567,14 +568,28 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Column(
       children: companies.map((company) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF5F5F5),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
+        return MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CompanyDetailPage(
+                    companyId: '1',
+                    companyName: company['name'] as String,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
             children: [
               const Icon(
                 Icons.business,
@@ -621,6 +636,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ],
+          ),
+            ),
           ),
         );
       }).toList(),
