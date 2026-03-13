@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -337,25 +338,72 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
     return Material(
       child: Stack(
         children: [
-          // === 底层：全屏渐变背景 ===
+          // === 底层：全屏背景图片 + 高斯模糊 + 底部白色渐变 ===
           Positioned(
             top: 0,
             left: 0,
             right: 0,
-            child: Container(
+            child: SizedBox(
               height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF52C41A),
-                    Color(0xFFD4B106),
-                    Color(0xFFFAFAFA),
-                    Colors.white,
-                  ],
-                  stops: [0.0, 0.3, 0.7, 1.0],
-                ),
+              child: Stack(
+                children: [
+                  // 背景图片
+                  Positioned.fill(
+                    child: Image.asset(
+                      'assets/284a0007c2c9e73207ff885f70fa4c40.jpeg',
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Color(0xFF52C41A),
+                                Color(0xFFD4B106),
+                                Color(0xFFFAFAFA),
+                                Colors.white,
+                              ],
+                              stops: [0.0, 0.3, 0.7, 1.0],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  // 强高斯模糊层
+                  Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                      child: Container(
+                        color: Colors.white.withValues(alpha: 0.1),
+                      ),
+                    ),
+                  ),
+
+                  // 底部渐变到白色
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: 400,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.white.withValues(alpha: 0.0),
+                            Colors.white.withValues(alpha: 0.3),
+                            Colors.white.withValues(alpha: 0.7),
+                            Colors.white,
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
