@@ -32,10 +32,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   // 记录滚动位置，用于判断滚动方向
   double _lastScrollOffset = 0;
 
-  // 平滑动画Ticker
-  Ticker? _smoothTicker;
-  bool _needsSmoothing = false;
-
   // 右侧卡片区域的粘滞动画状态
   double _rightSidebarOffset = 0.0;
 
@@ -46,11 +42,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   // 阶段2锁定状态（避免动效抖动）
   bool _isStage2Locked = false;
   double _lockedSidebarOffset = 0.0;
-
-  // 平滑过渡相关
-  double _currentSmoothOffset = 0.0; // 当前平滑后的offset
-  double _targetRawOffset = 0.0; // 目标原始offset
-  final double _smoothFactor = 0.15; // 平滑因子（0.1-0.2之间，越小越平滑但延迟越高）
 
   // 是否已初始化
   bool _isInitialized = false;
@@ -93,9 +84,6 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-
-    // 创建平滑动画ticker
-    _smoothTicker = createTicker(_onSmoothTick);
 
     // 初始化滚动简介动画
     _scrollingBioController = AnimationController(
@@ -146,41 +134,14 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
 
       setState(() {
         _rightSidebarOffset = initialOffset;
-        _currentSmoothOffset = initialOffset;
-        _targetRawOffset = initialOffset;
         _isInitialized = true;
       });
     }
   }
 
-  // 平滑动画的ticker回调（每帧调用）
-  void _onSmoothTick(Duration elapsed) {
-    if (!_needsSmoothing) {
-      return;
-    }
-
-    // 计算插值
-    final double delta = _targetRawOffset - _currentSmoothOffset;
-
-    // 如果差距很小，停止平滑动画
-    if (delta.abs() < 0.5) {
-      _currentSmoothOffset = _targetRawOffset;
-      _rightSidebarOffset = _currentSmoothOffset;
-      _needsSmoothing = false;
-      setState(() {});
-      return;
-    }
-
-    // 应用插值
-    _currentSmoothOffset += delta * _smoothFactor;
-    _rightSidebarOffset = _currentSmoothOffset;
-    setState(() {});
-  }
-
   @override
   void dispose() {
     _scrollController.dispose();
-    _smoothTicker?.dispose();
     _scrollingBioController.dispose();
     _titleSlideController.dispose();
     super.dispose();
@@ -237,32 +198,8 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
           _isStage2Locked = true;
         }
 
-        // 应用平滑过渡（针对鼠标滚轮优化）
-        if (shouldStage1) {
-          // 阶段1：使用ticker驱动的平滑动画
-          _targetRawOffset = targetOffset;
-
-          // 检查是否是首次显示（_currentSmoothOffset和_targetRawOffset差距很大）
-          final bool isFirstShow = (_currentSmoothOffset - _targetRawOffset).abs() > 500;
-
-          if (isFirstShow) {
-            // 首次显示：立即设置到正确位置，不要动画
-            _currentSmoothOffset = _targetRawOffset;
-            _rightSidebarOffset = _currentSmoothOffset;
-            _needsSmoothing = false;
-          } else {
-            // 正常滚动：使用平滑动画
-            if (!_needsSmoothing) {
-              _needsSmoothing = true;
-              _smoothTicker?.start();
-            }
-          }
-        } else {
-          // 阶段2和3：快速响应，不使用平滑
-          _needsSmoothing = false;
-          _rightSidebarOffset = targetOffset;
-          _currentSmoothOffset = targetOffset;
-        }
+        // 直接设置offset，不使用平滑动画
+        _rightSidebarOffset = targetOffset;
       }
 
       _lastScrollOffset = offset;
