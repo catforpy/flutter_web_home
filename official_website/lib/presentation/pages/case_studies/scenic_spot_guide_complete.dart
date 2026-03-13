@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 /// 智慧景区导览 - 完整实现版本
 ///
@@ -740,7 +741,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
             ),
           ),
           const SizedBox(height: 16),
-          _buildExploreButton('查看', Icons.article_outlined),
+          _buildExploreButton('查看', Icons.article_outlined, onTap: () => _showQRCodeDialog(context)),
           const SizedBox(height: 12),
           _buildExploreButton('关注', Icons.code_outlined),
           const SizedBox(height: 12),
@@ -797,11 +798,11 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
     );
   }
 
-  Widget _buildExploreButton(String label, IconData icon) {
+  Widget _buildExploreButton(String label, IconData icon, {VoidCallback? onTap}) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () {},
+        onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
@@ -823,6 +824,73 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
           ),
         ),
       ),
+    );
+  }
+
+  /// 显示二维码弹窗
+  void _showQRCodeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 关闭按钮
+                Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: const Icon(
+                      Icons.close,
+                      size: 24,
+                      color: Color(0xFF999999),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // 二维码
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: const Color(0xFFE0E0E0),
+                      width: 1,
+                    ),
+                  ),
+                  child: const QrImageView(
+                    data: 'https://example.com/mini-program',
+                    version: QrVersions.auto,
+                    size: 200.0,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // 提示文字
+                const Text(
+                  '扫描二维码查看小程序详情',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF333333),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
