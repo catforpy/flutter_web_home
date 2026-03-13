@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:official_website/presentation/widgets/workbench/register_mini_program_dialog.dart';
+import 'package:official_website/domain/models/mini_program_registration.dart';
 
 /// 智慧景区导览 - 完整实现版本
 ///
@@ -60,6 +62,10 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
 
   // 轮播图相关
   int _currentCarouselIndex = 0;
+
+  // 注册小程序弹窗控制
+  bool _showRegisterDialog = false;
+
   final List<MediaItem> _carouselItems = [
     MediaItem(
       type: MediaType.image,
@@ -560,6 +566,28 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
               ),
             ],
           ),
+
+          // 注册小程序弹窗
+          if (_showRegisterDialog)
+            RegisterMiniProgramDialog(
+              onRegistrationComplete: (registration) {
+                setState(() {
+                  _showRegisterDialog = false;
+                });
+                // TODO: 处理注册完成后的逻辑
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('小程序注册成功！'),
+                    backgroundColor: Color(0xFF52C41A),
+                  ),
+                );
+              },
+              onClose: () {
+                setState(() {
+                  _showRegisterDialog = false;
+                });
+              },
+            ),
         ],
       ),
     );
@@ -747,7 +775,11 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
           const SizedBox(height: 12),
           _buildExploreButton('项目入厅', Icons.contact_phone_outlined),
           const SizedBox(height: 12),
-          _buildExploreButton('我想购买', Icons.shopping_cart_outlined),
+          _buildExploreButton('我想购买', Icons.shopping_cart_outlined, onTap: () {
+            setState(() {
+              _showRegisterDialog = true;
+            });
+          }),
 
           const SizedBox(height: 24),
 
@@ -801,8 +833,9 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   Widget _buildExploreButton(String label, IconData icon, {VoidCallback? onTap}) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      child: GestureDetector(
+      child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
@@ -868,7 +901,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
                       width: 1,
                     ),
                   ),
-                  child: const QrImageView(
+                  child: QrImageView(
                     data: 'https://example.com/mini-program',
                     version: QrVersions.auto,
                     size: 200.0,
