@@ -69,7 +69,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
       duration: const Duration(seconds: 20),
     )..repeat();
 
-    // 初始化标题和数据卡片的向上移动动画（100px）
+    // 初始化标题和数据卡片的向上移动动画（100rpx ≈ 33px）
     _titleSlideController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -77,7 +77,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
 
     _titleSlideAnimation = Tween<double>(
       begin: 0.0,
-      end: -100.0,
+      end: -33.0, // 100rpx约等于33px
     ).animate(CurvedAnimation(
       parent: _titleSlideController,
       curve: Curves.easeInOut,
@@ -543,11 +543,12 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
         Text(
           label,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 32, // 和Case Show一样大
+            fontWeight: FontWeight.w300,
             color: Colors.white.withValues(alpha: 0.9),
           ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 8),
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -555,7 +556,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
               duration: const Duration(milliseconds: 800),
               curve: Curves.easeOutQuart,
               style: const TextStyle(
-                fontSize: 36,
+                fontSize: 64, // 比智慧景区导览(72px)小一点
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 height: 1.0,
@@ -568,7 +569,8 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
               child: Text(
                 unit,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 24, // 相应变大
+                  fontWeight: FontWeight.w300,
                   color: Colors.white.withValues(alpha: 0.8),
                 ),
               ),
