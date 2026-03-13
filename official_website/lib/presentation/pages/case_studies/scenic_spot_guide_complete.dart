@@ -338,7 +338,18 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
               key: _rightCardKey,
               right: 60, // 和主内容区域的padding一致
               top: 100 + _rightSidebarOffset, // 导航栏高度 + 动态offset
-              child: _buildRightSidebarCard(context),
+              child: MouseRegion(
+                onEnter: (_) {
+                  print('>>> 鼠标进入右侧卡片区域');
+                },
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    print('>>> 点击了右侧卡片容器');
+                  },
+                  child: _buildRightSidebarCard(context),
+                ),
+              ),
             ),
 
           // === 上层：CustomScrollView（包含导航栏和内容）===
@@ -756,9 +767,19 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   Widget _buildExploreButton(String label, IconData icon, {VoidCallback? onTap}) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
+      onEnter: (_) {
+        print('>>> 鼠标进入按钮: $label');
+      },
+      child: GestureDetector(
+        onTap: () {
+          print('>>> 点击了按钮: $label');
+          if (onTap != null) {
+            print('>>> 执行onTap回调');
+            onTap();
+          } else {
+            print('>>> onTap为null，没有回调');
+          }
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
@@ -853,8 +874,14 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
   Widget _buildNavButton(String label, IconData icon, VoidCallback onTap) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
+      onEnter: (_) {
+        print('>>> 鼠标进入导航按钮: $label');
+      },
       child: GestureDetector(
-        onTap: onTap,
+        onTap: () {
+          print('>>> 点击了导航按钮: $label');
+          onTap();
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
