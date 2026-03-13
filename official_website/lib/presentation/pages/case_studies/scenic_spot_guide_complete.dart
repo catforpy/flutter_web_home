@@ -821,57 +821,89 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
       barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          backgroundColor: Colors.transparent,
           child: Container(
-            padding: const EdgeInsets.all(24),
+            constraints: const BoxConstraints(maxWidth: 280),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 30,
+                  offset: const Offset(0, 10),
+                  spreadRadius: 0,
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // 关闭按钮
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: const Icon(
-                      Icons.close,
-                      size: 24,
-                      color: Color(0xFF999999),
+                // 标题栏
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      '扫码查看',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333),
+                      ),
                     ),
-                  ),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F5F5),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          size: 18,
+                          color: Color(0xFF666666),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
 
-                // 二维码
+                // 二维码（带阴影）
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: const Color(0xFFE0E0E0),
-                      width: 1,
-                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 15,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: QrImageView(
                     data: 'https://example.com/mini-program',
                     version: QrVersions.auto,
-                    size: 200.0,
+                    size: 180.0,
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
 
                 // 提示文字
                 const Text(
                   '扫描二维码查看小程序详情',
                   style: TextStyle(
-                    fontSize: 16,
-                    color: Color(0xFF333333),
-                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Color(0xFF666666),
+                    height: 1.5,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
