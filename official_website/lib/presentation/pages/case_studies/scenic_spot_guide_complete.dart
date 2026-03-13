@@ -732,7 +732,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
 
           // 探索更多部分
           Text(
-            '探索更多',
+            '我想做',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -740,11 +740,13 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
             ),
           ),
           const SizedBox(height: 16),
-          _buildExploreButton('案例详情', Icons.article_outlined),
+          _buildExploreButton('查看', Icons.article_outlined),
           const SizedBox(height: 12),
-          _buildExploreButton('技术方案', Icons.code_outlined),
+          _buildExploreButton('关注', Icons.code_outlined),
           const SizedBox(height: 12),
-          _buildExploreButton('联系我们', Icons.contact_phone_outlined),
+          _buildExploreButton('项目入厅', Icons.contact_phone_outlined),
+          const SizedBox(height: 12),
+          _buildExploreButton('我想购买', Icons.shopping_cart_outlined),
 
           const SizedBox(height: 24),
 
