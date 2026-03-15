@@ -804,9 +804,9 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
       children: [
         Row(
           children: [
-            Text(
+            const Text(
               '服务类目',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: Color(0xFF333333),

@@ -35,19 +35,19 @@ class _DevelopmentStepCardState extends State<DevelopmentStepCard> {
             // 六边形图标 + 序号
             _buildHexagonIcon(),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
             // 序号
             Text(
               widget.step.stepNumber,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textDisabled,
               ),
             ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
             // 主标题
             AnimatedDefaultTextStyle(
@@ -64,14 +64,14 @@ class _DevelopmentStepCardState extends State<DevelopmentStepCard> {
               ),
             ),
 
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
 
             // 描述列表
             ...widget.step.descriptions.map((desc) => Padding(
                   padding: const EdgeInsets.only(bottom: 1.5),
                   child: Text(
                     desc,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.textSecondary,
                       height: 1.4,
@@ -220,7 +220,7 @@ class _HexagonPainter extends CustomPainter {
       ..strokeJoin = StrokeJoin.round;
 
     final iconSize = size.width * 0.35;
-    final strokeWidth = 2.0;
+    const strokeWidth = 2.0;
 
     switch (iconType) {
       case DevelopmentStepIconType.personnel:
@@ -302,10 +302,10 @@ class _HexagonPainter extends CustomPainter {
           height: folderSize * 0.6,
         );
         // 绘制文件夹（双层矩形）
-        final outerRRect = RRect.fromRectAndRadius(folderRect, Radius.circular(4));
+        final outerRRect = RRect.fromRectAndRadius(folderRect, const Radius.circular(4));
         final innerRRect = RRect.fromRectAndRadius(
           folderRect.deflate(2),
-          Radius.circular(2),
+          const Radius.circular(2),
         );
         canvas.drawDRRect(
           outerRRect,
@@ -332,7 +332,7 @@ class _HexagonPainter extends CustomPainter {
           height: monitorSize * 0.6,
         );
         canvas.drawRRect(
-          RRect.fromRectAndRadius(monitorRect, Radius.circular(2)),
+          RRect.fromRectAndRadius(monitorRect, const Radius.circular(2)),
           paint..strokeWidth = strokeWidth,
         );
         // 底座

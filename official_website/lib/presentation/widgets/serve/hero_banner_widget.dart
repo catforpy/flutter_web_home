@@ -1,7 +1,4 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
-import 'package:flutter/gestures.dart';
 import '../../routes/app_router.dart';
 
 /// 服务页Hero横幅组件
@@ -137,7 +134,7 @@ class HeroBannerWidget extends StatelessWidget {
               ),
             ],
           ),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
@@ -145,7 +142,7 @@ class HeroBannerWidget extends StatelessWidget {
                 color: Colors.white,
                 size: 24,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'APP下载',
                 style: TextStyle(

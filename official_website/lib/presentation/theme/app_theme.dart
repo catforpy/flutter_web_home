@@ -11,7 +11,7 @@ class AppTheme {
       brightness: Brightness.light,
 
       // 颜色方案
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
         secondary: AppColors.secondary,
         tertiary: AppColors.tertiary,
@@ -27,7 +27,7 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.background,
 
       // AppBar主题
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.surface,
         foregroundColor: AppColors.onSurface,
         elevation: 0,
@@ -87,7 +87,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          side: BorderSide(color: AppColors.primary),
+          side: const BorderSide(color: AppColors.primary),
         ),
       ),
 
@@ -97,19 +97,19 @@ class AppTheme {
         fillColor: AppColors.surface,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppColors.outline),
+          borderSide: const BorderSide(color: AppColors.outline),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppColors.outline),
+          borderSide: const BorderSide(color: AppColors.outline),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppColors.primary, width: 2),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppColors.error),
+          borderSide: const BorderSide(color: AppColors.error),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
@@ -119,58 +119,58 @@ class AppTheme {
 
       // 文本主题
       textTheme: TextTheme(
-        displayLarge: TextStyle(
+        displayLarge: const TextStyle(
           fontSize: 57,
           fontWeight: FontWeight.w400,
           color: AppColors.onSurface,
           letterSpacing: -0.25,
         ),
-        displayMedium: TextStyle(
+        displayMedium: const TextStyle(
           fontSize: 45,
           fontWeight: FontWeight.w400,
           color: AppColors.onSurface,
         ),
-        displaySmall: TextStyle(
+        displaySmall: const TextStyle(
           fontSize: 36,
           fontWeight: FontWeight.w400,
           color: AppColors.onSurface,
         ),
-        headlineLarge: TextStyle(
+        headlineLarge: const TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.w600,
           color: AppColors.onSurface,
         ),
-        headlineMedium: TextStyle(
+        headlineMedium: const TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.w600,
           color: AppColors.onSurface,
         ),
-        headlineSmall: TextStyle(
+        headlineSmall: const TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w600,
           color: AppColors.onSurface,
         ),
-        titleLarge: TextStyle(
+        titleLarge: const TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w500,
           color: AppColors.onSurface,
         ),
-        titleMedium: TextStyle(
+        titleMedium: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
           color: AppColors.onSurface,
         ),
-        titleSmall: TextStyle(
+        titleSmall: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: AppColors.onSurface,
         ),
-        bodyLarge: TextStyle(
+        bodyLarge: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: AppColors.onSurface,
         ),
-        bodyMedium: TextStyle(
+        bodyMedium: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.normal,
           color: AppColors.onSurface,
@@ -180,17 +180,17 @@ class AppTheme {
           fontWeight: FontWeight.normal,
           color: AppColors.onSurface.withOpacity(0.7),
         ),
-        labelLarge: TextStyle(
+        labelLarge: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: AppColors.onSurface,
         ),
-        labelMedium: TextStyle(
+        labelMedium: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: AppColors.onSurface,
         ),
-        labelSmall: TextStyle(
+        labelSmall: const TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w500,
           color: AppColors.onSurface,
@@ -206,7 +206,7 @@ class AppTheme {
       brightness: Brightness.dark,
 
       // 颜色方案
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: AppColors.darkPrimary,
         secondary: AppColors.darkSecondary,
         tertiary: AppColors.darkTertiary,
@@ -222,7 +222,7 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.darkBackground,
 
       // AppBar主题
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.darkSurface,
         foregroundColor: AppColors.onDarkSurface,
         elevation: 0,
@@ -282,7 +282,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          side: BorderSide(color: AppColors.darkPrimary),
+          side: const BorderSide(color: AppColors.darkPrimary),
         ),
       ),
 
@@ -292,19 +292,19 @@ class AppTheme {
         fillColor: AppColors.darkSurface,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppColors.darkOutline),
+          borderSide: const BorderSide(color: AppColors.darkOutline),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppColors.darkOutline),
+          borderSide: const BorderSide(color: AppColors.darkOutline),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppColors.darkPrimary, width: 2),
+          borderSide: const BorderSide(color: AppColors.darkPrimary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppColors.darkError),
+          borderSide: const BorderSide(color: AppColors.darkError),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
@@ -314,58 +314,58 @@ class AppTheme {
 
       // 文本主题
       textTheme: TextTheme(
-        displayLarge: TextStyle(
+        displayLarge: const TextStyle(
           fontSize: 57,
           fontWeight: FontWeight.w400,
           color: AppColors.onDarkSurface,
           letterSpacing: -0.25,
         ),
-        displayMedium: TextStyle(
+        displayMedium: const TextStyle(
           fontSize: 45,
           fontWeight: FontWeight.w400,
           color: AppColors.onDarkSurface,
         ),
-        displaySmall: TextStyle(
+        displaySmall: const TextStyle(
           fontSize: 36,
           fontWeight: FontWeight.w400,
           color: AppColors.onDarkSurface,
         ),
-        headlineLarge: TextStyle(
+        headlineLarge: const TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.w600,
           color: AppColors.onDarkSurface,
         ),
-        headlineMedium: TextStyle(
+        headlineMedium: const TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.w600,
           color: AppColors.onDarkSurface,
         ),
-        headlineSmall: TextStyle(
+        headlineSmall: const TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w600,
           color: AppColors.onDarkSurface,
         ),
-        titleLarge: TextStyle(
+        titleLarge: const TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w500,
           color: AppColors.onDarkSurface,
         ),
-        titleMedium: TextStyle(
+        titleMedium: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
           color: AppColors.onDarkSurface,
         ),
-        titleSmall: TextStyle(
+        titleSmall: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: AppColors.onDarkSurface,
         ),
-        bodyLarge: TextStyle(
+        bodyLarge: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: AppColors.onDarkSurface,
         ),
-        bodyMedium: TextStyle(
+        bodyMedium: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.normal,
           color: AppColors.onDarkSurface,
@@ -375,17 +375,17 @@ class AppTheme {
           fontWeight: FontWeight.normal,
           color: AppColors.onDarkSurface.withOpacity(0.7),
         ),
-        labelLarge: TextStyle(
+        labelLarge: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: AppColors.onDarkSurface,
         ),
-        labelMedium: TextStyle(
+        labelMedium: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: AppColors.onDarkSurface,
         ),
-        labelSmall: TextStyle(
+        labelSmall: const TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w500,
           color: AppColors.onDarkSurface,

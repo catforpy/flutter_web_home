@@ -232,10 +232,10 @@ class _CartPageState extends State<CartPage> {
 
     return Container(
       height: 140,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: const Color(0xFFF0F0F0),
+            color: Color(0xFFF0F0F0),
             width: 1,
           ),
         ),
@@ -364,9 +364,9 @@ class _CartPageState extends State<CartPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       '¥',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         color: Color(0xFF999999),
                       ),
@@ -398,10 +398,10 @@ class _CartPageState extends State<CartPage> {
                       _selectedItems.clear();
                     });
                   },
-                  child: Container(
+                  child: const SizedBox(
                     width: 24,
                     height: 24,
-                    child: const Icon(
+                    child: Icon(
                       Icons.close,
                       size: 20,
                       color: Color(0xFFCCCCCC),

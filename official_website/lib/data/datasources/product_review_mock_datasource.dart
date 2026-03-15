@@ -29,13 +29,13 @@ class ProductReviewMockDatasource {
 
     if (minRating != null) {
       filteredReviews = filteredReviews
-          .where((r) => r.rating >= minRating!)
+          .where((r) => r.rating >= minRating)
           .toList();
     }
 
     if (maxRating != null) {
       filteredReviews = filteredReviews
-          .where((r) => r.rating <= maxRating!)
+          .where((r) => r.rating <= maxRating)
           .toList();
     }
 
@@ -53,13 +53,13 @@ class ProductReviewMockDatasource {
 
     if (startDate != null) {
       filteredReviews = filteredReviews
-          .where((r) => r.createTime.isAfter(startDate!))
+          .where((r) => r.createTime.isAfter(startDate))
           .toList();
     }
 
     if (endDate != null) {
       filteredReviews = filteredReviews
-          .where((r) => r.createTime.isBefore(endDate!))
+          .where((r) => r.createTime.isBefore(endDate))
           .toList();
     }
 
@@ -130,7 +130,7 @@ class ProductReviewMockDatasource {
   static ProductReview? getReviewById(String id) {
     return _getAllReviews().firstWhere(
       (r) => r.id == id,
-      orElse: () => throw StateError("Value not found"),
+      orElse: () => throw StateError('Value not found'),
     );
   }
 

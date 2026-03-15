@@ -40,7 +40,7 @@ class _CourseQAManagementPageState extends State<CourseQAManagementPage>
   /// 加载模拟数据
   void _loadMockData() {
     _preCourseData = [
-      CourseQAStats(
+      const CourseQAStats(
         courseId: 'course_001',
         courseName: 'Python全栈开发实战',
         instructorId: 'ins_001',
@@ -56,7 +56,7 @@ class _CourseQAManagementPageState extends State<CourseQAManagementPage>
         resolvedCount: 20,
         averageRating: 4.8,
       ),
-      CourseQAStats(
+      const CourseQAStats(
         courseId: 'course_002',
         courseName: 'React18高级进阶',
         instructorId: 'ins_002',
@@ -72,7 +72,7 @@ class _CourseQAManagementPageState extends State<CourseQAManagementPage>
         resolvedCount: 12,
         averageRating: 4.6,
       ),
-      CourseQAStats(
+      const CourseQAStats(
         courseId: 'course_003',
         courseName: 'Flutter移动开发实战',
         instructorId: 'ins_003',
@@ -88,7 +88,7 @@ class _CourseQAManagementPageState extends State<CourseQAManagementPage>
         resolvedCount: 35,
         averageRating: 4.9,
       ),
-      CourseQAStats(
+      const CourseQAStats(
         courseId: 'course_004',
         courseName: 'Java Spring Boot微服务',
         instructorId: 'ins_001',
@@ -104,7 +104,7 @@ class _CourseQAManagementPageState extends State<CourseQAManagementPage>
         resolvedCount: 6,
         averageRating: 0.0,
       ),
-      CourseQAStats(
+      const CourseQAStats(
         courseId: 'course_005',
         courseName: 'Vue3企业级项目实战',
         instructorId: 'ins_002',
@@ -123,7 +123,7 @@ class _CourseQAManagementPageState extends State<CourseQAManagementPage>
     ];
 
     _postCourseData = [
-      CourseQAStats(
+      const CourseQAStats(
         courseId: 'course_001',
         courseName: 'Python全栈开发实战',
         instructorId: 'ins_001',
@@ -139,7 +139,7 @@ class _CourseQAManagementPageState extends State<CourseQAManagementPage>
         resolvedCount: 142,
         averageRating: 4.8,
       ),
-      CourseQAStats(
+      const CourseQAStats(
         courseId: 'course_002',
         courseName: 'React18高级进阶',
         instructorId: 'ins_002',
@@ -155,7 +155,7 @@ class _CourseQAManagementPageState extends State<CourseQAManagementPage>
         resolvedCount: 76,
         averageRating: 4.6,
       ),
-      CourseQAStats(
+      const CourseQAStats(
         courseId: 'course_003',
         courseName: 'Flutter移动开发实战',
         instructorId: 'ins_003',
@@ -817,7 +817,7 @@ class _CourseQADetailDialogState extends State<CourseQADetailDialog> {
                 const SizedBox(width: 24),
                 const Icon(Icons.comment, size: 16, color: Colors.grey),
                 const SizedBox(width: 4),
-                Text('1'),
+                const Text('1'),
               ],
             ),
 

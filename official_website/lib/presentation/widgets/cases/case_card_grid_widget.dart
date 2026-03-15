@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import '../../routes/app_router.dart';
 
 /// 案例卡片网格组件
@@ -195,6 +194,8 @@ class _CaseCardState extends State<_CaseCard> {
                 child: Image.network(
                   widget.caseItem.backgroundImage,
                   fit: BoxFit.cover,
+                  cacheWidth: 1200,  // ✅ 优化：限制缓存图片尺寸
+                  cacheHeight: 800,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       color: Colors.grey.withValues(alpha: 0.2),
@@ -252,6 +253,8 @@ class _CaseCardState extends State<_CaseCard> {
                             child: Image.network(
                               widget.caseItem.logoUrl,
                               fit: BoxFit.contain,
+                              cacheWidth: 200,  // ✅ 优化：logo图片使用小尺寸
+                              cacheHeight: 200,
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
                                   color: Colors.grey.withValues(alpha: 0.2),

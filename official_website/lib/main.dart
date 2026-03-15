@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quill/translations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'presentation/theme/app_theme.dart';
 import 'presentation/routes/app_router.dart';

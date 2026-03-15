@@ -205,10 +205,10 @@ class _OrdersPageState extends State<OrdersPage> {
                   ),
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.chevron_right,
                 size: 16,
-                color: const Color(0xFFCCCCCC),
+                color: Color(0xFFCCCCCC),
               ),
             ],
           ),

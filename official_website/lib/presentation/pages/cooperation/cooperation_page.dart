@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_sizes.dart';
 import '../../widgets/common/footer_widget.dart';
 import '../../widgets/common/floating_widget.dart';
 import '../../widgets/common/unified_navigation_bar.dart';
-import 'dart:async';
-import 'dart:math' as math;
-import 'package:flutter/gestures.dart';
 import '../../routes/app_router.dart';
 
 /// 合作流程页面
@@ -60,7 +56,7 @@ class _CooperationPageState extends State<CooperationPage> {
               _buildHeroSection(),
 
               // 2. 导航栏（在 Hero 横幅下面）
-              UnifiedNavigationBar(
+              const UnifiedNavigationBar(
                 currentPath: AppRouter.cooperation,
               ),
 
@@ -284,7 +280,7 @@ class _CooperationPageState extends State<CooperationPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 主标题
-        Text(
+        const Text(
           '合作流程',
           style: TextStyle(
             fontSize: 48,
@@ -533,7 +529,7 @@ class _StepDetailContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 标题
-              Wrap(
+              const Wrap(
                 spacing: 4,
                 children: [
                   Text(
@@ -541,7 +537,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD93025), // 红色加深
+                      color: Color(0xFFD93025), // 红色加深
                     ),
                   ),
                   Text(
@@ -549,7 +545,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF333333),
+                      color: Color(0xFF333333),
                     ),
                   ),
                 ],
@@ -557,11 +553,11 @@ class _StepDetailContent extends StatelessWidget {
               const SizedBox(height: 16),
 
               // 副标题
-              Text(
+              const Text(
                 '用户确定自身资质是否满足微信设立相应小程序的资质要求，确定网站建设方案，需求定位，沟通网站设计细节',
                 style: TextStyle(
                   fontSize: 14,
-                  color: const Color(0xFF999999), // 灰色
+                  color: Color(0xFF999999), // 灰色
                   height: 1.5,
                 ),
               ),
@@ -643,7 +639,7 @@ class _StepDetailContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 标题
-              Wrap(
+              const Wrap(
                 spacing: 4,
                 children: [
                   Text(
@@ -651,7 +647,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD93025), // 红色
+                      color: Color(0xFFD93025), // 红色
                     ),
                   ),
                   Text(
@@ -659,7 +655,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF333333),
+                      color: Color(0xFF333333),
                     ),
                   ),
                 ],
@@ -678,11 +674,11 @@ class _StepDetailContent extends StatelessWidget {
               const SizedBox(height: 24),
 
               // 副标题
-              Text(
+              const Text(
                 '本阶段 网站设计图给到用户浏览 用户提出修改要求与最终签字确认',
                 style: TextStyle(
                   fontSize: 14,
-                  color: const Color(0xFF999999), // 灰色
+                  color: Color(0xFF999999), // 灰色
                   height: 1.5,
                 ),
               ),
@@ -753,7 +749,7 @@ class _StepDetailContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 标题
-              Wrap(
+              const Wrap(
                 spacing: 4,
                 children: [
                   Text(
@@ -761,7 +757,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD93025), // 红色
+                      color: Color(0xFFD93025), // 红色
                     ),
                   ),
                   Text(
@@ -769,7 +765,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF333333),
+                      color: Color(0xFF333333),
                     ),
                   ),
                 ],
@@ -788,11 +784,11 @@ class _StepDetailContent extends StatelessWidget {
               const SizedBox(height: 24),
 
               // 副标题
-              Text(
+              const Text(
                 '本阶段程序员会根据前端代码开发系统功能和实现逻辑',
                 style: TextStyle(
                   fontSize: 14,
-                  color: const Color(0xFF999999), // 灰色
+                  color: Color(0xFF999999), // 灰色
                   height: 1.5,
                 ),
               ),
@@ -861,7 +857,7 @@ class _StepDetailContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 标题
-              Wrap(
+              const Wrap(
                 spacing: 4,
                 children: [
                   Text(
@@ -869,7 +865,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD93025), // 红色
+                      color: Color(0xFFD93025), // 红色
                     ),
                   ),
                   Text(
@@ -877,7 +873,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF333333),
+                      color: Color(0xFF333333),
                     ),
                   ),
                 ],
@@ -896,11 +892,11 @@ class _StepDetailContent extends StatelessWidget {
               const SizedBox(height: 24),
 
               // 副标题
-              Text(
+              const Text(
                 '本阶段测试各型号的移动端，确保每个项目的质量都趋于完美',
                 style: TextStyle(
                   fontSize: 14,
-                  color: const Color(0xFF999999), // 灰色
+                  color: Color(0xFF999999), // 灰色
                   height: 1.5,
                 ),
               ),
@@ -971,7 +967,7 @@ class _StepDetailContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 标题
-              Wrap(
+              const Wrap(
                 spacing: 4,
                 children: [
                   Text(
@@ -979,7 +975,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD93025), // 红色
+                      color: Color(0xFFD93025), // 红色
                     ),
                   ),
                   Text(
@@ -987,7 +983,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF333333),
+                      color: Color(0xFF333333),
                     ),
                   ),
                 ],
@@ -1006,11 +1002,11 @@ class _StepDetailContent extends StatelessWidget {
               const SizedBox(height: 24),
 
               // 副标题
-              Text(
+              const Text(
                 '项目部署上线，开始正式运营和后期技术支持',
                 style: TextStyle(
                   fontSize: 14,
-                  color: const Color(0xFF999999), // 灰色
+                  color: Color(0xFF999999), // 灰色
                   height: 1.5,
                 ),
               ),
@@ -1081,7 +1077,7 @@ class _StepDetailContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 标题
-              Wrap(
+              const Wrap(
                 spacing: 4,
                 children: [
                   Text(
@@ -1089,7 +1085,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD93025), // 红色
+                      color: Color(0xFFD93025), // 红色
                     ),
                   ),
                   Text(
@@ -1097,7 +1093,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF333333),
+                      color: Color(0xFF333333),
                     ),
                   ),
                 ],
@@ -1116,11 +1112,11 @@ class _StepDetailContent extends StatelessWidget {
               const SizedBox(height: 24),
 
               // 副标题
-              Text(
+              const Text(
                 '本阶段用户根据自身产品/服务性质特征，选择拥有对应资质的小程序',
                 style: TextStyle(
                   fontSize: 14,
-                  color: const Color(0xFF999999), // 灰色
+                  color: Color(0xFF999999), // 灰色
                   height: 1.5,
                 ),
               ),
@@ -1170,7 +1166,7 @@ class _StepDetailContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 标题
-              Wrap(
+              const Wrap(
                 spacing: 4,
                 children: [
                   Text(
@@ -1178,7 +1174,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD93025), // 红色
+                      color: Color(0xFFD93025), // 红色
                     ),
                   ),
                   Text(
@@ -1186,7 +1182,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF333333),
+                      color: Color(0xFF333333),
                     ),
                   ),
                 ],
@@ -1205,11 +1201,11 @@ class _StepDetailContent extends StatelessWidget {
               const SizedBox(height: 24),
 
               // 副标题
-              Text(
+              const Text(
                 '本阶段，用户和小程序业主洽谈租金及租赁方式，沟通达成一致后由双方签订租赁合同',
                 style: TextStyle(
                   fontSize: 14,
-                  color: const Color(0xFF999999), // 灰色
+                  color: Color(0xFF999999), // 灰色
                   height: 1.5,
                 ),
               ),
@@ -1247,7 +1243,7 @@ class _StepDetailContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 标题
-              Wrap(
+              const Wrap(
                 spacing: 4,
                 children: [
                   Text(
@@ -1255,7 +1251,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD93025), // 红色
+                      color: Color(0xFFD93025), // 红色
                     ),
                   ),
                   Text(
@@ -1263,7 +1259,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF333333),
+                      color: Color(0xFF333333),
                     ),
                   ),
                 ],
@@ -1282,11 +1278,11 @@ class _StepDetailContent extends StatelessWidget {
               const SizedBox(height: 24),
 
               // 副标题
-              Text(
+              const Text(
                 '本阶段，用户将产品/服务的介绍资料发给小程序业主，由小程序业主将相关资料发布在对应的小程序中，客户购买后，分成按照合同规则进行分配',
                 style: TextStyle(
                   fontSize: 14,
-                  color: const Color(0xFF999999), // 灰色
+                  color: Color(0xFF999999), // 灰色
                   height: 1.5,
                 ),
               ),
@@ -1324,7 +1320,7 @@ class _StepDetailContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 标题
-              Wrap(
+              const Wrap(
                 spacing: 4,
                 children: [
                   Text(
@@ -1332,7 +1328,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD93025), // 红色
+                      color: Color(0xFFD93025), // 红色
                     ),
                   ),
                   Text(
@@ -1340,7 +1336,7 @@ class _StepDetailContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF333333),
+                      color: Color(0xFF333333),
                     ),
                   ),
                 ],
@@ -1359,11 +1355,11 @@ class _StepDetailContent extends StatelessWidget {
               const SizedBox(height: 24),
 
               // 副标题
-              Text(
+              const Text(
                 '本阶段，用户可成为小程序的对应柜台的专属客服，实时维护/答疑，并且可以跟踪销售数据',
                 style: TextStyle(
                   fontSize: 14,
-                  color: const Color(0xFF999999), // 灰色
+                  color: Color(0xFF999999), // 灰色
                   height: 1.5,
                 ),
               ),
@@ -1436,20 +1432,20 @@ class _StepDetailContent extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             '· ',
             style: TextStyle(
               fontSize: 18, // 从15放大到18
-              color: const Color(0xFF333333),
+              color: Color(0xFF333333),
               height: 1.6,
             ),
           ),
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 15,
-                color: const Color(0xFF333333),
+                color: Color(0xFF333333),
                 height: 1.6,
               ),
             ),

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
-import 'package:flutter_quill/translations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -563,21 +562,21 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                       topRight: Radius.circular(22),
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const SizedBox(width: 60),
-                      const Text(
+                      SizedBox(width: 60),
+                      Text(
                         '12:00',
                         style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
                       Row(
                         children: [
-                          const Icon(Icons.signal_cellular_4_bar, color: Colors.white, size: 14),
-                          const SizedBox(width: 4),
-                          const Text('4G', style: TextStyle(color: Colors.white, fontSize: 12)),
-                          const SizedBox(width: 4),
-                          const Icon(Icons.battery_full, color: Colors.white, size: 14),
+                          Icon(Icons.signal_cellular_4_bar, color: Colors.white, size: 14),
+                          SizedBox(width: 4),
+                          Text('4G', style: TextStyle(color: Colors.white, fontSize: 12)),
+                          SizedBox(width: 4),
+                          Icon(Icons.battery_full, color: Colors.white, size: 14),
                         ],
                       ),
                     ],
@@ -1001,7 +1000,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                     style: TextStyle(fontSize: 14, color: Color(0xFF1890FF)),
                   ),
                 )
-              : Container(
+              : SizedBox(
                   height: 100,
                   child: ListView.builder(
                     itemCount: _recommendedProducts.length,
@@ -1186,11 +1185,11 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                       '字数统计: ${_quillController.document.length - 1}',
                       style: const TextStyle(fontSize: 12, color: Color(0xFF999999)),
                     ),
-                    Row(
+                    const Row(
                       children: [
                         Icon(Icons.info_outline, size: 14, color: Color(0xFF999999)),
-                        const SizedBox(width: 4),
-                        const Text(
+                        SizedBox(width: 4),
+                        Text(
                           '支持快捷键：Ctrl+B 加粗 | Ctrl+I 斜体 | Ctrl+U 下划线',
                           style: TextStyle(fontSize: 12, color: Color(0xFF999999)),
                         ),
@@ -1213,9 +1212,9 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
             border: Border.all(color: const Color(0xFFD9D9D9)),
             borderRadius: BorderRadius.circular(4),
           ),
-          child: Column(
+          child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
                 '富文本编辑器功能说明：',
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF1F2329)),
@@ -1261,9 +1260,9 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
             border: Border.all(color: const Color(0xFFD9D9D9)),
             borderRadius: BorderRadius.circular(4),
           ),
-          child: Column(
+          child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
                 '工具栏按钮说明（鼠标悬停查看英文，实际功能如下）：',
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF1F2329)),
@@ -1333,7 +1332,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                 '暂无相关文章',
                 style: TextStyle(fontSize: 14, color: Color(0xFF999999)),
               )
-            : Container(
+            : SizedBox(
                 height: 100,
                 child: ListView.builder(
                   itemCount: _relatedArticles.length,
@@ -1454,7 +1453,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
     } catch (e) {
       debugPrint('选择图片失败: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('选择图片失败: $e'), backgroundColor: Color(0xFFFF4D4F)),
+        SnackBar(content: Text('选择图片失败: $e'), backgroundColor: const Color(0xFFFF4D4F)),
       );
     }
   }

@@ -32,13 +32,13 @@ class AppHeader extends StatelessWidget {
                           color: Colors.grey.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             '都达',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFFFF3B30),
+                              color: Color(0xFFFF3B30),
                             ),
                           ),
                         ),
@@ -59,22 +59,22 @@ class AppHeader extends StatelessWidget {
                     path: AppRouter.serve,
                     onTap: () => AppRouter.goToServe(context),
                   ),
-                  _NavSeparator(),
+                  const _NavSeparator(),
                   _NavLink(
                     label: '解决方案',
                     path: AppRouter.solutions,
                     onTap: () => AppRouter.goToSolutions(context),
                   ),
-                  _NavSeparator(),
+                  const _NavSeparator(),
                   _NavLink(
                     label: '案例',
                     path: AppRouter.cases,
                     onTap: () => AppRouter.goToCases(context),
                   ),
-                  _NavSeparator(),
+                  const _NavSeparator(),
                   // "我们"带下拉菜单
                   const _AboutDropdown(),
-                  _NavSeparator(),
+                  const _NavSeparator(),
                   _NavLink(
                     label: '联系',
                     path: AppRouter.contact,

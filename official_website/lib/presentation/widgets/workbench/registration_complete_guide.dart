@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../domain/models/mini_program_registration.dart';
 
 /// 注册完成引导页
 /// 提示用户进行认证，包含认证权益说明

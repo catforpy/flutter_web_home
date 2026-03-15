@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:official_website/domain/entities/article.dart';
 import 'package:official_website/domain/entities/article_category.dart';
 
 /// 文章事件基类

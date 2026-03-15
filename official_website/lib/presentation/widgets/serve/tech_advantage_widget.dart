@@ -25,7 +25,7 @@ class TechAdvantageWidget extends StatelessWidget {
 
     return Container(
       color: backgroundColor ?? AppColors.backgroundLight,
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: AppSizes.xxxl,
         left: AppSizes.lg,
         right: AppSizes.lg,
@@ -39,7 +39,7 @@ class TechAdvantageWidget extends StatelessWidget {
             subtitle: '为全行业提供高效便捷的小程序开发服务',
           ),
 
-          SizedBox(height: AppSizes.xxxl),
+          const SizedBox(height: AppSizes.xxxl),
 
           // 三栏卡片布局
           Center(
@@ -49,7 +49,7 @@ class TechAdvantageWidget extends StatelessWidget {
                   ? Column(
                       children: advantages
                           .map((advantage) => Padding(
-                                padding: EdgeInsets.only(bottom: AppSizes.lg),
+                                padding: const EdgeInsets.only(bottom: AppSizes.lg),
                                 child: _AdvantageCard(advantage: advantage),
                               ))
                           .toList(),
@@ -58,7 +58,7 @@ class TechAdvantageWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: advantages
                           .map((advantage) => Padding(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                   horizontal: AppSizes.md,
                                 ),
                                 child: SizedBox(
@@ -158,7 +158,7 @@ class _AdvantageCardState extends State<_AdvantageCard>
                         ),
                       ],
               ),
-              padding: EdgeInsets.all(AppSizes.xl),
+              padding: const EdgeInsets.all(AppSizes.xl),
               child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -193,13 +193,13 @@ class _AdvantageCardState extends State<_AdvantageCard>
                         ),
                       ),
 
-                      SizedBox(height: AppSizes.lg),
+                      const SizedBox(height: AppSizes.lg),
 
                       // 两行标题
                       Text(
                         widget.advantage.title,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: AppSizes.fsXl,
                           fontWeight: FontWeight.bold,
                           color: AppColors.textPrimary,
@@ -208,11 +208,11 @@ class _AdvantageCardState extends State<_AdvantageCard>
                       ),
 
                       if (widget.advantage.subtitle != null) ...[
-                        SizedBox(height: AppSizes.xs),
+                        const SizedBox(height: AppSizes.xs),
                         Text(
                           widget.advantage.subtitle!,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: AppSizes.fsMd,
                             fontWeight: FontWeight.w500,
                             color: AppColors.textPrimary,
@@ -221,7 +221,7 @@ class _AdvantageCardState extends State<_AdvantageCard>
                         ),
                       ],
 
-                      SizedBox(height: AppSizes.md),
+                      const SizedBox(height: AppSizes.md),
 
                       // 分隔线（细灰线）
                       Container(
@@ -233,13 +233,13 @@ class _AdvantageCardState extends State<_AdvantageCard>
                         ),
                       ),
 
-                      SizedBox(height: AppSizes.md),
+                      const SizedBox(height: AppSizes.md),
 
                       // 正文段落
                       Text(
                         widget.advantage.description,
                         textAlign: TextAlign.left,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: AppSizes.fsMd,
                           color: AppColors.textSecondary,
                           height: 1.6,

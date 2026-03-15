@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'qualification_form.dart';
 
 /// 修改类目弹窗
 class EditCategoryModal extends StatefulWidget {
@@ -263,25 +262,25 @@ class _EditCategoryModalState extends State<EditCategoryModal> {
                 ),
               ),
               const SizedBox(height: 8),
-              Text.rich(
+              const Text.rich(
                 TextSpan(
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     color: Color(0xFF666666),
                     height: 1.6,
                   ),
                   children: [
-                    const TextSpan(text: '上传原件或复印件，复印件务必加盖公司公章，文件格式为'),
+                    TextSpan(text: '上传原件或复印件，复印件务必加盖公司公章，文件格式为'),
                     TextSpan(
                       text: 'jpg、jpeg、bmp、gif或png',
                       style: TextStyle(color: Color(0xFF1890FF)),
                     ),
-                    const TextSpan(text: '，文件大小'),
+                    TextSpan(text: '，文件大小'),
                     TextSpan(
                       text: '不超过10M',
                       style: TextStyle(color: Color(0xFFFF4D4F)),
                     ),
-                    const TextSpan(text: '，可拼图上传。'),
+                    TextSpan(text: '，可拼图上传。'),
                   ],
                 ),
               ),

@@ -1,4 +1,5 @@
 /// 商户进件相关数据模型
+library;
 
 /// 商户主体类型
 enum MerchantSubjectType {

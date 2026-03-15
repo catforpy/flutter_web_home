@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/auth/auth_state.dart';
 import 'store_settings_page.dart';
-import 'development/development_settings_routes.dart';
-import 'route_manager.dart';
 import 'development/development_settings_content.dart';
 import 'audit_management_content.dart';
 import 'menu_navigation/menu_navigation_content.dart';
 import 'payment/payment_config_content.dart';
 import 'course_order/course_order_page.dart';
 import 'product_category/product_category_management_page.dart';
-import 'product_detail/product_detail_page.dart';
 import 'my_warehouse/my_warehouse_page.dart';
 import 'product_reviews/product_reviews_page.dart';
 import 'freight_template/freight_template_page.dart';
@@ -354,11 +351,11 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text(
+                const Text(
                   '唐极课得',
                   style: TextStyle(
                     fontSize: 10,
-                    color: const Color(0xFFCCCCCC),
+                    color: Color(0xFFCCCCCC),
                     fontWeight: FontWeight.w300,
                   ),
                 ),
@@ -637,8 +634,8 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
                     const SizedBox(width: 6),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFF4D4F),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFFF4D4F),
                         shape: BoxShape.circle,
                       ),
                       child: Text(
@@ -1030,8 +1027,8 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
           Container(
             width: 60,
             height: 60,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1A9B8E),
+            decoration: const BoxDecoration(
+              color: Color(0xFF1A9B8E),
               shape: BoxShape.circle,
             ),
             child: const Icon(

@@ -20,7 +20,7 @@ class ServiceIntroWidget extends StatelessWidget {
       color: backgroundColor,
       width: double.infinity,
       child: Padding(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: AppSizes.xl,
           vertical: AppSizes.xxxl,
         ),
@@ -32,7 +32,7 @@ class ServiceIntroWidget extends StatelessWidget {
                 children: [
                   // 左侧插画（移动端在上方）
                   _buildIllustration(constraints.maxWidth),
-                  SizedBox(height: AppSizes.xl),
+                  const SizedBox(height: AppSizes.xl),
                   // 右侧内容
                   _buildContent(constraints.maxWidth),
                 ],
@@ -47,7 +47,7 @@ class ServiceIntroWidget extends StatelessWidget {
                   flex: 45,
                   child: _buildIllustration(constraints.maxWidth * 0.45),
                 ),
-                SizedBox(width: AppSizes.xxl),
+                const SizedBox(width: AppSizes.xxl),
                 // 右侧内容（55%）
                 Expanded(
                   flex: 55,
@@ -95,7 +95,7 @@ class ServiceIntroWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // 主标题
-        Text(
+        const Text(
           '全行业小程序开发服务',
           style: TextStyle(
             fontSize: AppSizes.fs3xl,
@@ -104,23 +104,23 @@ class ServiceIntroWidget extends StatelessWidget {
             height: 1.2,
           ),
         ),
-        SizedBox(height: AppSizes.lg),
+        const SizedBox(height: AppSizes.lg),
 
         // 三段式说明文字
         _buildBulletPoint(
           '众多知名企业的放心之选，以专业的技术、成熟的行业经验为企业提供高效可靠的移动化服务',
         ),
-        SizedBox(height: AppSizes.md),
+        const SizedBox(height: AppSizes.md),
         _buildBulletPoint(
           '16 年移动开发经验，自有平台技术支持 App/小程序同时开发，升级成本低',
           highlightText: '16 年',
         ),
-        SizedBox(height: AppSizes.md),
+        const SizedBox(height: AppSizes.md),
         _buildBulletPoint(
           '支持移动应用定制、小程序开发、业务系统开发、行业解决方案等，推动企业的创新发展与数智化升级',
         ),
 
-        SizedBox(height: AppSizes.xl),
+        const SizedBox(height: AppSizes.xl),
 
         // CTA 按钮
         _buildCTAButton(),
@@ -132,7 +132,7 @@ class ServiceIntroWidget extends StatelessWidget {
   Widget _buildBulletPoint(String text, {String? highlightText}) {
     return RichText(
       text: TextSpan(
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: AppSizes.fsMd,
           color: AppColors.textSecondary,
           height: 1.6,

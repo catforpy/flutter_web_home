@@ -257,10 +257,10 @@ class _CustomerServiceCardState extends State<_CustomerServiceCard> {
                   // 机器人头像图标
                   _buildRobotAvatar(),
 
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // "全国热线电话"
-                  Text(
+                  const Text(
                     '全国热线电话',
                     style: TextStyle(
                       fontSize: AppSizes.fsSm,
@@ -269,10 +269,10 @@ class _CustomerServiceCardState extends State<_CustomerServiceCard> {
                     textAlign: TextAlign.center,
                   ),
 
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
 
                   // 电话号码
-                  Text(
+                  const Text(
                     '13961535392',
                     style: TextStyle(
                       fontSize: AppSizes.fsLg,
@@ -282,7 +282,7 @@ class _CustomerServiceCardState extends State<_CustomerServiceCard> {
                     textAlign: TextAlign.center,
                   ),
 
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // "免费咨询"按钮
                   _buildConsultButton(),
@@ -307,7 +307,7 @@ class _CustomerServiceCardState extends State<_CustomerServiceCard> {
                           : Colors.transparent,
                       shape: BoxShape.circle,
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         '×',
                         style: TextStyle(
@@ -332,8 +332,8 @@ class _CustomerServiceCardState extends State<_CustomerServiceCard> {
     return Container(
       width: 60,
       height: 60,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
@@ -403,13 +403,13 @@ class _CustomerServiceCardState extends State<_CustomerServiceCard> {
                 : null,
           ),
           height: 40,
-          child: Center(
+          child: const Center(
             child: Text(
               '免费咨询',
               style: TextStyle(
                 fontSize: AppSizes.fsMd,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFFFF3B30),
+                color: Color(0xFFFF3B30),
               ),
             ),
           ),
@@ -831,7 +831,7 @@ class _BackToTopButtonState extends State<_BackToTopButton> {
             ),
             width: 48,
             height: 48,
-            child: Center(
+            child: const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -884,7 +884,7 @@ class _RobotAvatarPainter extends CustomPainter {
     final centerY = size.height / 2;
 
     // 方形头（外框）
-    final headSize = 24.0;
+    const headSize = 24.0;
     final headRect = Rect.fromCenter(
       center: Offset(centerX, centerY - 4),
       width: headSize,

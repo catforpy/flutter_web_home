@@ -1,4 +1,5 @@
 /// 讲师数据模型
+library;
 
 /// 讲师登录状态
 enum InstructorStatus {

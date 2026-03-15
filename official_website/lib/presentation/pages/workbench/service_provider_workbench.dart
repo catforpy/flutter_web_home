@@ -633,11 +633,11 @@ class _ServiceProviderWorkbenchState extends State<ServiceProviderWorkbench> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.info_outline, size: 24, color: Colors.white),
-              const SizedBox(width: 12),
-              const Text(
+              Icon(Icons.info_outline, size: 24, color: Colors.white),
+              SizedBox(width: 12),
+              Text(
                 '授权范围提醒',
                 style: TextStyle(
                   fontSize: 18,

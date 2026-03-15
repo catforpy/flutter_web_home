@@ -7,7 +7,6 @@ import 'payment/payment_config_content.dart';
 import 'personal_center_management_content.dart';
 import 'page_management/page_editor.dart';
 import 'route_manager.dart';
-import '../../routes/app_router.dart';
 
 /// 小程序管理页面容器
 /// 包含：侧边栏、顶部标题栏、内容区

@@ -1033,14 +1033,14 @@ class ComponentPreviewContent extends StatelessWidget {
           if (showMore)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     '推荐列表',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1F2329)),
                   ),
-                  const Text(
+                  Text(
                     '更多 >',
                     style: TextStyle(fontSize: 12, color: Color(0xFF999999)),
                   ),
@@ -1257,7 +1257,7 @@ class ComponentPreviewContent extends StatelessWidget {
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
@@ -1278,8 +1278,8 @@ class ComponentPreviewContent extends StatelessWidget {
                     Container(
                       width: 60,
                       height: 60,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE5E5E5),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFE5E5E5),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(Icons.person, size: 30, color: Color(0xFFCCCCCC)),
@@ -1546,7 +1546,7 @@ class ComponentPreviewContent extends StatelessWidget {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -2851,7 +2851,7 @@ class _PageEditorState extends State<PageEditor> {
                       value: _selectedPageType,
                       icon: const Icon(Icons.arrow_drop_down, size: 24, color: Color(0xFF666666)),
                       style: const TextStyle(fontSize: 14, color: Color(0xFF1F2329)),
-                      underline: SizedBox(),
+                      underline: const SizedBox(),
                       items: _pageTypes.map((String type) {
                         return DropdownMenuItem<String>(
                           value: type,
@@ -3302,7 +3302,7 @@ class _PageEditorState extends State<PageEditor> {
               child: Column(
                 children: [
                   // 第一排（5个）
-                  if (enabledItems.length > 0)
+                  if (enabledItems.isNotEmpty)
                     GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -4140,7 +4140,7 @@ class _PageEditorState extends State<PageEditor> {
           else if (linkType == '课程详情' || linkType == '付费预约详情')
             Row(
               children: [
-                Text(linkType == '课程详情' ? '课程详情' : '付费预约', style: TextStyle(fontSize: 13, color: Color(0xFF1F2329))),
+                Text(linkType == '课程详情' ? '课程详情' : '付费预约', style: const TextStyle(fontSize: 13, color: Color(0xFF1F2329))),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Container(
@@ -4339,7 +4339,7 @@ class _PageEditorState extends State<PageEditor> {
               linkType != '签到')
             Row(
               children: [
-                Text('链接目标', style: TextStyle(fontSize: 13, color: Color(0xFF1F2329))),
+                const Text('链接目标', style: TextStyle(fontSize: 13, color: Color(0xFF1F2329))),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Container(
@@ -5060,7 +5060,7 @@ class _PageEditorState extends State<PageEditor> {
                 ],
               ),
             );
-          }).toList(),
+          }),
 
           const SizedBox(height: 12),
 
@@ -5373,7 +5373,7 @@ class _PageEditorState extends State<PageEditor> {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -5624,7 +5624,7 @@ class _PageEditorState extends State<PageEditor> {
                 ],
               ),
             );
-          }).toList(),
+          }),
 
           // 添加图文按钮
           MouseRegion(
@@ -6129,7 +6129,7 @@ class _PageEditorState extends State<PageEditor> {
                 ],
               ),
             );
-          }).toList(),
+          }),
 
           // 添加推荐按钮
           MouseRegion(
@@ -6944,7 +6944,7 @@ class _PageEditorState extends State<PageEditor> {
             width: double.maxFinite,
             child: SingleChildScrollView(
               child: SelectableText(
-                JsonEncoder.withIndent('  ').convert(jsonData),
+                const JsonEncoder.withIndent('  ').convert(jsonData),
                 style: const TextStyle(fontSize: 12, fontFamily: 'monospace'),
               ),
             ),
@@ -7216,11 +7216,11 @@ class _PageEditorState extends State<PageEditor> {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text('存储为模板'),
-          content: Column(
+          content: const Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: '模板名称',
                   hintText: '请输入模板名称',
                   filled: true,

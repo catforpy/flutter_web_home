@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../routes/app_router.dart';
 import 'store_settings_page.dart';
-import 'mini_program_management_page.dart';
 
 /// 工作台路由管理器
 /// 统一管理所有子菜单的路由跳转

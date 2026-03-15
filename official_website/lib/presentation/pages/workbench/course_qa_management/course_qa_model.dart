@@ -1,4 +1,5 @@
 /// 课程问答数据模型
+library;
 
 /// 问答类型
 enum QAType {

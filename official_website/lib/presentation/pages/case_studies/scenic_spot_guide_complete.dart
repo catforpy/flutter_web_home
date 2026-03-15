@@ -342,7 +342,7 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
                                       ),
                                     ),
                                     const SizedBox(height: 16),
-                                    Text(
+                                    const Text(
                                       'Case Show',
                                       style: TextStyle(
                                         fontSize: 32,
@@ -607,9 +607,9 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 项目服务部分
-          Text(
+          const Text(
             '项目服务',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Color(0xFF333333),
@@ -651,9 +651,9 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
           const SizedBox(height: 24),
 
           // 探索更多部分
-          Text(
+          const Text(
             '我想做',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Color(0xFF333333),
@@ -1581,9 +1581,9 @@ class _ScenicSpotGuideCompleteState extends State<ScenicSpotGuideComplete> with 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   '准备好开始您的项目了吗？',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,

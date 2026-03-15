@@ -13,7 +13,7 @@ class FooterWidget extends StatelessWidget {
       color: const Color(0xFF121212), // 深灰背景
       width: double.infinity,
       child: Padding(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: AppSizes.xl,
           vertical: AppSizes.xxxl,
         ),
@@ -22,12 +22,12 @@ class FooterWidget extends StatelessWidget {
             // 五列导航
             _buildNavigationColumns(context),
 
-            SizedBox(height: AppSizes.xl),
+            const SizedBox(height: AppSizes.xl),
 
             // 分隔线
             _buildSeparatorLine(),
 
-            SizedBox(height: AppSizes.lg),
+            const SizedBox(height: AppSizes.lg),
 
             // 版权行
             _buildCopyrightRow(),
@@ -47,11 +47,11 @@ class FooterWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSingleColumn('服务', _getServiceItems(context), isFirst: true),
-              SizedBox(height: AppSizes.lg),
+              const SizedBox(height: AppSizes.lg),
               _buildSingleColumn('解决方案', _getSolutionItems()),
-              SizedBox(height: AppSizes.lg),
+              const SizedBox(height: AppSizes.lg),
               _buildSingleColumn('关于我们', _getAboutItems()),
-              SizedBox(height: AppSizes.lg),
+              const SizedBox(height: AppSizes.lg),
               _buildSingleColumn('联系我们', _getContactItems()),
             ],
           );
@@ -80,13 +80,13 @@ class FooterWidget extends StatelessWidget {
         // 列标题
         Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: AppSizes.fsLg,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
-        SizedBox(height: AppSizes.md),
+        const SizedBox(height: AppSizes.md),
         // 列表项
         ...items.map((item) => Padding(
               padding: const EdgeInsets.only(bottom: AppSizes.sm),
@@ -140,7 +140,7 @@ class FooterWidget extends StatelessWidget {
                   color: const Color(0xFFFFFFFF).withValues(alpha: 0.5),
                 ),
               ),
-              SizedBox(height: AppSizes.sm),
+              const SizedBox(height: AppSizes.sm),
               _buildICPLink(),
             ],
           );

@@ -40,6 +40,20 @@ class CaseDetailHeroWidget extends StatelessWidget {
                   child: Image.network(
                     backgroundImageUrl,
                     fit: BoxFit.cover,
+                    cacheWidth: 1920,
+                    cacheHeight: 800,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        color: Colors.grey.withValues(alpha: 0.1),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                          ),
+                        ),
+                      );
+                    },
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         color: Colors.grey.withValues(alpha: 0.2),
@@ -53,11 +67,11 @@ class CaseDetailHeroWidget extends StatelessWidget {
               ),
 
               // 导航栏（包含Logo + 导航菜单）
-              Positioned(
+              const Positioned(
                 top: 24,
                 left: 0,
                 right: 0,
-                child: const _NavigationBar(),
+                child: _NavigationBar(),
               ),
               Positioned(
                 top: 0,
@@ -69,6 +83,20 @@ class CaseDetailHeroWidget extends StatelessWidget {
                   child: Image.network(
                     backgroundImageUrl,
                     fit: BoxFit.cover,
+                    cacheWidth: 1920,
+                    cacheHeight: 800,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        color: Colors.grey.withValues(alpha: 0.1),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                          ),
+                        ),
+                      );
+                    },
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         color: Colors.grey.withValues(alpha: 0.2),
@@ -87,8 +115,8 @@ class CaseDetailHeroWidget extends StatelessWidget {
                 left: 0,
                 right: 0,
                 height: heroHeight,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 80),
+                child: const Padding(
+                  padding: EdgeInsets.only(left: 80),
                   child: Row(
                     children: [
                       // 左侧：标题Column
@@ -97,7 +125,7 @@ class CaseDetailHeroWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           // 主标题
-                          const Text(
+                          Text(
                             '都达网络科技',
                             style: TextStyle(
                               fontSize: 56,
@@ -107,13 +135,13 @@ class CaseDetailHeroWidget extends StatelessWidget {
                             ),
                           ),
 
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16),
 
                           // 副标题 + 动态开关按钮
                           Row(
                             children: [
                               // 副标题
-                              const Text(
+                              Text(
                                 'CASE SHOW',
                                 style: TextStyle(
                                   fontSize: 24,
@@ -123,26 +151,26 @@ class CaseDetailHeroWidget extends StatelessWidget {
                                 ),
                               ),
 
-                              const SizedBox(width: 20),
+                              SizedBox(width: 20),
 
                               // 动态开关按钮
-                              const _StartButton(size: 40),
+                              _StartButton(size: 40),
                             ],
                           ),
                         ],
                       ),
 
-                      const Spacer(),
+                      Spacer(),
 
                       // 右侧：数据展示
                       Padding(
-                        padding: const EdgeInsets.only(right: 80),
+                        padding: EdgeInsets.only(right: 80),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             // 访客停留时长
                             Row(
-                              children: const [
+                              children: [
                                 Text(
                                   '访客停留时长',
                                   style: TextStyle(
@@ -170,11 +198,11 @@ class CaseDetailHeroWidget extends StatelessWidget {
                               ],
                             ),
 
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12),
 
                             // 有效转化率
                             Row(
-                              children: const [
+                              children: [
                                 Text(
                                   '有效转化率',
                                   style: TextStyle(
@@ -251,7 +279,7 @@ class CaseDetailHeroWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 项目标题区
-                _ProjectHeader(
+                const _ProjectHeader(
                   year: '2020年',
                   city: '无锡',
                   viewCount: 4353,
@@ -260,7 +288,7 @@ class CaseDetailHeroWidget extends StatelessWidget {
                 const SizedBox(height: 32),
 
                 // 项目简介
-                _ProjectIntro(),
+                const _ProjectIntro(),
 
                 const SizedBox(height: 32),
 
@@ -475,7 +503,7 @@ class _ProjectHeader extends StatelessWidget {
 
   /// 构建6个小圆点组成的网格图标
   Widget _buildGridIcon() {
-    return Container(
+    return SizedBox(
       width: 24,
       height: 24,
       child: Column(
@@ -489,8 +517,8 @@ class _ProjectHeader extends StatelessWidget {
               (index) => Container(
                 width: 4,
                 height: 4,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD93025),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFD93025),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -505,8 +533,8 @@ class _ProjectHeader extends StatelessWidget {
               (index) => Container(
                 width: 4,
                 height: 4,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD93025),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFD93025),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -524,11 +552,11 @@ class _ProjectIntro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 标题
-        const Text(
+        Text(
           '项目简介',
           style: TextStyle(
             fontSize: 24,
@@ -537,10 +565,10 @@ class _ProjectIntro extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // 内容
-        const Text(
+        Text(
           '销售难？开口难？成交更难？唐极课得专为解决销售一线难题而生！\n'
           '作为一个专业的销售视频课程销售平台，唐极课得不卖空洞理论，只交付能拿结果的实战视频。这里汇集了全网最优质的销售教学视频：从如何破冰开场，到如何处理价格异议，再到如何搞定关键决策人，每一个视频都是一个具体的解决方案。\n'
           '为什么选择唐极课得？\n'
@@ -647,6 +675,22 @@ class _NavigationBarState extends State<_NavigationBar> {
           height: 48,
           width: 48,
           fit: BoxFit.contain,
+          cacheWidth: 200,
+          cacheHeight: 200,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return const SizedBox(
+              width: 48,
+              height: 48,
+              child: Center(
+                child: SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            );
+          },
           errorBuilder: (context, error, stackTrace) {
             return Container(
               height: 48,
@@ -655,13 +699,13 @@ class _NavigationBarState extends State<_NavigationBar> {
                 color: Colors.grey.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Center(
+              child: const Center(
                 child: Text(
                   '都达',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFFFF3B30),
+                    color: Color(0xFFFF3B30),
                   ),
                 ),
               ),
@@ -810,7 +854,7 @@ class _NavigationBarState extends State<_NavigationBar> {
                       ),
 
                       // 第4列：图片
-                      Expanded(
+                      const Expanded(
                         child: _MenuImage(),
                       ),
                     ],
@@ -1109,6 +1153,21 @@ class _MenuImage extends StatelessWidget {
         'https://picsum.photos/400/300?random=201',
         width: double.infinity,
         fit: BoxFit.cover,
+        cacheWidth: 600,
+        cacheHeight: 400,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.grey.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Center(
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          );
+        },
         errorBuilder: (context, error, stackTrace) {
           return Container(
             width: double.infinity,

@@ -38,7 +38,7 @@ class ContactBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final widgetToRender = Container(
       color: backgroundColor ?? AppColors.primary,
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         vertical: AppSizes.lg,
         horizontal: AppSizes.lg,
       ),
@@ -49,7 +49,7 @@ class ContactBarWidget extends StatelessWidget {
           if (MediaQuery.of(context).size.width > AppSizes.breakpointMobile)
             Text(
               hintText,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: AppSizes.fsLg,
                 color: AppColors.background,
                 fontWeight: FontWeight.w500,
@@ -57,11 +57,11 @@ class ContactBarWidget extends StatelessWidget {
             ),
 
           if (MediaQuery.of(context).size.width > AppSizes.breakpointMobile)
-            SizedBox(width: AppSizes.xl),
+            const SizedBox(width: AppSizes.xl),
 
           // 客服热线
           Container(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               horizontal: AppSizes.lg,
               vertical: AppSizes.sm,
             ),
@@ -71,15 +71,15 @@ class ContactBarWidget extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.phone,
                   color: AppColors.background,
                   size: AppSizes.iconMd,
                 ),
-                SizedBox(width: AppSizes.sm),
+                const SizedBox(width: AppSizes.sm),
                 Text(
                   '客服热线：$phoneNumber',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: AppSizes.fsMd,
                     color: AppColors.background,
                     fontWeight: FontWeight.bold,
@@ -89,7 +89,7 @@ class ContactBarWidget extends StatelessWidget {
             ),
           ),
 
-          SizedBox(width: AppSizes.lg),
+          const SizedBox(width: AppSizes.lg),
 
           // 咨询按钮
           CTAButtonWidget(
@@ -99,7 +99,7 @@ class ContactBarWidget extends StatelessWidget {
             onPressed: onButtonPressed ??
                 () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text('感谢您的咨询！我们将尽快联系您。'),
                       backgroundColor: AppColors.secondary,
                     ),

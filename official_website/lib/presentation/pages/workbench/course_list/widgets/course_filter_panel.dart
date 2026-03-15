@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:official_website/application/blocs/course/course_bloc.dart';
-import 'package:official_website/application/blocs/course/course_event.dart';
 import 'package:official_website/application/blocs/course/course_state.dart';
 import 'package:official_website/domain/entities/course.dart';
 
@@ -214,7 +213,7 @@ class _CourseFilterPanelState extends State<CourseFilterPanel> {
                 value: id,
                 child: Text(name, style: const TextStyle(fontSize: 14)),
               );
-            }).toList(),
+            }),
           ],
           onChanged: onChanged,
         ),

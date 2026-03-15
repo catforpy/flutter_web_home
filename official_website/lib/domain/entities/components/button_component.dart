@@ -95,7 +95,7 @@ class ButtonComponent extends PageComponent {
       text: text ?? this.text,
       linkType: linkType ?? this.linkType,
       linkTarget: linkTarget ?? this.linkTarget,
-      style: style as ComponentButtonStyle? ?? this.style,
+      style: style ?? this.style,
       enabled: enabled ?? this.enabled,
       sortOrder: sortOrder ?? this.sortOrder,
     );
@@ -106,6 +106,7 @@ class ComponentButtonStyle extends ComponentStyle {
   final double? width;
   final double? height;
   final double fontSize;
+  @override
   final Color backgroundColor;
   final Color textColor;
   final AlignmentGeometry alignment;

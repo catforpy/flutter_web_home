@@ -35,8 +35,8 @@ class _AboutPageState extends State<AboutPage> {
                 controller: _scrollController,
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 1400),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 80),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 80, vertical: 80),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -46,7 +46,7 @@ class _AboutPageState extends State<AboutPage> {
                           child: _LeftContentSection(),
                         ),
 
-                        const SizedBox(width: 60),
+                        SizedBox(width: 60),
 
                         // 中间：导航树区（40%）
                         Expanded(
@@ -54,7 +54,7 @@ class _AboutPageState extends State<AboutPage> {
                           child: _NavTreeSection(),
                         ),
 
-                        const SizedBox(width: 60),
+                        SizedBox(width: 60),
 
                         // 右侧：图片区（30%）
                         Expanded(
@@ -124,10 +124,10 @@ class _LeftContentSection extends StatelessWidget {
                 color: const Color(0xFFD93025),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Row(
+              child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     '了解更多',
                     style: TextStyle(
                       color: Colors.white,
@@ -135,7 +135,7 @@ class _LeftContentSection extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Icon(
                     Icons.arrow_forward,
                     size: 20,

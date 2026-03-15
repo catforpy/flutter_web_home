@@ -310,6 +310,23 @@ class _CarouselManagementContentState extends State<CarouselManagementContent> {
                   width: 120,
                   height: 60,
                   fit: BoxFit.cover,
+                  cacheWidth: 240,
+                  cacheHeight: 120,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      width: 120,
+                      height: 60,
+                      color: const Color(0xFFF0F0F0),
+                      child: const Center(
+                        child: SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    );
+                  },
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       width: 120,
@@ -625,6 +642,14 @@ class _CarouselDialogState extends State<_CarouselDialog> {
                                     width: double.infinity,
                                     height: double.infinity,
                                     fit: BoxFit.cover,
+                                    cacheWidth: 600,
+                                    cacheHeight: 400,
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return const Center(
+                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                      );
+                                    },
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Center(
                                         child: Icon(Icons.broken_image, size: 48, color: Color(0xFFCCCCCC)),
@@ -801,7 +826,7 @@ class _CarouselDialogState extends State<_CarouselDialog> {
                     value: article['id'],
                     child: Text(article['title'], style: const TextStyle(fontSize: 14)),
                   );
-                }).toList(),
+                }),
               ],
               onChanged: onChanged,
             ),
@@ -997,6 +1022,14 @@ class _CarouselEditDialogState extends State<_CarouselEditDialog> {
                                     width: double.infinity,
                                     height: double.infinity,
                                     fit: BoxFit.cover,
+                                    cacheWidth: 600,
+                                    cacheHeight: 400,
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return const Center(
+                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                      );
+                                    },
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Center(
                                         child: Icon(Icons.broken_image, size: 48, color: Color(0xFFCCCCCC)),
@@ -1173,7 +1206,7 @@ class _CarouselEditDialogState extends State<_CarouselEditDialog> {
                     value: article['id'],
                     child: Text(article['title'], style: const TextStyle(fontSize: 14)),
                   );
-                }).toList(),
+                }),
               ],
               onChanged: onChanged,
             ),

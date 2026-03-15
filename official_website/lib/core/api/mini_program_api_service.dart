@@ -11,7 +11,7 @@ class MiniProgramApiService {
 
   factory MiniProgramApiService.create() {
     final dio = Dio(BaseOptions(
-      baseUrl: "https://api.example.com",
+      baseUrl: 'https://api.example.com',
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
     ));
@@ -27,10 +27,10 @@ class MiniProgramApiService {
   }) async {
     try {
       final response = await _dio.get(
-        "/weixin/mini-program/check-name",
+        '/weixin/mini-program/check-name',
         queryParameters: {
-          "name": name,
-          if (appId != null) "appId": appId,
+          'name': name,
+          if (appId != null) 'appId': appId,
         },
       );
       return ApiResponse<NameCheckResult>.fromJson(response.data);
@@ -48,7 +48,7 @@ class MiniProgramApiService {
   ) async {
     try {
       final response = await _dio.post(
-        "/weixin/mini-program/register",
+        '/weixin/mini-program/register',
         data: registration.toJson(),
       );
       return ApiResponse<RegisterResult>.fromJson(response.data);
@@ -66,8 +66,8 @@ class MiniProgramApiService {
   ) async {
     try {
       final response = await _dio.get(
-        "/weixin/mini-program/register/task",
-        queryParameters: {"taskId": taskId},
+        '/weixin/mini-program/register/task',
+        queryParameters: {'taskId': taskId},
       );
       return ApiResponse<RegistrationTaskStatus>.fromJson(response.data);
     } catch (e) {
@@ -84,10 +84,10 @@ class MiniProgramApiService {
   ) async {
     try {
       await _dio.post(
-        "/weixin/mini-program/resend-auth",
+        '/weixin/mini-program/resend-auth',
         data: data,
       );
-      return ApiResponse<void>(errcode: 0, errmsg: 'success');
+      return const ApiResponse<void>(errcode: 0, errmsg: 'success');
     } catch (e) {
       return ApiResponse<void>(
         errcode: -1,
@@ -109,7 +109,7 @@ class MiniProgramApiService {
       // TODO: 实现文件上传逻辑
       // 这里应该调用文件上传接口
       await Future.delayed(const Duration(seconds: 1));
-      return ApiResponse<String>(
+      return const ApiResponse<String>(
         errcode: 0,
         errmsg: 'success',
         data: 'file_url_placeholder',
@@ -128,7 +128,7 @@ class MiniProgramApiService {
   ) async {
     try {
       final response = await _dio.post(
-        "/weixin/mini-program/verify",
+        '/weixin/mini-program/verify',
         data: verification.toJson(),
       );
       return ApiResponse<VerificationResult>.fromJson(response.data);
@@ -146,8 +146,8 @@ class MiniProgramApiService {
   ) async {
     try {
       final response = await _dio.get(
-        "/weixin/mini-program/verify/order",
-        queryParameters: {"orderId": orderId},
+        '/weixin/mini-program/verify/order',
+        queryParameters: {'orderId': orderId},
       );
       return ApiResponse<VerificationOrderStatus>.fromJson(response.data);
     } catch (e) {
@@ -164,10 +164,10 @@ class MiniProgramApiService {
   ) async {
     try {
       await _dio.post(
-        "/weixin/mini-program/verify/resubmit",
+        '/weixin/mini-program/verify/resubmit',
         data: data,
       );
-      return ApiResponse<void>(errcode: 0, errmsg: 'success');
+      return const ApiResponse<void>(errcode: 0, errmsg: 'success');
     } catch (e) {
       return ApiResponse<void>(
         errcode: -1,
@@ -182,8 +182,8 @@ class MiniProgramApiService {
   ) async {
     try {
       final response = await _dio.get(
-        "/weixin/mini-program/verify/expiry",
-        queryParameters: {"appId": appId},
+        '/weixin/mini-program/verify/expiry',
+        queryParameters: {'appId': appId},
       );
       return ApiResponse<DateTime>.fromJson(response.data);
     } catch (e) {
@@ -327,6 +327,6 @@ class FileUploadHelper {
   /// 上传文件
   static Future<String> uploadFile(String filePath, MaterialType type) async {
     // TODO: 实现文件上传逻辑
-    return "file_url_placeholder";
+    return 'file_url_placeholder';
   }
 }

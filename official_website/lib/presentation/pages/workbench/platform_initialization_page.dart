@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/auth/auth_state.dart';
 import '../../../domain/models/mini_program_registration.dart';
 import '../../../domain/models/mini_program_verification.dart';
 import '../../routes/app_router.dart';
 import '../../widgets/workbench/register_mini_program_dialog.dart';
 import '../../widgets/workbench/registration_complete_guide.dart';
 import '../../widgets/workbench/verify_mini_program_dialog.dart';
-import 'merchant_dashboard.dart';
 
 /// 平台接入中心页面
 /// 展示已绑定的小程序平台列表（微信、抖音、百度等）
@@ -272,16 +270,16 @@ class _PlatformInitializationPageState extends State<PlatformInitializationPage>
                         ),
                       ],
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.app_registration,
                           size: 20,
                           color: Colors.white,
                         ),
-                        const SizedBox(width: 8),
-                        const Text(
+                        SizedBox(width: 8),
+                        Text(
                           '注册小程序',
                           style: TextStyle(
                             fontSize: 16,
@@ -442,17 +440,17 @@ class _PlatformInitializationPageState extends State<PlatformInitializationPage>
                             const SizedBox(height: 8),
 
                             // 第二行：小程序主体
-                            Row(
+                            const Row(
                               children: [
-                                const Text(
+                                Text(
                                   '小程序主体',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Color(0xFF999999),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
-                                const Text(
+                                SizedBox(width: 8),
+                                Text(
                                   '个人',
                                   style: TextStyle(
                                     fontSize: 14,
@@ -817,12 +815,12 @@ class _PlatformInitializationPageState extends State<PlatformInitializationPage>
                     const SizedBox(width: 16),
 
                     // 文本信息组
-                    Expanded(
+                    const Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // 标题
-                          const Text(
+                          Text(
                             '百度智能小程序',
                             style: TextStyle(
                               fontSize: 16,
@@ -830,10 +828,10 @@ class _PlatformInitializationPageState extends State<PlatformInitializationPage>
                               color: Color(0xFF333333),
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
 
                           // 简介描述
-                          const Text(
+                          Text(
                             '百度智能小程序，智能连接人与信息、人与服务、人与万物的开放生态...无需下载安装便可享受智慧超前的使用体验。',
                             style: TextStyle(
                               fontSize: 14,
@@ -961,12 +959,12 @@ class _PlatformInitializationPageState extends State<PlatformInitializationPage>
                     const SizedBox(width: 16),
 
                     // 文本信息组
-                    Expanded(
+                    const Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // 标题
-                          const Text(
+                          Text(
                             '支付宝小程序',
                             style: TextStyle(
                               fontSize: 16,
@@ -974,10 +972,10 @@ class _PlatformInitializationPageState extends State<PlatformInitializationPage>
                               color: Color(0xFF333333),
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
 
                           // 简介描述
-                          const Text(
+                          Text(
                             '敬请期待',
                             style: TextStyle(
                               fontSize: 14,

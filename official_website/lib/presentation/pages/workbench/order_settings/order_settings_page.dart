@@ -355,8 +355,6 @@ class _OrderSettingsPageState extends State<OrderSettingsPage> {
     String unit,
     void Function(int) onChanged,
   ) {
-    final controller = TextEditingController(text: value.toString());
-
     return Row(
       children: [
         Expanded(
@@ -386,7 +384,7 @@ class _OrderSettingsPageState extends State<OrderSettingsPage> {
         SizedBox(
           width: 100,
           child: TextField(
-            controller: controller,
+            controller: TextEditingController(text: value.toString()),
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -412,8 +410,6 @@ class _OrderSettingsPageState extends State<OrderSettingsPage> {
     int value,
     void Function(int) onChanged,
   ) {
-    final controller = TextEditingController(text: value.toString());
-
     return Row(
       children: [
         Expanded(
@@ -443,7 +439,7 @@ class _OrderSettingsPageState extends State<OrderSettingsPage> {
         SizedBox(
           width: 100,
           child: TextField(
-            controller: controller,
+            controller: TextEditingController(text: value.toString()),
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),

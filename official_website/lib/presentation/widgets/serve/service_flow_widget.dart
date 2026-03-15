@@ -37,7 +37,7 @@ class ServiceFlowWidget extends StatelessWidget {
     if (screenWidth < AppSizes.breakpointTablet) {
       return Container(
         color: backgroundColor ?? AppColors.background,
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           vertical: AppSizes.xxxl,
           horizontal: AppSizes.lg,
         ),
@@ -47,9 +47,9 @@ class ServiceFlowWidget extends StatelessWidget {
               title: title,
               subtitle: subtitle,
             ),
-            SizedBox(height: AppSizes.xl),
+            const SizedBox(height: AppSizes.xl),
             ...steps.map((step) => Padding(
-                  padding: EdgeInsets.only(bottom: AppSizes.md),
+                  padding: const EdgeInsets.only(bottom: AppSizes.md),
                   child: ProcessFlowCard(step: step),
                 )),
           ],
@@ -60,7 +60,7 @@ class ServiceFlowWidget extends StatelessWidget {
     // 桌面端：2行布局（2+3）
     return Container(
       color: backgroundColor ?? AppColors.background,
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         vertical: AppSizes.xxxl,
         horizontal: AppSizes.lg,
       ),
@@ -72,7 +72,7 @@ class ServiceFlowWidget extends StatelessWidget {
             subtitle: subtitle,
           ),
 
-          SizedBox(height: AppSizes.xxxl),
+          const SizedBox(height: AppSizes.xxxl),
 
           // 第一行：2个大卡片
           Center(
@@ -85,7 +85,7 @@ class ServiceFlowWidget extends StatelessWidget {
                     width: 560, // 大卡片固定宽度
                     child: ProcessFlowCard(step: steps[0]),
                   ),
-                  SizedBox(width: AppSizes.lg),
+                  const SizedBox(width: AppSizes.lg),
                   SizedBox(
                     width: 560, // 大卡片固定宽度
                     child: ProcessFlowCard(step: steps[1]),
@@ -95,7 +95,7 @@ class ServiceFlowWidget extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: AppSizes.lg),
+          const SizedBox(height: AppSizes.lg),
 
           // 第二行：3个小卡片
           Center(
@@ -108,12 +108,12 @@ class ServiceFlowWidget extends StatelessWidget {
                     width: 350, // 小卡片固定宽度
                     child: ProcessFlowCard(step: steps[2]),
                   ),
-                  SizedBox(width: AppSizes.lg),
+                  const SizedBox(width: AppSizes.lg),
                   SizedBox(
                     width: 350, // 小卡片固定宽度
                     child: ProcessFlowCard(step: steps[3]),
                   ),
-                  SizedBox(width: AppSizes.lg),
+                  const SizedBox(width: AppSizes.lg),
                   SizedBox(
                     width: 350, // 小卡片固定宽度
                     child: ProcessFlowCard(step: steps[4]),

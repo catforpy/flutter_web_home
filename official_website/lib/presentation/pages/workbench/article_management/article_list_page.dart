@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/cache/workbench_cache_service.dart';
 import '../../../routes/app_router.dart';
 import 'reward_records_content.dart';
 import 'article_list_content.dart';
@@ -260,9 +259,9 @@ class _ArticleListPageState extends State<ArticleListPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
                         subItem,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 15,
-                          color: const Color(0xFFCCCCCC),
+                          color: Color(0xFFCCCCCC),
                         ),
                       ),
                     ),
@@ -591,18 +590,18 @@ class _ArticleListPageState extends State<ArticleListPage> {
           const SizedBox(width: 12),
           Expanded(
             child: RichText(
-              text: TextSpan(
-                style: const TextStyle(fontSize: 14, color: Color(0xFF666666)),
+              text: const TextSpan(
+                style: TextStyle(fontSize: 14, color: Color(0xFF666666)),
                 children: [
-                  const TextSpan(text: '注：新增资讯时记得选择'),
+                  TextSpan(text: '注：新增资讯时记得选择'),
                   TextSpan(
                     text: '『文章类别』',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Color(0xFFFF4D4F),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const TextSpan(text: '。当不选择『文章类别』时该条资讯则在手机端资讯列表不显示'),
+                  TextSpan(text: '。当不选择『文章类别』时该条资讯则在手机端资讯列表不显示'),
                 ],
               ),
             ),
@@ -682,12 +681,12 @@ class _ArticleListPageState extends State<ArticleListPage> {
         children: [
           Expanded(
             child: TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: '文章标题',
                 hintStyle: TextStyle(color: Color(0xFF999999)),
-                prefixIcon: const Icon(Icons.search, size: 20, color: Color(0xFF999999)),
+                prefixIcon: Icon(Icons.search, size: 20, color: Color(0xFF999999)),
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               ),
               onChanged: (value) {
                 setState(() {
@@ -711,7 +710,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: value,
-          hint: Text(hint, style: TextStyle(fontSize: 14, color: Color(0xFF666666))),
+          hint: Text(hint, style: const TextStyle(fontSize: 14, color: Color(0xFF666666))),
           isExpanded: true,
           icon: const Icon(Icons.arrow_drop_down, size: 20),
           items: items.map((String item) {
@@ -967,7 +966,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
             final index = entry.key;
             final article = entry.value;
             return _buildTableRow(article, index);
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -979,7 +978,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
       decoration: const BoxDecoration(
         color: Color(0xFFFAFAFA),
         border: Border(
-          bottom: BorderSide(color: const Color(0xFFE5E5E5), width: 1),
+          bottom: BorderSide(color: Color(0xFFE5E5E5), width: 1),
         ),
       ),
       child: Row(
@@ -1050,9 +1049,9 @@ class _ArticleListPageState extends State<ArticleListPage> {
             color: isSelected
                 ? const Color(0xFFF0F7FF)
                 : (isEven ? const Color(0xFFFFFFFF) : const Color(0xFFFAFAFA)),
-            border: Border(
+            border: const Border(
               bottom: BorderSide(
-                color: const Color(0xFFE5E5E5),
+                color: Color(0xFFE5E5E5),
                 width: 1,
               ),
             ),
@@ -1083,8 +1082,8 @@ class _ArticleListPageState extends State<ArticleListPage> {
                     Container(
                       width: 8,
                       height: 8,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1890FF),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF1890FF),
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -1092,9 +1091,9 @@ class _ArticleListPageState extends State<ArticleListPage> {
                     Expanded(
                       child: Text(
                         article['title'] as String,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
-                          color: const Color(0xFF333333),
+                          color: Color(0xFF333333),
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

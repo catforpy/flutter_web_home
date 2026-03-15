@@ -120,9 +120,9 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
     items.addAll(baseItems);
 
     // 根据用户身份添加"工作台"（客户、服务商和后台可以访问）
-    if (authState.userType == UserType.customer ||
-        authState.userType == UserType.merchant ||
-        authState.userType == UserType.backend) {
+    if (authState.userTypeEnum == UserType.customer ||
+        authState.userTypeEnum == UserType.merchant ||
+        authState.userTypeEnum == UserType.backend) {
       items.add(
         NavbarMenuItem(
           label: '工作台',
@@ -222,10 +222,10 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
                 color: Colors.grey.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Center(
+              child: const Center(
                 child: Text(
                   '都达小程序', // 改为 "都达小程序"
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFFFF3B30), // 红色
@@ -407,16 +407,16 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
         onTap: () => AppRouter.goToCart(context),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
+          child: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
+              Icon(
                 Icons.shopping_cart_outlined,
                 size: 20,
                 color: Color(0xFF666666),
               ),
-              const SizedBox(width: 6),
-              const Text(
+              SizedBox(width: 6),
+              Text(
                 '购物车',
                 style: TextStyle(
                   fontSize: 14,

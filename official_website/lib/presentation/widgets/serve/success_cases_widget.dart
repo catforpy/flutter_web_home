@@ -37,7 +37,7 @@ class SuccessCasesWidget extends StatelessWidget {
                     children: [
                       // 左侧内容（移动端在上方）
                       _buildLeftContent(context),
-                      SizedBox(height: AppSizes.xl),
+                      const SizedBox(height: AppSizes.xl),
                       // 右侧手机截图
                       _buildRightContent(constraints.maxWidth),
                     ],
@@ -53,7 +53,7 @@ class SuccessCasesWidget extends StatelessWidget {
                       flex: 45,
                       child: _buildLeftContent(context),
                     ),
-                    SizedBox(width: AppSizes.xxxl),
+                    const SizedBox(width: AppSizes.xxxl),
                     // 右侧手机截图
                     Expanded(
                       flex: 55,
@@ -76,7 +76,7 @@ class SuccessCasesWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         // 主标题
-        Text(
+        const Text(
           '企业成功案例',
           style: TextStyle(
             fontSize: AppSizes.fs3xl,
@@ -84,12 +84,12 @@ class SuccessCasesWidget extends StatelessWidget {
             color: AppColors.textPrimary,
           ),
         ),
-        SizedBox(height: AppSizes.lg),
+        const SizedBox(height: AppSizes.lg),
 
         // 说明段落
         Container(
           constraints: const BoxConstraints(maxWidth: 400),
-          child: Text(
+          child: const Text(
             '君和数字创意帮助用户在移动场景中快速落地，涵盖电商、新能源、教育、社交、金融、资讯、医疗等众多领域',
             style: TextStyle(
               fontSize: AppSizes.fsMd,
@@ -98,7 +98,7 @@ class SuccessCasesWidget extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: AppSizes.xl),
+        const SizedBox(height: AppSizes.xl),
 
         // "更多行业案例"链接
         _buildHoverLink(context),
@@ -115,7 +115,7 @@ class SuccessCasesWidget extends StatelessWidget {
           // 跳转到案例页面
           AppRouter.goToCases(context);
         },
-        child: _HoverLinkWidget(
+        child: const _HoverLinkWidget(
           text: '更多行业案例 >',
         ),
       ),
@@ -150,7 +150,7 @@ class SuccessCasesWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: caseItems.map((item) {
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSizes.md),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
             child: _buildPhoneMockup(
               item['imageUrl']!,
               item['title']!,
@@ -199,7 +199,7 @@ class SuccessCasesWidget extends StatelessWidget {
         // 案例标题和分类
         Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: AppSizes.fsSm,
             fontWeight: FontWeight.w600,
             color: AppColors.textPrimary,
@@ -207,9 +207,9 @@ class SuccessCasesWidget extends StatelessWidget {
         ),
         Text(
           category,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 11,
-            color: const Color(0xFF999999),
+            color: Color(0xFF999999),
           ),
         ),
       ],

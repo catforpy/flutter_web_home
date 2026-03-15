@@ -5,7 +5,6 @@ import '../../widgets/solutions/solution_showcase_widget.dart';
 import '../../widgets/serve/custom_solution_widget.dart';
 import '../../widgets/solutions/solution_process_widget.dart';
 import '../../widgets/solutions/service_process_widget.dart';
-import '../../widgets/solutions/client_showcase_widget.dart';
 import '../../widgets/common/footer_widget.dart';
 import '../../widgets/common/floating_widget.dart';
 import '../../widgets/common/unified_navigation_bar.dart';
@@ -36,10 +35,10 @@ class _SolutionsPageState extends State<SolutionsPage> {
         backgroundColor: AppColors.background,
         body: SingleChildScrollView(
           controller: _scrollController,
-          child: Column(
+          child: const Column(
             children: [
               // Hero 横幅
-              const HeroBannerWidget(
+              HeroBannerWidget(
                 title: '个性化软件开发定制专家',
                 subtitle: '产品定位 | 产品设计 | 代码实现 | 产品上线',
                 backgroundImageUrl: 'assets/solution-banner.png',
@@ -51,22 +50,22 @@ class _SolutionsPageState extends State<SolutionsPage> {
               ),
 
               // 图文展示区域
-              const SolutionShowcaseWidget(),
+              SolutionShowcaseWidget(),
 
               // 流程展示区域
-              const SolutionProcessWidget(),
+              SolutionProcessWidget(),
 
               // 定制化解决方案卡片
-              const CustomSolutionWidget(),
+              CustomSolutionWidget(),
 
               // 服务流程展示
-              const ServiceProcessWidget(),
+              ServiceProcessWidget(),
 
               // // 客户案例展示墙
               // const ClientShowcaseWidget(),
 
               // Footer 底部导航栏
-              const FooterWidget(),
+              FooterWidget(),
             ],
           ),
         ),

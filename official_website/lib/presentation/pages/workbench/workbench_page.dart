@@ -42,12 +42,12 @@ class _WorkbenchPageState extends State<WorkbenchPage> {
   @override
   Widget build(BuildContext context) {
     // 客户直接返回平台接入中心页面（有完整的 Scaffold）
-    if (authState.userType == UserType.customer) {
+    if (authState.userTypeEnum == UserType.customer) {
       return const PlatformInitializationPage();
     }
 
     // 服务商直接返回服务商工作台页面（有完整的 Scaffold）
-    if (authState.userType == UserType.merchant) {
+    if (authState.userTypeEnum == UserType.merchant) {
       return const ServiceProviderWorkbench();
     }
 
@@ -86,7 +86,7 @@ class _WorkbenchPageState extends State<WorkbenchPage> {
 
   /// 根据用户身份构建工作台内容（非客户、非服务商）
   Widget _buildWorkbenchContent() {
-    switch (authState.userType) {
+    switch (authState.userTypeEnum) {
       case UserType.backend:
         return _buildBackendWorkbench();
       case UserType.merchant:
@@ -95,7 +95,7 @@ class _WorkbenchPageState extends State<WorkbenchPage> {
       case UserType.customer:
         // 客户不会走到这里，上面已经直接返回了
         return const SizedBox.shrink();
-      case null:
+      default:
         return _buildNoAccessPage();
     }
   }
@@ -148,16 +148,16 @@ class _WorkbenchPageState extends State<WorkbenchPage> {
   Widget _buildNoAccessPage() {
     return Container(
       padding: const EdgeInsets.all(80),
-      child: Column(
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
+          Icon(
             Icons.lock_outline,
             size: 80,
             color: Color(0xFF999999),
           ),
-          const SizedBox(height: 24),
-          const Text(
+          SizedBox(height: 24),
+          Text(
             '无权限访问',
             style: TextStyle(
               fontSize: 24,
@@ -165,8 +165,8 @@ class _WorkbenchPageState extends State<WorkbenchPage> {
               color: Color(0xFF333333),
             ),
           ),
-          const SizedBox(height: 12),
-          const Text(
+          SizedBox(height: 12),
+          Text(
             '商户功能重新设计中...',
             style: TextStyle(
               fontSize: 16,

@@ -97,10 +97,10 @@ class _QualificationFormState extends State<QualificationForm> {
 
   /// 构建适用范围说明行
   Widget _buildScopeInfoRow() {
-    return Row(
+    return const Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(
+        SizedBox(
           width: 100,
           child: Text(
             '适用范围',
@@ -122,8 +122,8 @@ class _QualificationFormState extends State<QualificationForm> {
                   height: 1.6,
                 ),
               ),
-              const SizedBox(height: 12),
-              const Text(
+              SizedBox(height: 12),
+              Text(
                 '注：',
                 style: TextStyle(
                   fontSize: 14,
@@ -134,7 +134,7 @@ class _QualificationFormState extends State<QualificationForm> {
               Text(
                 '1.如提供时政信息服务，需补充：时政信息类目；\n'
                 '2.选择该类目后首次提交代码审核，需经当地互联网主管机关审核确认，预计审核时长7天左右。',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   color: Color(0xFF333333),
                   height: 1.6,
@@ -280,25 +280,25 @@ class _QualificationFormState extends State<QualificationForm> {
                 ),
               ),
               const SizedBox(height: 8),
-              Text.rich(
+              const Text.rich(
                 TextSpan(
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     color: Color(0xFF666666),
                     height: 1.6,
                   ),
                   children: [
-                    const TextSpan(text: '上传原件或复印件，复印件务必加盖公司公章，文件格式为'),
+                    TextSpan(text: '上传原件或复印件，复印件务必加盖公司公章，文件格式为'),
                     TextSpan(
                       text: 'jpg、jpeg、bmp、gif或png',
                       style: TextStyle(color: Color(0xFF1890FF)),
                     ),
-                    const TextSpan(text: '，文件大小'),
+                    TextSpan(text: '，文件大小'),
                     TextSpan(
                       text: '不超过10M',
                       style: TextStyle(color: Color(0xFFFF4D4F)),
                     ),
-                    const TextSpan(text: '，可拼图上传。'),
+                    TextSpan(text: '，可拼图上传。'),
                   ],
                 ),
               ),

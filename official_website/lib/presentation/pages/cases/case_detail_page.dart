@@ -43,22 +43,22 @@ class _CaseDetailPageState extends State<CaseDetailPage> {
             Expanded(
               child: SingleChildScrollView(
                 controller: _scrollController,
-                child: Column(
+                child: const Column(
                   children: [
                     // 案例详情Hero区域（模糊背景图，70%屏幕高度）
                     CaseDetailHeroWidget(
                       backgroundImageUrl: 'https://picsum.photos/1920/1080?random=100', // 临时占位图
                     ),
 
-                    const SizedBox(height: 60),
+                    SizedBox(height: 60),
 
                     // 相关案例区域
-                    const _RelatedCasesSection(),
+                    _RelatedCasesSection(),
 
-                    const SizedBox(height: 80),
+                    SizedBox(height: 80),
 
                     // Footer 底部导航栏
-                    const FooterWidget(),
+                    FooterWidget(),
                   ],
                 ),
               ),
@@ -114,19 +114,19 @@ class _RelatedCasesSection extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           '更多案例',
                           style: TextStyle(
                             fontSize: 16,
-                            color: const Color(0xFFD93025),
+                            color: Color(0xFFD93025),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        const Icon(
+                        SizedBox(width: 8),
+                        Icon(
                           Icons.arrow_forward_ios,
                           size: 14,
                           color: Color(0xFFD93025),
@@ -163,7 +163,7 @@ class _RelatedCasesSection extends StatelessWidget {
   /// 获取相关案例假数据
   List<CaseItem> _getRelatedCases() {
     return [
-      CaseItem(
+      const CaseItem(
         companyName: '云创信息',
         subtitle: '现代化品牌展示网站',
         location: '上海·浦东',
@@ -171,7 +171,7 @@ class _RelatedCasesSection extends StatelessWidget {
         logoUrl: 'https://via.placeholder.com/60',
         caseId: null,
       ),
-      CaseItem(
+      const CaseItem(
         companyName: '智汇网络',
         subtitle: '响应式企业门户系统',
         location: '深圳·南山',
@@ -179,7 +179,7 @@ class _RelatedCasesSection extends StatelessWidget {
         logoUrl: 'https://via.placeholder.com/60',
         caseId: null,
       ),
-      CaseItem(
+      const CaseItem(
         companyName: '星河科技',
         subtitle: '多语言官网开发',
         location: '广州·天河',

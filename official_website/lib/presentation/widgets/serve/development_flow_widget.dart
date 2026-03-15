@@ -24,7 +24,7 @@ class DevelopmentFlowWidget extends StatelessWidget {
       child: Column(
         children: [
           // 标题区域
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(
               top: AppSizes.xxxl,
               bottom: AppSizes.xl,
@@ -54,7 +54,7 @@ class DevelopmentFlowWidget extends StatelessWidget {
           // 6个步骤（横向排列）
           Container(
             constraints: const BoxConstraints(maxWidth: 1200),
-            padding: EdgeInsets.symmetric(horizontal: AppSizes.xl),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.xl),
             child: LayoutBuilder(
               builder: (context, constraints) {
                 // 判断是否为移动端（宽度小于768）
@@ -67,7 +67,7 @@ class DevelopmentFlowWidget extends StatelessWidget {
                       final index = entry.key;
                       final step = entry.value;
                       return Padding(
-                        padding: EdgeInsets.only(bottom: AppSizes.xl),
+                        padding: const EdgeInsets.only(bottom: AppSizes.xl),
                         child: DevelopmentStepCard(
                           step: step,
                           showConnector: index < steps.length - 1,
@@ -98,7 +98,7 @@ class DevelopmentFlowWidget extends StatelessWidget {
           ),
 
           // 底部间距
-          SizedBox(height: AppSizes.xxxl),
+          const SizedBox(height: AppSizes.xxxl),
         ],
       ),
     );

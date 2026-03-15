@@ -130,13 +130,13 @@ class _LoginDialogState extends State<LoginDialog>
         errorBuilder: (context, error, stackTrace) {
           // 图片加载失败时显示渐变背景
           return Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color(0xFFD93025),
-                  const Color(0xFFB71C1C),
+                  Color(0xFFD93025),
+                  Color(0xFFB71C1C),
                 ],
               ),
             ),
@@ -1142,7 +1142,7 @@ class _LoginDialogState extends State<LoginDialog>
   }
 
   /// 处理登录
-  void _handleLogin() {
+  void _handleLogin() async {
     // 都达网账号登录
     if (_selectedUserType == 0 && _selectedLoginMethod == 0) {
       final account = _accountController.text.trim();
@@ -1158,11 +1158,21 @@ class _LoginDialogState extends State<LoginDialog>
         return;
       }
 
-      // TODO: 实际项目中需要调用API验证账号密码
-      // 这里暂时直接登录成功
-      debugPrint('登录成功：用户类型=都达用户账号, 账号=$account');
-      authState.login(userType: UserType.customer);
-      _showSuccessDialog();
+      // 调用后端V2 API：都达网账户 - 账号密码登录
+      debugPrint('🔐 开始登录：用户类型=都达网账户, 账号=$account');
+      final success = await authState.loginPlatformAccount(
+        username: account,
+        password: password,
+      );
+
+      if (success) {
+        debugPrint('✅ 登录成功：$account');
+        _showSuccessDialog();
+      } else {
+        final errorMsg = authState.errorMessage ?? '登录失败，请检查账号密码';
+        debugPrint('❌ 登录失败：$errorMsg');
+        _showErrorDialog(errorMsg);
+      }
       return;
     }
 
@@ -1181,11 +1191,21 @@ class _LoginDialogState extends State<LoginDialog>
         return;
       }
 
-      // TODO: 实际项目中需要调用API验证账号密码
-      // 这里暂时直接登录成功
-      debugPrint('登录成功：用户类型=服务商户, 账号=$account');
-      authState.login(userType: UserType.merchant);
-      _showSuccessDialog();
+      // 调用后端V2 API：服务商 - 账号密码登录
+      debugPrint('🔐 开始登录：用户类型=服务商, 账号=$account');
+      final success = await authState.loginServiceProvider(
+        username: account,
+        password: password,
+      );
+
+      if (success) {
+        debugPrint('✅ 登录成功：$account');
+        _showSuccessDialog();
+      } else {
+        final errorMsg = authState.errorMessage ?? '登录失败，请检查账号密码';
+        debugPrint('❌ 登录失败：$errorMsg');
+        _showErrorDialog(errorMsg);
+      }
       return;
     }
 
@@ -1216,28 +1236,55 @@ class _LoginDialogState extends State<LoginDialog>
       return;
     }
 
-    // 客户和商户：只要输入了手机号和验证码就登录成功
+    // 客户和商户：调用后端V2 API - 手机验证码登录
     if (_selectedUserType == 0 || _selectedUserType == 1) {
-      debugPrint('登录成功：用户类型=$_selectedUserType, 手机号=$phone');
+      debugPrint('🔐 开始登录：用户类型=$_selectedUserType, 手机号=$phone');
 
-      // 更新登录状态
-      final userType = _selectedUserType == 0 ? UserType.customer : UserType.merchant;
-      authState.login(userType: userType);
+      bool success;
+      if (_selectedUserType == 0) {
+        // 都达网账户 - 手机验证码登录
+        success = await authState.loginPlatformAccountWithSms(
+          phone: phone,
+          verifyCode: code,
+        );
+      } else {
+        // 服务商 - 手机验证码登录
+        success = await authState.loginServiceProviderWithSms(
+          phone: phone,
+          verifyCode: code,
+        );
+      }
 
-      _showSuccessDialog();
+      if (success) {
+        debugPrint('✅ 登录成功：$phone');
+        _showSuccessDialog();
+      } else {
+        final errorMsg = authState.errorMessage ?? '登录失败，请检查手机号和验证码';
+        debugPrint('❌ 登录失败：$errorMsg');
+        _showErrorDialog(errorMsg);
+      }
       return;
     }
 
-    // 后台管理：验证手机号是否是主管手机 15251513885
+    // 后台管理：调用后端V2 API - 平台管理员登录
     if (_selectedUserType == 2) {
+      debugPrint('🔐 开始登录：用户类型=平台管理员, 手机号=$phone');
+
+      // 暂时只允许特定手机号登录（实际项目应该调用API验证）
       if (phone == '15251513885') {
-        // 主管认证的手机号，登录成功
-        debugPrint('登录成功：后台, 手机号=$phone, 部门=$_selectedDepartment');
+        final success = await authState.loginPlatformAdmin(
+          username: phone, // 平台管理员暂时用手机号作为用户名
+          password: code, // 暂时用验证码作为密码
+        );
 
-        // 更新登录状态
-        authState.login(userType: UserType.backend);
-
-        _showSuccessDialog();
+        if (success) {
+          debugPrint('✅ 登录成功：平台管理员 $phone');
+          _showSuccessDialog();
+        } else {
+          final errorMsg = authState.errorMessage ?? '登录失败';
+          debugPrint('❌ 登录失败：$errorMsg');
+          _showErrorDialog(errorMsg);
+        }
       } else {
         // 不是主管手机号，需要注册
         _showNotRegisteredDialog();
@@ -1693,6 +1740,6 @@ void showLoginDialog(BuildContext context) {
   showDialog(
     context: context,
     barrierColor: Colors.black.withValues(alpha: 0.5),
-    builder: (context) => LoginDialog(),
+    builder: (context) => const LoginDialog(),
   );
 }

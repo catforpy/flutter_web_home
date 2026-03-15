@@ -239,7 +239,7 @@ class IMWebManager {
 
       // 添加到消息流
       _messageStreamController.add(message);
-      print('收到新消息: $text (from: ${from})');
+      print('收到新消息: $text (from: $from)');
     } catch (e) {
       print('解析消息失败: $e');
     }

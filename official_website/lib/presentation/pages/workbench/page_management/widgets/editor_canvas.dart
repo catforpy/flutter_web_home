@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:official_website/application/blocs/page_editor/page_editor_bloc.dart';
 import 'package:official_website/application/blocs/page_editor/page_editor_event.dart';
-import 'package:official_website/application/blocs/page_editor/page_editor_state.dart';
 import 'package:official_website/domain/entities/page_component.dart';
 
 /// 编辑画布 - 中间组件预览和编辑区域
@@ -142,7 +141,7 @@ class _ComponentListItem extends StatelessWidget {
               onTap: onTap,
               child: Padding(
                 padding: const EdgeInsets.all(12),
-                child: component.buildPreview(context as BuildContext),
+                child: component.buildPreview(context),
               ),
             ),
           ],

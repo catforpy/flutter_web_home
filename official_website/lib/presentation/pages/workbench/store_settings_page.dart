@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../core/auth/auth_state.dart';
-import 'development/development_settings_routes.dart';
 import 'route_manager.dart';
 
 /// 店铺设置页
@@ -158,7 +156,7 @@ class _StoreSettingsPageState extends State<StoreSettingsPage> {
   }
 
   /// 构建菜单项（支持展开子菜单）
-  Widget _buildMenuItem(IconData icon, String label, {bool isActive = false, bool hasSubmenu = false, bool isExpanded = false, List<String>? submenu}) {
+  Widget _buildMenuItem(IconData icon, String label, {bool isActive = false, bool hasSubmenu = false, List<String>? submenu}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -468,10 +466,10 @@ class _StoreSettingsPageState extends State<StoreSettingsPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     '唐极课得',
                     style: TextStyle(
                       fontSize: 16,
@@ -479,8 +477,8 @@ class _StoreSettingsPageState extends State<StoreSettingsPage> {
                       color: Color(0xFF333333),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  const Text(
+                  SizedBox(height: 4),
+                  Text(
                     'ID: 15955556666',
                     style: TextStyle(
                       fontSize: 12,

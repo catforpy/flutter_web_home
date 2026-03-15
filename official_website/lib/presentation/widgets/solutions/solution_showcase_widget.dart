@@ -131,7 +131,7 @@ class SolutionShowcaseWidget extends StatelessWidget {
 
   /// 构建合作品牌Logo区
   Widget _buildPartnerLogos() {
-    return Wrap(
+    return const Wrap(
       spacing: 20,
       runSpacing: 16,
       children: [

@@ -32,10 +32,10 @@ class _CasesPageState extends State<CasesPage> {
         backgroundColor: AppColors.background,
         body: SingleChildScrollView(
           controller: _scrollController,
-          child: Column(
+          child: const Column(
             children: [
               // Hero 横幅
-              const HeroBannerWidget(
+              HeroBannerWidget(
                 title: '服务客户 来自全国各地',
                 subtitle: '',
                 backgroundImageUrl: 'assets/case-banner.png',
@@ -47,10 +47,10 @@ class _CasesPageState extends State<CasesPage> {
               ),
 
               // 案例分类标签栏
-              const CaseCategoryWidget(),
+              CaseCategoryWidget(),
 
               // Footer 底部导航栏
-              const FooterWidget(),
+              FooterWidget(),
             ],
           ),
         ),

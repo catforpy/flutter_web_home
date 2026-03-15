@@ -87,7 +87,7 @@ class CourseMockDatasource {
   static Course? getCourseById(String id) {
     return _getAllCourses().firstWhere(
       (c) => c.id == id,
-      orElse: () => throw StateError("Value not found"),
+      orElse: () => throw StateError('Value not found'),
     );
   }
 

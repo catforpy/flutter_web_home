@@ -259,7 +259,7 @@ class _MenuNavigationContentState extends State<MenuNavigationContent> {
           SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: DataTable(
-              headingRowColor: MaterialStateProperty.all(const Color(0xFFF5F5F5)),
+              headingRowColor: WidgetStateProperty.all(const Color(0xFFF5F5F5)),
               columns: const [
                 DataColumn(
                   label: Text(

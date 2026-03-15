@@ -640,7 +640,7 @@ class _InstructorManagementPageState extends State<InstructorManagementPage> {
             ],
           ),
           const SizedBox(height: 20),
-          Divider(height: 1, color: Color(0xFFE5E5E5)),
+          const Divider(height: 1, color: Color(0xFFE5E5E5)),
           const SizedBox(height: 20),
 
           // 搜索框
@@ -752,7 +752,7 @@ class _InstructorManagementPageState extends State<InstructorManagementPage> {
     bool showArrow = false,
   }) {
     // 如果是排序下拉框且需要显示箭头
-    final displayLabel = showArrow ? '${_getSortLabelWithArrow()}' : label;
+    final displayLabel = showArrow ? _getSortLabelWithArrow() : label;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -1079,20 +1079,53 @@ class _InstructorManagementPageState extends State<InstructorManagementPage> {
     return Center(
       child: CircleAvatar(
         radius: 20,
-        backgroundImage: NetworkImage(avatarUrl),
-        onBackgroundImageError: (exception, stackTrace) {
-          // 图片加载失败时不做处理，使用默认背景色
-        },
-        child: avatarUrl.isEmpty
-            ? Text(
-                name.isNotEmpty ? name[0].toUpperCase() : '?',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+        child: ClipOval(
+          child: avatarUrl.isEmpty
+              ? Text(
+                  name.isNotEmpty ? name[0].toUpperCase() : '?',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                )
+              : Image.network(
+                  avatarUrl,
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                  cacheWidth: 200,
+                  cacheHeight: 200,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(
+                      child: SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey.withValues(alpha: 0.3),
+                      child: Center(
+                        child: Text(
+                          name.isNotEmpty ? name[0].toUpperCase() : '?',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              )
-            : null,
+        ),
       ),
     );
   }
@@ -1232,12 +1265,12 @@ class _InstructorManagementPageState extends State<InstructorManagementPage> {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
 
               if (_totalPages > 5)
-                Text(
+                const Text(
                   '...',
-                  style: const TextStyle(fontSize: 14, color: Color(0xFF999999)),
+                  style: TextStyle(fontSize: 14, color: Color(0xFF999999)),
                 ),
 
               // 下一页
@@ -1421,7 +1454,34 @@ class _InstructorManagementPageState extends State<InstructorManagementPage> {
                         children: [
                           CircleAvatar(
                             radius: 40,
-                            backgroundImage: NetworkImage(application['avatar']),
+                            child: ClipOval(
+                              child: Image.network(
+                                application['avatar'],
+                                width: 80,
+                                height: 80,
+                                fit: BoxFit.cover,
+                                cacheWidth: 200,
+                                cacheHeight: 200,
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return const Center(
+                                    child: SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Center(
+                                    child: Icon(Icons.person, size: 40, color: Colors.grey),
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                           const SizedBox(width: 20),
                           Expanded(
@@ -2022,7 +2082,7 @@ class _InstructorManagementPageState extends State<InstructorManagementPage> {
 class _InstructorDetailDialog extends StatelessWidget {
   final Instructor instructor;
 
-  const _InstructorDetailDialog({super.key, required this.instructor});
+  const _InstructorDetailDialog({required this.instructor});
 
   @override
   Widget build(BuildContext context) {

@@ -387,9 +387,9 @@ class _ArticleManagementView extends StatelessWidget {
                 ),
                 const SizedBox(width: 24),
                 // 右侧：配置操作区
-                Expanded(
+                const Expanded(
                   flex: 1,
-                  child: const CategoryManagementPanel(),
+                  child: CategoryManagementPanel(),
                 ),
               ],
             ),

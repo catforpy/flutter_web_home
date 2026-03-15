@@ -871,7 +871,7 @@ class _CourseListPageState extends State<CourseListPage> {
               color: Colors.grey[300]!,
               width: 1,
             ),
-            headingRowColor: MaterialStateProperty.all(Colors.grey[100]),
+            headingRowColor: WidgetStateProperty.all(Colors.grey[100]),
             columns: const [
               DataColumn(
                 label: Center(child: Text('课程名称')),
@@ -910,8 +910,8 @@ class _CourseListPageState extends State<CourseListPage> {
             ],
             rows: courses.map((course) {
               return DataRow(
-                color: MaterialStateProperty.resolveWith((states) {
-                  if (states.contains(MaterialState.selected)) {
+                color: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
                     return Colors.blue[50];
                   }
                   return Colors.white;
@@ -1347,11 +1347,11 @@ class _CourseListPageState extends State<CourseListPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Row(
+        title: const Row(
           children: [
-            const Icon(Icons.mail, color: Colors.blue),
-            const SizedBox(width: 8),
-            const Expanded(child: Text('站内信已发送')),
+            Icon(Icons.mail, color: Colors.blue),
+            SizedBox(width: 8),
+            Expanded(child: Text('站内信已发送')),
           ],
         ),
         content: Column(
@@ -1577,11 +1577,11 @@ class _CourseListPageState extends State<CourseListPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Row(
+        title: const Row(
           children: [
-            const Icon(Icons.security, color: Colors.orange),
-            const SizedBox(width: 8),
-            const Expanded(child: Text('授权请求详情')),
+            Icon(Icons.security, color: Colors.orange),
+            SizedBox(width: 8),
+            Expanded(child: Text('授权请求详情')),
           ],
         ),
         content: SizedBox(
@@ -1695,11 +1695,11 @@ class _CourseListPageState extends State<CourseListPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Row(
+          title: const Row(
             children: [
-              const Icon(Icons.check_circle, color: Colors.green),
-              const SizedBox(width: 8),
-              const Expanded(child: Text('授权成功')),
+              Icon(Icons.check_circle, color: Colors.green),
+              SizedBox(width: 8),
+              Expanded(child: Text('授权成功')),
             ],
           ),
           content: const Text('授权已通过，现在可以编辑课程了。'),
@@ -1720,11 +1720,11 @@ class _CourseListPageState extends State<CourseListPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Row(
+          title: const Row(
             children: [
-              const Icon(Icons.check_circle, color: Colors.green),
-              const SizedBox(width: 8),
-              const Expanded(child: Text('授权成功')),
+              Icon(Icons.check_circle, color: Colors.green),
+              SizedBox(width: 8),
+              Expanded(child: Text('授权成功')),
             ],
           ),
           content: const Text('授权已通过，课程将被删除。'),
@@ -2816,7 +2816,7 @@ class _CourseEditDialogState extends State<CourseEditDialog>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('编辑课时'),
+        title: const Text('编辑课时'),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -2829,16 +2829,16 @@ class _CourseEditDialogState extends State<CourseEditDialog>
                 controller: TextEditingController(text: lessonTitle),
               ),
               const SizedBox(height: 16),
-              TextField(
-                decoration: const InputDecoration(
+              const TextField(
+                decoration: InputDecoration(
                   labelText: '课时大纲',
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
               ),
               const SizedBox(height: 16),
-              TextField(
-                decoration: const InputDecoration(
+              const TextField(
+                decoration: InputDecoration(
                   labelText: '视频URL',
                   border: OutlineInputBorder(),
                 ),

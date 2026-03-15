@@ -165,17 +165,17 @@ class _ArticleListContentState extends State<ArticleListContent> {
           const Icon(Icons.info_outline, color: Color(0xFFFFA940)),
           const SizedBox(width: 8),
           RichText(
-            text: TextSpan(
+            text: const TextSpan(
               children: [
-                const TextSpan(text: '注：新增资讯时记得选择'),
+                TextSpan(text: '注：新增资讯时记得选择'),
                 TextSpan(
                   text: '『文章类别』',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Color(0xFFFF4D4F),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const TextSpan(text: '。当不选择『文章类别』时该条资讯则在手机端资讯列表不显示'),
+                TextSpan(text: '。当不选择『文章类别』时该条资讯则在手机端资讯列表不显示'),
               ],
             ),
           ),
@@ -359,12 +359,12 @@ class _ArticleListContentState extends State<ArticleListContent> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFD9D9D9D)),
+              border: Border.all(color: const Color(0xffd9d9d9d)),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Row(
               children: [
-                Icon(Icons.calendar_today, size: 16, color: Color(0xFF999999)),
+                const Icon(Icons.calendar_today, size: 16, color: Color(0xFF999999)),
                 const SizedBox(width: 8),
                 Text(
                   _startDate != null && _endDate != null
@@ -538,12 +538,12 @@ class _ArticleListContentState extends State<ArticleListContent> {
       decoration: const BoxDecoration(
         color: Color(0xFFFAFAFA),
         border: Border(
-          bottom: BorderSide(color: const Color(0xFFE5E5E5)),
+          bottom: BorderSide(color: Color(0xFFE5E5E5)),
         ),
       ),
       child: Row(
         children: [
-          SizedBox(
+          const SizedBox(
             width: 40,
             child: Checkbox(value: false, onChanged: null),
           ),
@@ -565,8 +565,8 @@ class _ArticleListContentState extends State<ArticleListContent> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: isSelected ? const Color(0xFFF6FFED) : (index % 2 == 0 ? Colors.white : const Color(0xFFFAFAFA)),
-        border: Border(
-          bottom: BorderSide(color: const Color(0xFFE5E5E5), width: 1),
+        border: const Border(
+          bottom: BorderSide(color: Color(0xFFE5E5E5), width: 1),
         ),
       ),
       child: Row(
@@ -783,7 +783,7 @@ class _ArticleListContentState extends State<ArticleListContent> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             '文章评论',
                             style: TextStyle(
                               fontSize: 20,
@@ -794,7 +794,7 @@ class _ArticleListContentState extends State<ArticleListContent> {
                           const SizedBox(height: 8),
                           Text(
                             articleTitle,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 14,
                               color: Color(0xFF666666),
                             ),
@@ -831,5 +831,11 @@ class _ArticleListContentState extends State<ArticleListContent> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _searchKeywordController.dispose();
+    super.dispose();
   }
 }

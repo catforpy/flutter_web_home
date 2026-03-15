@@ -87,18 +87,18 @@ class ExperienceVersionCard extends StatelessWidget {
                   children: [
                     _buildInfoRow('最新版本', '当前代码库最新版本: 4.2.5'),
                     const SizedBox(height: 16),
-                    Column(
+                    const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           '体验说明',
                           style: TextStyle(
                             fontSize: 14,
                             color: Color(0xFF666666),
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        const Text(
+                        SizedBox(height: 8),
+                        Text(
                           '您的小程序代码包非最新版本,请点击右侧获取最新体验版,以更新到最新代码包。',
                           style: TextStyle(
                             fontSize: 14,

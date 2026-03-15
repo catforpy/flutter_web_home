@@ -469,8 +469,8 @@ class _ScenicSpotGuideContentState extends State<ScenicSpotGuideContent> {
                 ),
               ),
               const Spacer(),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Icon(Icons.phone, size: 16, color: Color(0xFF1890FF)),
                   SizedBox(width: 6),
                   Text('400-607-8355', style: TextStyle(fontSize: 14, color: Color(0xFF595959), fontWeight: FontWeight.w500)),
@@ -755,7 +755,7 @@ class _ScenicSpotGuideContentState extends State<ScenicSpotGuideContent> {
                         Container(
                           width: 24,
                           height: 24,
-                          decoration: BoxDecoration(color: Color(0xFF52C41A).withValues(alpha: 0.1), shape: BoxShape.circle),
+                          decoration: BoxDecoration(color: const Color(0xFF52C41A).withValues(alpha: 0.1), shape: BoxShape.circle),
                           child: const Icon(Icons.check, size: 14, color: Color(0xFF52C41A)),
                         ),
                         const SizedBox(width: 10),

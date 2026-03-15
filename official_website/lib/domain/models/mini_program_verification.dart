@@ -1,4 +1,3 @@
-import 'mini_program_registration.dart';
 
 /// 小程序认证信息模型
 /// 用于收集商户认证小程序所需的所有信息

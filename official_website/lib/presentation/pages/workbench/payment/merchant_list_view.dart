@@ -359,25 +359,25 @@ class MerchantListView extends StatelessWidget {
 
   /// 构建空状态
   Widget _buildEmptyState() {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.inbox,
             size: 80,
-            color: const Color(0xFFCCCCCC),
+            color: Color(0xFFCCCCCC),
           ),
-          const SizedBox(height: 16),
-          const Text(
+          SizedBox(height: 16),
+          Text(
             '暂无商户数据',
             style: TextStyle(
               fontSize: 16,
               color: Color(0xFF999999),
             ),
           ),
-          const SizedBox(height: 8),
-          const Text(
+          SizedBox(height: 8),
+          Text(
             '点击上方"新增商户进件"按钮开始',
             style: TextStyle(
               fontSize: 14,

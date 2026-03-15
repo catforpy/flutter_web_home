@@ -90,7 +90,7 @@ class _CTAButtonWidgetState extends State<CTAButtonWidget> {
                       size: _getIconSize(),
                       color: _getTextColor(),
                     ),
-                    SizedBox(width: AppSizes.sm),
+                    const SizedBox(width: AppSizes.sm),
                   ],
                   Text(
                     widget.text,

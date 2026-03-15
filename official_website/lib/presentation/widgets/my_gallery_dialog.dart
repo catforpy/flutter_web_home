@@ -75,9 +75,9 @@ class _MyGalleryDialogState extends State<MyGalleryDialog> {
                   // 左侧标签
                   Container(
                     width: 150,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
-                      border: Border(right: BorderSide(color: const Color(0xFFE5E5E5))),
+                      border: Border(right: BorderSide(color: Color(0xFFE5E5E5))),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -468,7 +468,7 @@ class _MyGalleryDialogState extends State<MyGalleryDialog> {
                       right: 0,
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 4),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.black54,
                         ),
                         child: Text(
@@ -524,5 +524,12 @@ class _MyGalleryDialogState extends State<MyGalleryDialog> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // ✅ 释放搜索控制器
+    _searchController.dispose();
+    super.dispose();
   }
 }

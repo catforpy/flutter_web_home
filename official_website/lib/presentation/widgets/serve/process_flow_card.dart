@@ -122,7 +122,7 @@ class _ProcessFlowCardState extends State<ProcessFlowCard> {
                         ),
                       ),
 
-                    SizedBox(height: AppSizes.sm),
+                    const SizedBox(height: AppSizes.sm),
 
                     // 标题（带放大效果）
                     AnimatedScale(
@@ -144,7 +144,7 @@ class _ProcessFlowCardState extends State<ProcessFlowCard> {
                       ),
                     ),
 
-                    SizedBox(height: AppSizes.sm),
+                    const SizedBox(height: AppSizes.sm),
 
                     // 短横线（带放大效果）
                     AnimatedScale(

@@ -58,7 +58,7 @@ class SecurityScoreCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  '${score}分',
+                  '$score分',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

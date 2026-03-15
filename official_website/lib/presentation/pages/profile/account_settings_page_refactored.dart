@@ -118,8 +118,8 @@ class _AccountSettingsView extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 120,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [

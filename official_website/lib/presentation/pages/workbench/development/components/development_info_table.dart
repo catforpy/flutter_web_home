@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'copy_button.dart';
-import 'green_button.dart';
-import 'question_icon.dart';
 
 /// 开发信息表格组件
 class DevelopmentInfoTable extends StatelessWidget {

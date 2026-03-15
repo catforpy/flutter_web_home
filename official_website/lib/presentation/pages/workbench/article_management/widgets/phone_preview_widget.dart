@@ -89,10 +89,10 @@ class PhonePreviewWidget extends StatelessWidget {
           topRight: Radius.circular(32),
         ),
       ),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             '19:14',
             style: TextStyle(
               fontSize: 14,
@@ -102,12 +102,12 @@ class PhonePreviewWidget extends StatelessWidget {
           ),
           Row(
             children: [
-              const Icon(Icons.signal_cellular_4_bar, size: 16, color: Colors.black),
-              const SizedBox(width: 4),
-              const Text('中国移动 4G', style: TextStyle(fontSize: 12, color: Colors.black)),
-              const SizedBox(width: 8),
-              const Text('61%', style: TextStyle(fontSize: 12, color: Colors.black)),
-              const Icon(Icons.battery_full, size: 16, color: Colors.black),
+              Icon(Icons.signal_cellular_4_bar, size: 16, color: Colors.black),
+              SizedBox(width: 4),
+              Text('中国移动 4G', style: TextStyle(fontSize: 12, color: Colors.black)),
+              SizedBox(width: 8),
+              Text('61%', style: TextStyle(fontSize: 12, color: Colors.black)),
+              Icon(Icons.battery_full, size: 16, color: Colors.black),
             ],
           ),
         ],
@@ -125,11 +125,11 @@ class PhonePreviewWidget extends StatelessWidget {
           bottom: BorderSide(color: Color(0xFFE5E5E5), width: 1),
         ),
       ),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
-          const Text(
+          Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
+          Text(
             '分类预览',
             style: TextStyle(
               fontSize: 16,
@@ -137,7 +137,7 @@ class PhonePreviewWidget extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          const Icon(Icons.more_horiz, size: 24, color: Colors.black),
+          Icon(Icons.more_horiz, size: 24, color: Colors.black),
         ],
       ),
     );

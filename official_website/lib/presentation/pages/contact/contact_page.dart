@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_sizes.dart';
 import '../../widgets/common/footer_widget.dart';
 import '../../widgets/common/floating_widget.dart';
 import '../../widgets/common/unified_navigation_bar.dart';
-import 'dart:async';
-import 'dart:math' as math;
-import 'package:flutter/gestures.dart';
 import '../../routes/app_router.dart';
 
 /// 联系页面
@@ -42,7 +38,7 @@ class _ContactPageState extends State<ContactPage> {
                   _buildHeroSection(),
 
                   // 2. 导航栏（在 Hero 横幅下面）
-                  UnifiedNavigationBar(
+                  const UnifiedNavigationBar(
                     currentPath: AppRouter.contact,
                   ),
 
@@ -111,7 +107,7 @@ class _ContactPageState extends State<ContactPage> {
 
   /// 构建左侧内容
   Widget _buildLeftContent() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 主标题
@@ -124,10 +120,10 @@ class _ContactPageState extends State<ContactPage> {
             height: 1.2,
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
 
         // 副标题（空白）
-        const SizedBox.shrink(),
+        SizedBox.shrink(),
       ],
     );
   }
@@ -137,7 +133,7 @@ class _ContactPageState extends State<ContactPage> {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(vertical: 120),
-      child: Center(
+      child: const Center(
         child: SizedBox(
           width: 900,
           child: Column(
@@ -148,31 +144,31 @@ class _ContactPageState extends State<ContactPage> {
                 style: TextStyle(
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF333333),
+                  color: Color(0xFF333333),
                   height: 1.2,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // 副标题
               Text(
                 '专注中小企业与个体工商户的数字化建站服务商',
                 style: TextStyle(
                   fontSize: 20,
-                  color: const Color(0xFF999999),
+                  color: Color(0xFF999999),
                   height: 1.5,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 48),
+              SizedBox(height: 48),
 
               // 公司介绍正文
               Text(
                 '都达网络科技有限公司，是一家新兴的互联网技术服务团队，致力于成为中小企业及个体工商户最值得信赖的数字化合作伙伴。\n\n我们摒弃传统大型服务商的繁琐流程与高昂溢价，专注于为小微经济体提供高性价比的品牌网站建设、小程序开发及运营维护服务。虽然我们是行业的新锐力量，但我们拥有严谨的技术态度与敏锐的市场洞察。\n\n我们深知创业维艰，因此坚持以"让每一家小店都拥有自己的品牌官网"为愿景，用专业的技术和贴心的服务，助力您在互联网浪潮中轻松起步，快速获客，实现业务增长。',
                 style: TextStyle(
                   fontSize: 16,
-                  color: const Color(0xFF666666),
+                  color: Color(0xFF666666),
                   height: 1.8,
                 ),
                 textAlign: TextAlign.justify,
@@ -210,7 +206,7 @@ class _ContactPageState extends State<ContactPage> {
 
   /// 左侧联系方式
   Widget _buildLeftContactInfo() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 标题
@@ -219,10 +215,10 @@ class _ContactPageState extends State<ContactPage> {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: const Color(0xFF333333),
+            color: Color(0xFF333333),
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
 
         // 电话号码（红色大字）
         Text(
@@ -230,11 +226,11 @@ class _ContactPageState extends State<ContactPage> {
           style: TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.bold,
-            color: const Color(0xFFD93025),
+            color: Color(0xFFD93025),
             height: 1.2,
           ),
         ),
-        const SizedBox(height: 48),
+        SizedBox(height: 48),
 
         // 项目咨询
         _ContactItem(
@@ -242,7 +238,7 @@ class _ContactPageState extends State<ContactPage> {
           label: '项目咨询：',
           value: '139-6153-5392',
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
 
         // 售后服务
         _ContactItem(
@@ -250,7 +246,7 @@ class _ContactPageState extends State<ContactPage> {
           label: '售后服务：',
           value: '',
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
 
         // 作息时间
         _ContactItem(
@@ -278,21 +274,21 @@ class _ContactPageState extends State<ContactPage> {
               width: 1,
             ),
           ),
-          child: Center(
+          child: const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   Icons.qr_code_2,
                   size: 80,
-                  color: const Color(0xFF999999),
+                  color: Color(0xFF999999),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   '微信二维码',
                   style: TextStyle(
                     fontSize: 14,
-                    color: const Color(0xFF999999),
+                    color: Color(0xFF999999),
                   ),
                 ),
               ],
@@ -303,7 +299,7 @@ class _ContactPageState extends State<ContactPage> {
         const SizedBox(width: 40),
 
         // 文字说明
-        Expanded(
+        const Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -313,24 +309,24 @@ class _ContactPageState extends State<ContactPage> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF333333),
+                  color: Color(0xFF333333),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 '扫码加好友',
                 style: TextStyle(
                   fontSize: 18,
-                  color: const Color(0xFF666666),
+                  color: Color(0xFF666666),
                   height: 1.5,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Text(
                 '商务经理快速报价',
                 style: TextStyle(
                   fontSize: 18,
-                  color: const Color(0xFF666666),
+                  color: Color(0xFF666666),
                   height: 1.5,
                 ),
               ),
@@ -366,9 +362,9 @@ class _ContactItem extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
-            color: const Color(0xFF333333),
+            color: Color(0xFF333333),
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -376,9 +372,9 @@ class _ContactItem extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             value,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
-              color: const Color(0xFF666666),
+              color: Color(0xFF666666),
             ),
           ),
         ],

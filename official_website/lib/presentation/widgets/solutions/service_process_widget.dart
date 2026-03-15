@@ -84,7 +84,7 @@ class ServiceProcessWidget extends StatelessWidget {
             },
           ),
           const SizedBox(width: 30),
-          _ServiceCard(
+          const _ServiceCard(
             iconName: 'phone', // 临时使用图标
             icon: Icons.phone_android,
             title: 'APP定制开发',

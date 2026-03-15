@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:official_website/presentation/widgets/common/auth_widget.dart';
 import '../../models/service_models.dart';
 /// 行业分类数据模型
@@ -35,37 +34,37 @@ class _LeasePageState extends State<LeasePage>
 
   // 一级行业数据（租赁相关）
   final List<IndustryCategory> _industries = [
-    IndustryCategory(
+    const IndustryCategory(
       id: 'equipment',
       name: '设备租赁',
       icon: '🔧',
       subCategories: ['所有服务', '工程机械', '办公设备', '电脑设备', '摄影器材', '演出设备'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'vehicle',
       name: '车辆租赁',
       icon: '🚗',
       subCategories: ['所有服务', '轿车', 'SUV', '商务车', '货车', '大巴车'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'venue',
       name: '场地租赁',
       icon: '🏢',
       subCategories: ['所有服务', '会议室', '展厅', '仓库', '商铺', '厂房'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'clothing',
       name: '服装租赁',
       icon: '👔',
       subCategories: ['所有服务', '礼服', '演出服', '制服', '婚纱', '汉服'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'digital',
       name: '数码租赁',
       icon: '📱',
       subCategories: ['所有服务', '手机', '平板', '相机', '无人机', '游戏机'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'furniture',
       name: '家具租赁',
       icon: '🛋️',
@@ -84,7 +83,7 @@ class _LeasePageState extends State<LeasePage>
 
   // 模拟服务卡片数据（租赁相关）
   final List<ServiceCard> _serviceCards = [
-    ServiceCard(
+    const ServiceCard(
       id: 'l001',
       title: '挖掘机日租服务',
       coverImage: '',
@@ -96,7 +95,7 @@ class _LeasePageState extends State<LeasePage>
       minOrder: 1,
       category: '工程机械',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 'l002',
       title: '办公电脑月租套餐',
       coverImage: '',
@@ -108,7 +107,7 @@ class _LeasePageState extends State<LeasePage>
       minOrder: 3,
       category: '电脑设备',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 'l003',
       title: '商务车婚车租赁',
       coverImage: '',
@@ -120,7 +119,7 @@ class _LeasePageState extends State<LeasePage>
       minOrder: 1,
       category: '商务车',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 'l004',
       title: '会议室按时计费',
       coverImage: '',
@@ -132,7 +131,7 @@ class _LeasePageState extends State<LeasePage>
       minOrder: 2,
       category: '会议室',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 'l005',
       title: '单反相机全套租赁',
       coverImage: '',
@@ -144,7 +143,7 @@ class _LeasePageState extends State<LeasePage>
       minOrder: 1,
       category: '摄影器材',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 'l006',
       title: '高档西装礼服租赁',
       coverImage: '',
@@ -156,7 +155,7 @@ class _LeasePageState extends State<LeasePage>
       minOrder: 1,
       category: '礼服',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 'l007',
       title: '无人机航拍租赁',
       coverImage: '',
@@ -522,7 +521,7 @@ class _LeasePageState extends State<LeasePage>
           const Spacer(),
 
           // 中间标签滑动区
-          Container(
+          SizedBox(
             width: 600,
             child: Stack(
               children: [
@@ -723,17 +722,17 @@ class _LeasePageState extends State<LeasePage>
 
   /// 构建空状态
   Widget _buildEmptyState() {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.search_off,
             size: 64,
-            color: const Color(0xFFCCCCCC),
+            color: Color(0xFFCCCCCC),
           ),
-          const SizedBox(height: 16),
-          const Text(
+          SizedBox(height: 16),
+          Text(
             '暂无相关服务',
             style: TextStyle(
               fontSize: 16,
@@ -956,7 +955,7 @@ class _LeasePageState extends State<LeasePage>
           spacing: 8,
           runSpacing: 8,
           children: options.map((option) {
-            final isSelected = false;
+            const isSelected = false;
             return MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
@@ -974,9 +973,9 @@ class _LeasePageState extends State<LeasePage>
                   ),
                   child: Text(
                     option,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
-                      color: isSelected ? const Color(0xFF1890FF) : const Color(0xFF333333),
+                      color: isSelected ? Color(0xFF1890FF) : Color(0xFF333333),
                     ),
                   ),
                 ),

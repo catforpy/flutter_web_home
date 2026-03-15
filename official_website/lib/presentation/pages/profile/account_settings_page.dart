@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/material.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/auth/auth_state.dart';
 import '../../widgets/common/unified_navigation_bar.dart';
 import '../../widgets/common/footer_widget.dart';
@@ -22,9 +21,9 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   int _selectedMenuIndex = 0;
 
   // 实名认证状态
-  bool _isVerified = false; // 默认未认证
-  String _verifiedName = ''; // 已认证的姓名
-  String _verifiedIdCard = ''; // 已认证的身份证号（脱敏）
+  final bool _isVerified = false; // 默认未认证
+  final String _verifiedName = ''; // 已认证的姓名
+  final String _verifiedIdCard = ''; // 已认证的身份证号（脱敏）
 
   // 解绑手机号输入控制器
   final TextEditingController _currentPhoneController = TextEditingController();
@@ -32,7 +31,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   final TextEditingController _smsCodeController = TextEditingController();
 
   // 当前绑定的手机号（完整号码，从后端获取）
-  String _currentBoundPhone = '15251513885'; // 假数据，后续从后端获取
+  final String _currentBoundPhone = '15251513885'; // 假数据，后续从后端获取
   bool _isPhoneVerified = false; // 当前手机号是否验证通过
 
   // 个人信息编辑控制器
@@ -735,16 +734,16 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
                     // 错误提示
                     if (_currentPhoneController.text.isNotEmpty && !_isPhoneVerified)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 8),
                         child: Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.error_outline,
                               size: 14,
                               color: Color(0xFFD93025),
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Text(
                               '手机号不正确',
                               style: TextStyle(
@@ -1372,9 +1371,9 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           '实名认证',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF333333),
@@ -1785,9 +1784,9 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   Widget _buildRequiredLabel(String label) {
     return Row(
       children: [
-        Text(
+        const Text(
           '*',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             color: Color(0xFFD93025),
                             fontWeight: FontWeight.bold,
@@ -2024,7 +2023,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          statusText!,
+                          statusText,
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.white,
@@ -2062,7 +2061,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
-                    buttonText!,
+                    buttonText,
                     style: const TextStyle(
                       fontSize: 14,
                       color: Color(0xFF2196F3),

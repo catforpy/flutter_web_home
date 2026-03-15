@@ -60,24 +60,24 @@ class _ServePageState extends State<ServePage> {
               ),
 
               // 2. 导航栏（在 Hero 横幅下面）
-              UnifiedNavigationBar(
+              const UnifiedNavigationBar(
                 currentPath: AppRouter.serve,
               ),
 
               // 3. 核心服务
-              CoreServicesWidget(
+              const CoreServicesWidget(
                 services: services,
                 backgroundColor: AppColors.background,
               ),
 
               // 3. 技术优势
-              TechAdvantageWidget(
+              const TechAdvantageWidget(
                 advantages: advantages,
                 backgroundColor: AppColors.backgroundDark,
               ),
 
               // 4. 服务流程
-              ServiceFlowWidget(
+              const ServiceFlowWidget(
                 steps: steps,
                 backgroundColor: AppColors.background,
               ),

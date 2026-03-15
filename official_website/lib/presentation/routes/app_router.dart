@@ -19,7 +19,6 @@ import '../pages/lease/lease_page.dart';
 import '../pages/partnership/partnership_page.dart';
 import '../pages/custom_dev/custom_dev_page.dart';
 import '../pages/workbench/workbench_page.dart';
-import '../pages/workbench/platform_initialization_page.dart';
 import '../pages/workbench/merchant_dashboard.dart';
 import '../pages/workbench/mini_program_management_page.dart';
 import '../pages/workbench/media_storage/media_storage_page.dart';

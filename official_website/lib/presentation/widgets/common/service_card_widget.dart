@@ -70,7 +70,7 @@ class _ServiceCardWidgetState extends State<ServiceCardWidget>
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(AppSizes.radiusLg),
                           topRight: Radius.circular(AppSizes.radiusLg),
                         ),
@@ -98,7 +98,7 @@ class _ServiceCardWidgetState extends State<ServiceCardWidget>
                     // 深色蒙版
                     Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(AppSizes.radiusLg),
                           topRight: Radius.circular(AppSizes.radiusLg),
                         ),
@@ -119,7 +119,7 @@ class _ServiceCardWidgetState extends State<ServiceCardWidget>
                       left: AppSizes.md,
                       child: Text(
                         widget.service.title,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 24, // 从 AppSizes.fsXl 改为固定 24
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -136,8 +136,8 @@ class _ServiceCardWidgetState extends State<ServiceCardWidget>
                 fit: FlexFit.tight,
                 child: Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(AppSizes.md), // 改回 md
-                  decoration: BoxDecoration(
+                  padding: const EdgeInsets.all(AppSizes.md), // 改回 md
+                  decoration: const BoxDecoration(
                     color: AppColors.backgroundLight,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(AppSizes.radiusLg),
@@ -158,20 +158,20 @@ class _ServiceCardWidgetState extends State<ServiceCardWidget>
                               // 显示所有特性
                               ...widget.service.features.map((feature) {
                                 return Padding(
-                                  padding: EdgeInsets.only(bottom: 8),
+                                  padding: const EdgeInsets.only(bottom: 8),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.check_circle_outline,
                                         size: 16,
                                         color: AppColors.secondary,
                                       ),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
                                           feature,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             color: AppColors.textSecondary,
                                             height: 1.4,
@@ -181,7 +181,7 @@ class _ServiceCardWidgetState extends State<ServiceCardWidget>
                                     ],
                                   ),
                                 );
-                              }).toList(),
+                              }),
                             ],
                           ),
                         ),
@@ -196,7 +196,7 @@ class _ServiceCardWidgetState extends State<ServiceCardWidget>
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeOut,
                           child: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: AppColors.secondary,
                               borderRadius: BorderRadius.vertical(
                                 top: Radius.circular(1.5),

@@ -394,6 +394,20 @@ class _ServiceDetailPageState extends State<ServiceDetailPage>
                                 : Image.network(
                                     item.url,
                                     fit: BoxFit.cover,
+                                    cacheWidth: 1920,
+                                    cacheHeight: 800,
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Container(
+                                        color: Colors.grey.withValues(alpha: 0.1),
+                                        child: const Center(
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                     errorBuilder: (context, error, stackTrace) {
                                       return Container(
                                         color: Colors.grey.withValues(alpha: 0.2),
@@ -520,6 +534,20 @@ class _ServiceDetailPageState extends State<ServiceDetailPage>
                       child: Image.network(
                         item.image,
                         fit: BoxFit.cover,
+                        cacheWidth: 600,
+                        cacheHeight: 400,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return SizedBox(
+                            height: 300,
+                            child: Container(
+                              color: Colors.grey.withValues(alpha: 0.1),
+                              child: const Center(
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            ),
+                          );
+                        },
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
                             height: 300,
@@ -568,6 +596,20 @@ class _ServiceDetailPageState extends State<ServiceDetailPage>
                       child: Image.network(
                         item.image,
                         fit: BoxFit.cover,
+                        cacheWidth: 600,
+                        cacheHeight: 400,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return SizedBox(
+                            height: 300,
+                            child: Container(
+                              color: Colors.grey.withValues(alpha: 0.1),
+                              child: const Center(
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            ),
+                          );
+                        },
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
                             height: 300,
@@ -646,6 +688,20 @@ class _ServiceDetailPageState extends State<ServiceDetailPage>
                   child: Image.network(
                     item.image,
                     fit: BoxFit.cover,
+                    cacheWidth: 1200,
+                    cacheHeight: 1600,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return SizedBox(
+                        height: 800,
+                        child: Container(
+                          color: Colors.grey.withValues(alpha: 0.1),
+                          child: const Center(
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        ),
+                      );
+                    },
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         height: 800,

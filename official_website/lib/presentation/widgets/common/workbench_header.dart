@@ -27,7 +27,7 @@ class WorkbenchHeader extends StatelessWidget {
           const Spacer(),
 
           // 右侧功能按钮组
-          ...buttons.map((button) => _buildButton(button)).toList(),
+          ...buttons.map((button) => _buildButton(button)),
         ],
       ),
     );

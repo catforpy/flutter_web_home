@@ -217,13 +217,13 @@ class _IMDemoPageState extends State<IMDemoPage> {
                   ],
                 ),
                 if (_isLoggedIn)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8),
                     child: Text(
                       '提示: 可以在 UniApp 或微信小程序中使用相同的 userID (${IMConfig.currentUserId}) 进行互通测试',
                       style: TextStyle(
                         fontSize: 12,
-                        color: const Color(0xFF616161),
+                        color: Color(0xFF616161),
                       ),
                     ),
                   ),
@@ -332,12 +332,12 @@ class _IMDemoPageState extends State<IMDemoPage> {
                         Icon(
                           Icons.message_outlined,
                           size: 64,
-                          color: const Color(0xFF9E9E9E),
+                          color: Color(0xFF9E9E9E),
                         ),
                         SizedBox(height: 16),
                         Text(
                           '暂无消息',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Color(0xFF9E9E9E),
                             fontSize: 16,
                           ),
@@ -345,7 +345,7 @@ class _IMDemoPageState extends State<IMDemoPage> {
                         SizedBox(height: 8),
                         Text(
                           '登录后可以发送和接收消息',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Color(0xFF757575),
                             fontSize: 14,
                           ),

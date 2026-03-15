@@ -225,10 +225,10 @@ class _FreightTemplatePageState extends State<FreightTemplatePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.local_shipping_outlined,
               size: 80,
-              color: const Color(0xFFCCCCCC),
+              color: Color(0xFFCCCCCC),
             ),
             const SizedBox(height: 16),
             const Text(
@@ -391,10 +391,10 @@ class _FreightTemplatePageState extends State<FreightTemplatePage> {
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.card_giftcard,
                     size: 16,
-                    color: const Color(0xFFFF9800),
+                    color: Color(0xFFFF9800),
                   ),
                   const SizedBox(width: 8),
                   Text(
@@ -461,17 +461,17 @@ class _FreightTemplatePageState extends State<FreightTemplatePage> {
                   ],
                 ),
               );
-            }).toList(),
+            }),
 
           const SizedBox(height: 16),
 
           // 底部信息
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.info_outline,
                 size: 14,
-                color: const Color(0xFF999999),
+                color: Color(0xFF999999),
               ),
               const SizedBox(width: 4),
               Text(
@@ -614,7 +614,11 @@ class _FreightTemplatePageState extends State<FreightTemplatePage> {
             ),
             actions: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  nameController.dispose();
+                  freeAmountController.dispose();
+                  Navigator.of(context).pop();
+                },
                 child: const Text('取消'),
               ),
               TextButton(
@@ -626,6 +630,8 @@ class _FreightTemplatePageState extends State<FreightTemplatePage> {
                     return;
                   }
 
+                  nameController.dispose();
+                  freeAmountController.dispose();
                   Navigator.of(context).pop();
                   setState(() {
                     if (template == null) {
@@ -664,7 +670,11 @@ class _FreightTemplatePageState extends State<FreightTemplatePage> {
           );
         },
       ),
-    );
+    ).then((_) {
+      // 对话框关闭时确保释放资源
+      nameController.dispose();
+      freeAmountController.dispose();
+    });
   }
 
   /// 编辑模板

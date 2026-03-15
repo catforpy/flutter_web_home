@@ -114,7 +114,7 @@ class SolutionProcessWidget extends StatelessWidget {
 
   /// 右侧三卡片
   Widget _buildRightCards() {
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       scrollDirection: Axis.horizontal, // 横向滚动
       child: Row(
         children: [
@@ -123,13 +123,13 @@ class SolutionProcessWidget extends StatelessWidget {
             title: '设计阶段',
             description: '资深项目经理，产品经理，UI设计师帮您梳理项目需求，制定项目开发方案。',
           ),
-          const SizedBox(width: 40),
+          SizedBox(width: 40),
           _ProcessCard(
             iconName: 'luchang2',
             title: '开发阶段',
             description: '高级技术研发工程师以最新的主流流程，提供专业的代码编写，高质量、高保障。',
           ),
-          const SizedBox(width: 40),
+          SizedBox(width: 40),
           _ProcessCard(
             iconName: 'luchang3',
             title: '测试阶段',

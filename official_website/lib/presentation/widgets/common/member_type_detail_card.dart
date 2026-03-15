@@ -371,15 +371,15 @@ class MemberTypeDetailCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                const Row(
                   children: [
                     Icon(
                       Icons.card_giftcard,
-                      color: const Color(0xFFFF8800),
+                      color: Color(0xFFFF8800),
                       size: 20,
                     ),
-                    const SizedBox(width: 8),
-                    const Text(
+                    SizedBox(width: 8),
+                    Text(
                       '购买此会员类型，用户可享受以下权益：',
                       style: TextStyle(
                         fontSize: 14,

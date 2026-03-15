@@ -135,7 +135,7 @@ class _MerchantProgressDetailPageState extends State<MerchantProgressDetailPage>
           ),
 
           const SizedBox(height: 24),
-          Divider(color: const Color(0xFFF0F0F0)),
+          const Divider(color: Color(0xFFF0F0F0)),
           const SizedBox(height: 24),
 
           // 详细信息
@@ -259,7 +259,7 @@ class _MerchantProgressDetailPageState extends State<MerchantProgressDetailPage>
                   (step == ProgressStep.pendingVerification ||
                    step == ProgressStep.pendingContract),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -300,13 +300,13 @@ class _MerchantProgressDetailPageState extends State<MerchantProgressDetailPage>
                     ),
                   ),
                   if (isCompleted)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 4),
                       child: Text(
                         '已完成',
                         style: TextStyle(
                           fontSize: 13,
-                          color: const Color(0xFF52C41A),
+                          color: Color(0xFF52C41A),
                         ),
                       ),
                     ),

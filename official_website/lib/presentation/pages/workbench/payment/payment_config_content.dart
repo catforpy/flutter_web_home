@@ -246,7 +246,7 @@ class _PaymentConfigContentState extends State<PaymentConfigContent> {
   void _showMerchantApplicationDialog() {
     showDialog(
       context: context,
-      builder: (context) => MerchantApplicationDialog(),
+      builder: (context) => const MerchantApplicationDialog(),
     );
   }
 
@@ -465,19 +465,19 @@ class _MerchantApplicationDialogState extends State<MerchantApplicationDialog> {
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: const Color(0xFFE5E5E5)),
                         ),
-                        child: Row(
+                        child: const Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.info_outline,
                               size: 20,
                               color: Color(0xFF1890FF),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
+                                  Text(
                                     '结算方式',
                                     style: TextStyle(
                                       fontSize: 14,
@@ -485,7 +485,7 @@ class _MerchantApplicationDialogState extends State<MerchantApplicationDialog> {
                                       color: Color(0xFF333333),
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  SizedBox(height: 4),
                                   Text(
                                     '特约商户进件默认使用银行卡结算，请在下方填写银行账户信息',
                                     style: TextStyle(
@@ -1520,10 +1520,10 @@ class _ApplicationStatusDialogState extends State<ApplicationStatusDialog> {
                 border: Border.all(color: const Color(0xFFFFCCC7)),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
                       Icon(Icons.error_outline, size: 16, color: Color(0xFFFF4D4F)),
                       SizedBox(width: 8),
@@ -1537,9 +1537,9 @@ class _ApplicationStatusDialogState extends State<ApplicationStatusDialog> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   // TODO: 展示audit_detail列表
-                  const Text(
+                  Text(
                     '请根据驳回原因修改申请资料后重新提交',
                     style: TextStyle(fontSize: 12, color: Color(0xFF666666)),
                   ),

@@ -27,7 +27,7 @@ class UserProfileWidget extends StatefulWidget {
 class _UserProfileWidgetState extends State<UserProfileWidget> {
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         // 购物车图标（始终显示）

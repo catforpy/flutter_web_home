@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'copy_button.dart';
 import 'green_button.dart';
-import 'question_icon.dart';
 import 'add_category_modal.dart';
 import 'edit_category_modal.dart';
 import 'delete_category_dialog.dart';

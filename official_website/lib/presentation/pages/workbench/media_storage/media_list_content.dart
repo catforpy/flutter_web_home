@@ -617,7 +617,7 @@ class _MediaListContentState extends State<MediaListContent> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('链接已复制到剪贴板'),
-        duration: const Duration(seconds: 2),
+        duration: Duration(seconds: 2),
         backgroundColor: Color(0xFF52C41A),
       ),
     );
@@ -701,7 +701,7 @@ class _MediaListContentState extends State<MediaListContent> {
   String _formatDuration(int seconds) {
     final minutes = seconds ~/ 60;
     final remainingSeconds = seconds % 60;
-    return '${minutes}分${remainingSeconds}秒';
+    return '$minutes分$remainingSeconds秒';
   }
 
   /// 格式化日期时间

@@ -51,7 +51,7 @@ class SectionTitleWidget extends StatelessWidget {
 
         // 如果有副标题，显示副标题
         if (subtitle != null && subtitle!.isNotEmpty) ...[
-          SizedBox(height: AppSizes.sm),
+          const SizedBox(height: AppSizes.sm),
           Text(
             subtitle!,
             textAlign: textAlign,

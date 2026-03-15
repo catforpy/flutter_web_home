@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:official_website/domain/entities/account_settings.dart';
 
 /// 账号设置实体
 class AccountSettings {

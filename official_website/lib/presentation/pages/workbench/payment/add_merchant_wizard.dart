@@ -353,21 +353,21 @@ class _AddMerchantWizardState extends State<AddMerchantWizard> {
               width: 1,
             ),
           ),
-          child: Row(
+          child: const Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(
+              Icon(
                 Icons.info_outline,
                 size: 20,
                 color: Color(0xFF1890FF),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Text(
                   '上传的图片将自动使用 OCR 识别，请确保图片清晰完整',
                   style: TextStyle(
                     fontSize: 13,
-                    color: const Color(0xFF1890FF),
+                    color: Color(0xFF1890FF),
                     height: 1.5,
                   ),
                 ),
@@ -576,11 +576,11 @@ class _AddMerchantWizardState extends State<AddMerchantWizard> {
                   ),
                   if (_formData[label] != null && _formData[label].isNotEmpty) ...[
                     const SizedBox(height: 8),
-                    Text(
+                    const Text(
                       '点击重新上传',
                       style: TextStyle(
                         fontSize: 12,
-                        color: const Color(0xFF1890FF),
+                        color: Color(0xFF1890FF),
                       ),
                     ),
                   ],

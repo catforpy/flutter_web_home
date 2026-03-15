@@ -76,14 +76,14 @@ class PhonePreview extends StatelessWidget {
     return Container(
       height: 44,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             '中国移动',
             style: TextStyle(fontSize: 14, color: Colors.black),
           ),
-          const Text(
+          Text(
             '9:41 AM',
             style: TextStyle(
               fontSize: 14,
@@ -91,7 +91,7 @@ class PhonePreview extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          const Text(
+          Text(
             '🔋 100%',
             style: TextStyle(fontSize: 14, color: Colors.black),
           ),

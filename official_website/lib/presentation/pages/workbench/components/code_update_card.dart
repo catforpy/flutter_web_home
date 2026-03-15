@@ -38,19 +38,19 @@ class CodeUpdateCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 左列：版本号
-              Expanded(
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       '版本号',
                       style: TextStyle(
                         fontSize: 14,
                         color: Color(0xFF666666),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
+                    SizedBox(height: 8),
+                    Text(
                       '4.2.5',
                       style: TextStyle(
                         fontSize: 24,

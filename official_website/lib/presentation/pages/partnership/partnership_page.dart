@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:official_website/presentation/widgets/common/auth_widget.dart';
-import '../../models/service_models.dart';
 /// 行业分类数据模型
 class IndustryCategory {
   final String id;
@@ -75,37 +73,37 @@ class _PartnershipPageState extends State<PartnershipPage>
 
   // 一级行业数据（合作相关）
   final List<IndustryCategory> _industries = [
-    IndustryCategory(
+    const IndustryCategory(
       id: 'channel',
       name: '渠道合作',
       icon: '🤝',
       subCategories: ['所有服务', '代理商', '经销商', '分销商', '渠道商'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'technology',
       name: '技术合作',
       icon: '💡',
       subCategories: ['所有服务', '技术转让', '技术入股', '联合研发', '技术咨询'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'investment',
       name: '投资合作',
       icon: '💰',
       subCategories: ['所有服务', '天使投资', 'VC投资', 'PE投资', '战略投资'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'business',
       name: '商务合作',
       icon: '📊',
       subCategories: ['所有服务', '品牌联名', '市场推广', '异业合作', '流量互换'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'supply',
       name: '供应链合作',
       icon: '🏭',
       subCategories: ['所有服务', '原材料供应', '生产加工', '物流配送', '仓储服务'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'service',
       name: '服务外包',
       icon: '🎯',
@@ -124,7 +122,7 @@ class _PartnershipPageState extends State<PartnershipPage>
 
   // 模拟服务卡片数据（合作相关）
   final List<ServiceCard> _serviceCards = [
-    ServiceCard(
+    const ServiceCard(
       id: 'p001',
       title: '区域代理商招募',
       coverImage: '',
@@ -136,7 +134,7 @@ class _PartnershipPageState extends State<PartnershipPage>
       minOrder: 1,
       category: '代理商',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 'p002',
       title: '短视频技术入股合作',
       coverImage: '',
@@ -148,7 +146,7 @@ class _PartnershipPageState extends State<PartnershipPage>
       minOrder: 1,
       category: '技术入股',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 'p003',
       title: '品牌联名推广合作',
       coverImage: '',
@@ -160,7 +158,7 @@ class _PartnershipPageState extends State<PartnershipPage>
       minOrder: 1,
       category: '品牌联名',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 'p004',
       title: '天使投资项目对接',
       coverImage: '',
@@ -172,7 +170,7 @@ class _PartnershipPageState extends State<PartnershipPage>
       minOrder: 1,
       category: '天使投资',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 'p005',
       title: '客服外包服务合作',
       coverImage: '',
@@ -184,7 +182,7 @@ class _PartnershipPageState extends State<PartnershipPage>
       minOrder: 6,
       category: '客服外包',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 'p006',
       title: 'APP开发技术合作',
       coverImage: '',
@@ -196,7 +194,7 @@ class _PartnershipPageState extends State<PartnershipPage>
       minOrder: 1,
       category: '技术转让',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 'p007',
       title: '全国分销商招募',
       coverImage: '',
@@ -562,7 +560,7 @@ class _PartnershipPageState extends State<PartnershipPage>
           const Spacer(),
 
           // 中间标签滑动区
-          Container(
+          SizedBox(
             width: 600,
             child: Stack(
               children: [
@@ -763,17 +761,17 @@ class _PartnershipPageState extends State<PartnershipPage>
 
   /// 构建空状态
   Widget _buildEmptyState() {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.search_off,
             size: 64,
-            color: const Color(0xFFCCCCCC),
+            color: Color(0xFFCCCCCC),
           ),
-          const SizedBox(height: 16),
-          const Text(
+          SizedBox(height: 16),
+          Text(
             '暂无相关服务',
             style: TextStyle(
               fontSize: 16,
@@ -996,7 +994,7 @@ class _PartnershipPageState extends State<PartnershipPage>
           spacing: 8,
           runSpacing: 8,
           children: options.map((option) {
-            final isSelected = false;
+            const isSelected = false;
             return MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
@@ -1014,9 +1012,9 @@ class _PartnershipPageState extends State<PartnershipPage>
                   ),
                   child: Text(
                     option,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
-                      color: isSelected ? const Color(0xFF1890FF) : const Color(0xFF333333),
+                      color: isSelected ? Color(0xFF1890FF) : Color(0xFF333333),
                     ),
                   ),
                 ),

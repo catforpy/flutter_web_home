@@ -30,12 +30,12 @@ class CaseBannerWidget extends StatelessWidget {
           // 内容
           Center(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSizes.xl),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.xl),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // 主标题
-                  Text(
+                  const Text(
                     '更多小程序行业案例，快速构建企业级应用',
                     style: TextStyle(
                       fontSize: AppSizes.fs2xl,
@@ -45,7 +45,7 @@ class CaseBannerWidget extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: AppSizes.md),
+                  const SizedBox(height: AppSizes.md),
 
                   // 副标题
                   Text(
@@ -57,7 +57,7 @@ class CaseBannerWidget extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: AppSizes.xxxl),
+                  const SizedBox(height: AppSizes.xxxl),
 
                   // 发光按钮
                   _buildGlowingButton(),
@@ -96,12 +96,12 @@ class _RadialGridBackgroundPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // 1. 绘制深蓝色渐变背景
-    final gradient = LinearGradient(
+    const gradient = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        const Color(0xFF0A2E5C), // 顶部深蓝灰
-        const Color(0xFF001F3F), // 底部海军蓝
+        Color(0xFF0A2E5C), // 顶部深蓝灰
+        Color(0xFF001F3F), // 底部海军蓝
       ],
     );
 
@@ -129,7 +129,7 @@ class _RadialGridBackgroundPainter extends CustomPainter {
     final centerY = size.height * 0.7;
 
     // 绘制15-20条放射线
-    final lineCount = 18;
+    const lineCount = 18;
     for (int i = 0; i < lineCount; i++) {
       final angle = (i * 360 / lineCount) * 3.14159 / 180;
 
@@ -268,10 +268,10 @@ class _GlowingButtonState extends State<_GlowingButton> {
           child: Center(
             child: Text(
               widget.text,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: AppSizes.fsMd,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF0A2E5C),
+                color: Color(0xFF0A2E5C),
               ),
             ),
           ),

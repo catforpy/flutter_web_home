@@ -28,7 +28,7 @@ class InstructorMockDatasource {
 
     if (filterSubject != null && filterSubject.isNotEmpty) {
       filteredInstructors = filteredInstructors
-          .where((i) => i.subjects.any((s) => s.contains(filterSubject!)))
+          .where((i) => i.subjects.any((s) => s.contains(filterSubject)))
           .toList();
     }
 
@@ -73,7 +73,7 @@ class InstructorMockDatasource {
   static Instructor? getInstructorById(String id) {
     return _getAllInstructors().firstWhere(
       (i) => i.id == id,
-      orElse: () => throw StateError("Value not found"), // 会抛出异常，调用方需要处理
+      orElse: () => throw StateError('Value not found'), // 会抛出异常，调用方需要处理
     );
   }
 

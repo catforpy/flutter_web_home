@@ -79,19 +79,19 @@ class PropertyPanel extends StatelessWidget {
   }
 
   Widget _buildStyleProperties(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           '样式配置',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         // TODO: 根据不同组件类型显示不同的样式配置
-        const Text('具体配置项待实现...'),
+        Text('具体配置项待实现...'),
       ],
     );
   }

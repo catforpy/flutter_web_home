@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/auth/auth_state.dart';
 import 'route_manager.dart';
 import 'components/audit_info_banner.dart';
 import 'components/online_version_card.dart';
@@ -357,30 +356,30 @@ class _AuditManagementPageState extends State<AuditManagementPage> {
     return Container(
       color: const Color(0xFFF5F6F7),
       padding: const EdgeInsets.all(24),
-      child: Column(
+      child: const Column(
         children: [
           // 绿色提示横幅
-          const AuditInfoBanner(),
+          AuditInfoBanner(),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // 线上版本卡片
-          const OnlineVersionCard(),
+          OnlineVersionCard(),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // 审核版本卡片
-          const AuditVersionCard(),
+          AuditVersionCard(),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // 体验版本卡片
-          const ExperienceVersionCard(),
+          ExperienceVersionCard(),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // 代码更新卡片
-          const CodeUpdateCard(),
+          CodeUpdateCard(),
         ],
       ),
     );

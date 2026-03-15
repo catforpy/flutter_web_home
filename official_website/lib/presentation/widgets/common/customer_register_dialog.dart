@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:async';
+import '../../../core/auth/auth_state.dart';
 
 /// 客户注册弹窗
 /// 支持两种注册方式：
@@ -677,7 +677,7 @@ class _CustomerRegisterDialogState extends State<CustomerRegisterDialog> {
   }
 
   /// 处理注册
-  void _handleRegister() {
+  void _handleRegister() async {
     // 验证协议同意
     if (!_agreedToTerms) {
       _showErrorDialog('请先同意用户协议和隐私政策');
@@ -720,9 +720,22 @@ class _CustomerRegisterDialogState extends State<CustomerRegisterDialog> {
         return;
       }
 
-      // TODO: 实际项目中需要调用API注册
-      debugPrint('注册成功：账号=$account');
-      _showSuccessDialog();
+      // 调用后端V2 API：都达网账户 - 账号密码注册
+      debugPrint('📝 开始注册（V2）：都达网账户, 账号=$account');
+      final success = await authState.registerPlatformAccount(
+        username: account,
+        password: password,
+        confirmPassword: confirmPassword,
+      );
+
+      if (success) {
+        debugPrint('✅ 注册成功：账号=$account');
+        _showSuccessDialog();
+      } else {
+        final errorMsg = authState.errorMessage ?? '注册失败，请重试';
+        debugPrint('❌ 注册失败：$errorMsg');
+        _showErrorDialog(errorMsg);
+      }
     } else {
       // 手机号码注册
       final phone = _phoneController.text.trim();
@@ -738,9 +751,9 @@ class _CustomerRegisterDialogState extends State<CustomerRegisterDialog> {
         return;
       }
 
-      // TODO: 实际项目中需要调用API注册
-      debugPrint('注册成功：手机号=$phone');
-      _showSuccessDialog();
+      // TODO: 手机验证码注册暂时未实现，需要后端提供发送验证码接口
+      debugPrint('⚠️ 手机验证码注册功能待实现');
+      _showErrorDialog('手机验证码注册功能待实现，请使用账号密码注册');
     }
   }
 
@@ -822,12 +835,26 @@ class _CustomerRegisterDialogState extends State<CustomerRegisterDialog> {
             ),
           ],
         ),
-        content: const Text(
-          '欢迎加入都达网！',
-          style: TextStyle(
-            fontSize: 15,
-            color: Color(0xFF333333),
-          ),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '欢迎加入都达网！',
+              style: TextStyle(
+                fontSize: 15,
+                color: Color(0xFF333333),
+              ),
+            ),
+            SizedBox(height: 12),
+            Text(
+              '请使用您的账号和密码登录。',
+              style: TextStyle(
+                fontSize: 14,
+                color: Color(0xFF666666),
+              ),
+            ),
+          ],
         ),
         actions: [
           TextButton(
@@ -836,7 +863,7 @@ class _CustomerRegisterDialogState extends State<CustomerRegisterDialog> {
               Navigator.of(context).pop(); // 关闭注册弹窗
             },
             child: const Text(
-              '确定',
+              '去登录',
               style: TextStyle(
                 fontSize: 15,
                 color: Color(0xFFD93025),

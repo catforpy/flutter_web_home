@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:official_website/presentation/pages/case_studies/scenic_spot_guide_complete.dart';
 
 /// 行业分类数据模型
@@ -75,43 +74,43 @@ class _ShowcasePageState extends State<ShowcasePage>
 
   // 一级行业数据
   final List<IndustryCategory> _industries = [
-    IndustryCategory(
+    const IndustryCategory(
       id: 'logistics',
       name: '物流交通',
       icon: '🚚',
       subCategories: ['所有服务', '快递配送', '货运物流', '冷链物流', '同城配送', '仓储管理'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'media',
       name: '影音娱乐',
       icon: '🎬',
       subCategories: ['所有服务', '短视频', '直播', '游戏开发', '影视制作', '音乐制作'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'medical',
       name: '医疗健康',
       icon: '🏥',
       subCategories: ['所有服务', '智慧医院', '健康管理', '心理咨询', '医疗器械', '体检服务'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'construction',
       name: '建筑工程',
       icon: '🏗️',
       subCategories: ['所有服务', '室内设计', '装修施工', '工程监理', '建材供应', '工程造价'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'business',
       name: '商务服务',
       icon: '💼',
       subCategories: ['所有服务', '工商注册', '财务代理', '法律咨询', '知识产权', '人力资源'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'education',
       name: '教育培训',
       icon: '📚',
       subCategories: ['所有服务', 'K12教育', '职业教育', '语言培训', 'IT培训', '艺术培训'],
     ),
-    IndustryCategory(
+    const IndustryCategory(
       id: 'beauty',
       name: '美容美发',
       icon: '💇',
@@ -130,7 +129,7 @@ class _ShowcasePageState extends State<ShowcasePage>
 
   // 模拟服务卡片数据
   final List<ServiceCard> _serviceCards = [
-    ServiceCard(
+    const ServiceCard(
       id: 's001',
       title: '高端美妆短视频全案策划',
       coverImage: '',
@@ -142,7 +141,7 @@ class _ShowcasePageState extends State<ShowcasePage>
       minOrder: 1,
       category: '短视频',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 's002',
       title: '企业宣传片拍摄制作',
       coverImage: '',
@@ -154,7 +153,7 @@ class _ShowcasePageState extends State<ShowcasePage>
       minOrder: 1,
       category: '影视制作',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 's003',
       title: '抖音账号代运营服务',
       coverImage: '',
@@ -166,7 +165,7 @@ class _ShowcasePageState extends State<ShowcasePage>
       minOrder: 3,
       category: '短视频',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 's004',
       title: '直播带货策划执行',
       coverImage: '',
@@ -178,7 +177,7 @@ class _ShowcasePageState extends State<ShowcasePage>
       minOrder: 1,
       category: '直播',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 's005',
       title: '科普短视频内容创作',
       coverImage: '',
@@ -190,7 +189,7 @@ class _ShowcasePageState extends State<ShowcasePage>
       minOrder: 10,
       category: '短视频',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 's006',
       title: '户外探险短视频拍摄',
       coverImage: '',
@@ -202,7 +201,7 @@ class _ShowcasePageState extends State<ShowcasePage>
       minOrder: 1,
       category: '短视频',
     ),
-    ServiceCard(
+    const ServiceCard(
       id: 's007',
       title: '搞笑短视频剧本创作',
       coverImage: '',
@@ -414,10 +413,10 @@ class _ShowcasePageState extends State<ShowcasePage>
                   onTap: () {
                     debugPrint('打开个人中心');
                   },
-                  child: CircleAvatar(
+                  child: const CircleAvatar(
                     radius: 18,
-                    backgroundColor: const Color(0xFF1890FF),
-                    child: const Icon(
+                    backgroundColor: Color(0xFF1890FF),
+                    child: Icon(
                       Icons.person,
                       size: 18,
                       color: Colors.white,
@@ -584,7 +583,7 @@ class _ShowcasePageState extends State<ShowcasePage>
           const Spacer(),
 
           // 中间标签滑动区
-          Container(
+          SizedBox(
             width: 600,
             child: Stack(
               children: [
@@ -785,17 +784,17 @@ class _ShowcasePageState extends State<ShowcasePage>
 
   /// 构建空状态
   Widget _buildEmptyState() {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.search_off,
             size: 64,
-            color: const Color(0xFFCCCCCC),
+            color: Color(0xFFCCCCCC),
           ),
-          const SizedBox(height: 16),
-          const Text(
+          SizedBox(height: 16),
+          Text(
             '暂无相关服务',
             style: TextStyle(
               fontSize: 16,
@@ -1018,7 +1017,7 @@ class _ShowcasePageState extends State<ShowcasePage>
           spacing: 8,
           runSpacing: 8,
           children: options.map((option) {
-            final isSelected = false;
+            const isSelected = false;
             return MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
@@ -1036,9 +1035,9 @@ class _ShowcasePageState extends State<ShowcasePage>
                   ),
                   child: Text(
                     option,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
-                      color: isSelected ? const Color(0xFF1890FF) : const Color(0xFF333333),
+                      color: isSelected ? Color(0xFF1890FF) : Color(0xFF333333),
                     ),
                   ),
                 ),

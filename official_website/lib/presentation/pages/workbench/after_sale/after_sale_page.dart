@@ -578,7 +578,7 @@ class _AfterSalePageState extends State<AfterSalePage> {
           // 底部：时间和操作
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.access_time,
                 size: 14,
                 color: Color(0xFF999999),
@@ -593,7 +593,7 @@ class _AfterSalePageState extends State<AfterSalePage> {
               ),
               if (ticket.handler != null) ...[
                 const SizedBox(width: 24),
-                Icon(
+                const Icon(
                   Icons.person_outline,
                   size: 14,
                   color: Color(0xFF999999),
@@ -609,9 +609,9 @@ class _AfterSalePageState extends State<AfterSalePage> {
               ],
               const Spacer(),
               if (ticket.status == AfterSaleStatus.pending)
-                _buildActionButton('处理', Color(0xFF2196F3), () => _handleTicket(ticket))
+                _buildActionButton('处理', const Color(0xFF2196F3), () => _handleTicket(ticket))
               else if (ticket.status == AfterSaleStatus.processing)
-                _buildActionButton('完成', Color(0xFF4CAF50), () => _completeTicket(ticket)),
+                _buildActionButton('完成', const Color(0xFF4CAF50), () => _completeTicket(ticket)),
             ],
           ),
         ],
@@ -718,7 +718,7 @@ class _AfterSalePageState extends State<AfterSalePage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('完成工单'),
-        content: Text('确定要完成该售后工单吗？'),
+        content: const Text('确定要完成该售后工单吗？'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

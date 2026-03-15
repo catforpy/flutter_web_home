@@ -268,7 +268,7 @@ class _ProfilePageState extends State<ProfilePage> {
   /// 构建用户数据统计
   Widget _buildUserStats() {
     // 根据用户身份显示不同的统计数据
-    switch (authState.userType) {
+    switch (authState.userTypeEnum) {
       case UserType.customer:
         // 客户：客户 + 商户的统计数据
         return _buildCustomerStats();
@@ -277,8 +277,9 @@ class _ProfilePageState extends State<ProfilePage> {
         return _buildMerchantPlaceholderStats();
       case UserType.backend:
         return _buildBackendStats();
-      case null:
-        return const SizedBox.shrink();
+      default:
+        // 未登录或其他情况
+        return _buildNotLoginStats();
     }
   }
 
@@ -335,6 +336,11 @@ class _ProfilePageState extends State<ProfilePage> {
         _buildStatItem('12', '站内信'),
       ],
     );
+  }
+
+  /// 未登录状态统计
+  Widget _buildNotLoginStats() {
+    return const SizedBox.shrink();
   }
 
   /// 构建单个统计项
@@ -1004,7 +1010,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           const SizedBox(height: 12),
-          Text(
+          const Text(
             '点击浏览所有项目案例',
             style: TextStyle(
               fontSize: 14,
@@ -1523,12 +1529,12 @@ class _AddCompanyDialogState extends State<AddCompanyDialog> {
                       ],
                     ),
                   )
-                : Center(
+                : const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.upload_file, size: 32, color: Color(0xFF999999)),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Text('点击上传', style: TextStyle(color: Color(0xFF999999))),
                       ],
                     ),
@@ -1547,9 +1553,9 @@ class _AddCompanyDialogState extends State<AddCompanyDialog> {
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: const Color(0xFFFFA940)),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
             '⚠️ 温馨提示',
             style: TextStyle(

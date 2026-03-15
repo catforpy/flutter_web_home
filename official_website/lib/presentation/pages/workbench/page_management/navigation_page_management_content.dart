@@ -140,14 +140,14 @@ class _NavigationPageManagementContentState extends State<NavigationPageManageme
   Widget _buildBreadcrumb() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
+      child: const Row(
         children: [
-          const Text(
+          Text(
             '页面管理',
             style: TextStyle(fontSize: 14, color: Color(0xFF666666)),
           ),
-          const Text(' / ', style: TextStyle(fontSize: 14, color: Color(0xFF999999))),
-          const Text(
+          Text(' / ', style: TextStyle(fontSize: 14, color: Color(0xFF999999))),
+          Text(
             '导航页面管理',
             style: TextStyle(fontSize: 14, color: Color(0xFF1A9B8E)),
           ),

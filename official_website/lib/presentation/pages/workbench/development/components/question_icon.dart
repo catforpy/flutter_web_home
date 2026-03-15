@@ -21,8 +21,8 @@ class QuestionIcon extends StatelessWidget {
         child: Container(
           width: 16,
           height: 16,
-          decoration: BoxDecoration(
-            color: const Color(0xFF999999),
+          decoration: const BoxDecoration(
+            color: Color(0xFF999999),
             shape: BoxShape.circle,
           ),
           child: const Center(

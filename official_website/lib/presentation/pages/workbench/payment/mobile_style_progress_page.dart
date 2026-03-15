@@ -225,11 +225,11 @@ class _MobileStyleProgressPageState extends State<MobileStyleProgressPage> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12),
-          Align(
+          const Align(
             alignment: Alignment.centerRight,
             child: Text(
               '更新于：刚刚',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 color: Color(0xFF999999),
               ),
@@ -365,10 +365,10 @@ class _MobileStyleProgressPageState extends State<MobileStyleProgressPage> {
       child: Column(
         children: [
           // 插画（使用Icon代替）
-          Icon(
+          const Icon(
             Icons.file_upload,
             size: 64,
-            color: const Color(0xFFFFA940),
+            color: Color(0xFFFFA940),
           ),
           const SizedBox(height: 24),
 
@@ -452,11 +452,11 @@ class _MobileStyleProgressPageState extends State<MobileStyleProgressPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.error, color: Color(0xFFFF4D4F)),
-              const SizedBox(width: 8),
-              const Text(
+              Icon(Icons.error, color: Color(0xFFFF4D4F)),
+              SizedBox(width: 8),
+              Text(
                 '驳回原因',
                 style: TextStyle(
                   fontSize: 16,
@@ -611,8 +611,8 @@ class _MobileStyleProgressPageState extends State<MobileStyleProgressPage> {
         return Container(
           width: 16,
           height: 16,
-          decoration: BoxDecoration(
-            color: const Color(0xFFE5E5E5),
+          decoration: const BoxDecoration(
+            color: Color(0xFFE5E5E5),
             shape: BoxShape.circle,
           ),
         );

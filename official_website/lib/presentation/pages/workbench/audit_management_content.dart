@@ -15,14 +15,14 @@ class AuditManagementContent extends StatelessWidget {
     return Container(
       color: const Color(0xFFF5F6F7),
       padding: const EdgeInsets.all(24),
-      child: SingleChildScrollView(
+      child: const SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 顶部信息提示
-            const AuditInfoBanner(),
+            AuditInfoBanner(),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // 版本卡片网格
             Row(
@@ -30,21 +30,21 @@ class AuditManagementContent extends StatelessWidget {
                 Expanded(
                   child: OnlineVersionCard(),
                 ),
-                const SizedBox(width: 24),
+                SizedBox(width: 24),
                 Expanded(
                   child: AuditVersionCard(),
                 ),
               ],
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             Row(
               children: [
                 Expanded(
                   child: ExperienceVersionCard(),
                 ),
-                const SizedBox(width: 24),
+                SizedBox(width: 24),
                 Expanded(
                   child: CodeUpdateCard(),
                 ),

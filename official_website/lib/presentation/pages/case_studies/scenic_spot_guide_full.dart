@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'dart:ui';
 
 /// 智慧景区导览完整页面
@@ -137,7 +136,7 @@ class _ScenicSpotGuideFullState extends State<ScenicSpotGuideFull> {
     return Container(
       height: 100,
       padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.transparent,
       ),
       child: Row(
@@ -200,17 +199,17 @@ class _ScenicSpotGuideFullState extends State<ScenicSpotGuideFull> {
       right: 0,
       child: Container(
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              const Color(0xFF52C41A), // 绿色
-              const Color(0xFFD4B106), // 土黄色
-              const Color(0xFFFAFAFA), // 浅灰
+              Color(0xFF52C41A), // 绿色
+              Color(0xFFD4B106), // 土黄色
+              Color(0xFFFAFAFA), // 浅灰
               Colors.white, // 白色
             ],
-            stops: const [0.0, 0.3, 0.7, 1.0],
+            stops: [0.0, 0.3, 0.7, 1.0],
           ),
         ),
         // 毛玻璃效果
@@ -332,7 +331,7 @@ class _ScenicSpotGuideFullState extends State<ScenicSpotGuideFull> {
           const SizedBox(height: 24),
           _buildStatItem(
             '有效转化率',
-            '${_conversionRateValue.toStringAsFixed(1)}',
+            _conversionRateValue.toStringAsFixed(1),
             '%',
             _conversionRateValue / 68.5,
           ),

@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:dartz/dartz.dart';
 import 'package:official_website/core/error/failures.dart';
-import 'package:official_website/core/network/api_config.dart';
 import 'package:official_website/core/config/app_config.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:official_website/core/services/token_manager.dart';
+import 'package:official_website/core/services/auth_service.dart';
 
 /// API 客户端
 ///
@@ -13,15 +13,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// - 自动添加认证 Token
 /// - 统一错误处理
 /// - 请求/响应日志
-/// - Token 刷新机制
+/// - Token 刷新机制（带锁，防止并发刷新）
+/// - 对接真实的后端API
 class ApiClient {
   late final Dio _dio;
   final Logger _logger = Logger();
+  late final TokenManager _tokenManager;
+  late final AuthService _authService;
+
+  /// Token刷新锁，防止并发刷新
+  bool _isRefreshing = false;
+
+  /// 等待重试的请求队列
+  final List<_RetryRequest> _retryRequests = [];
 
   // 单例模式
-  static final ApiClient _instance = ApiClient._internal();
-  factory ApiClient() => _instance;
+  static ApiClient? _instance;
+  factory ApiClient() {
+    _instance ??= ApiClient._internal();
+    return _instance!;
+  }
   ApiClient._internal() {
+    _tokenManager = TokenManager();
+    _authService = AuthService();
     _dio = Dio(_createBaseOptions());
     _setupInterceptors();
   }
@@ -29,10 +43,10 @@ class ApiClient {
   /// 创建 Dio 基础配置
   static BaseOptions _createBaseOptions() {
     return BaseOptions(
-      baseUrl: AppConfig.apiBaseUrl, // 使用 AppConfig
-      connectTimeout: Duration(seconds: AppConfig.connectTimeout),
-      receiveTimeout: Duration(seconds: AppConfig.receiveTimeout),
-      sendTimeout: Duration(seconds: AppConfig.receiveTimeout),
+      baseUrl: AppConfig.apiBaseUrl, // 使用 AppConfig（支持可配置）
+      connectTimeout: AppConfig.connectionTimeout,
+      receiveTimeout: AppConfig.receiveTimeout,
+      sendTimeout: AppConfig.sendTimeout,
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -45,8 +59,8 @@ class ApiClient {
     // 请求拦截器 - 添加 Token
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        // 从本地存储获取 Token
-        final token = await _getToken();
+        // 从TokenManager获取 Token
+        final token = await _tokenManager.getAccessToken();
         if (token != null && token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
@@ -76,12 +90,46 @@ class ApiClient {
           _logger.e('📄 Response: ${error.response?.data}');
         }
 
-        // 处理 401 未授权错误 - 尝试刷新 Token
+        // 处理 401 未授权错误 - 尝试刷新 Token（带锁机制）
         if (error.response?.statusCode == 401) {
-          final refreshed = await _refreshToken();
+          if (_isRefreshing) {
+            // 如果正在刷新Token，将请求加入队列
+            _logger.d('⏳ Token刷新中，请求加入队列...');
+            _retryRequests.add(_RetryRequest(error.requestOptions, handler));
+            return;
+          }
+
+          // 开始刷新Token
+          _isRefreshing = true;
+          final refreshed = await _refreshTokenAndRetry();
+          _isRefreshing = false;
+
           if (refreshed) {
-            // 重试原请求
-            return handler.resolve(await _retry(error.requestOptions));
+            // Token刷新成功，重试原请求
+            try {
+              final response = await _retry(error.requestOptions);
+              // 重试所有排队的请求
+              for (final retryRequest in _retryRequests) {
+                try {
+                  final queuedResponse = await _retry(retryRequest.requestOptions);
+                  retryRequest.handler.resolve(queuedResponse);
+                } catch (e) {
+                  _logger.e('❌ 队列请求重试失败: $e');
+                  retryRequest.handler.next(error);
+                }
+              }
+              _retryRequests.clear();
+              return handler.resolve(response);
+            } catch (e) {
+              _logger.e('❌ 请求重试失败: $e');
+              _retryRequests.clear();
+            }
+          } else {
+            // Token刷新失败，拒绝所有排队的请求
+            for (final retryRequest in _retryRequests) {
+              retryRequest.handler.next(error);
+            }
+            _retryRequests.clear();
           }
         }
 
@@ -99,68 +147,25 @@ class ApiClient {
     }
   }
 
-  /// 从本地获取 Token
-  Future<String?> _getToken() async {
+  /// 刷新Token并重试
+  Future<bool> _refreshTokenAndRetry() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getString('auth_token');
-    } catch (e) {
-      _logger.e('Failed to get token: $e');
-      return null;
-    }
-  }
+      _logger.i('🔄 Token过期，尝试刷新...');
+      final result = await _authService.refreshToken();
 
-  /// 保存 Token 到本地
-  Future<void> _saveToken(String token) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('auth_token', token);
-    } catch (e) {
-      _logger.e('Failed to save token: $e');
-    }
-  }
-
-  /// 清除 Token
-  Future<void> _clearToken() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('auth_token');
-    } catch (e) {
-      _logger.e('Failed to clear token: $e');
-    }
-  }
-
-  /// 刷新 Token
-  Future<bool> _refreshToken() async {
-    try {
-      final refreshToken = await _getRefreshToken();
-      if (refreshToken == null) return false;
-
-      final response = await _dio.post(
-        ApiConfig.authRefresh,
-        data: {'refreshToken': refreshToken},
-      );
-
-      if (response.statusCode == 200) {
-        final newToken = response.data['accessToken'] as String?;
-        if (newToken != null) {
-          await _saveToken(newToken);
+      return result.fold(
+        (failure) {
+          _logger.e('❌ Token刷新失败: ${failure.message}');
+          return false;
+        },
+        (loginResponse) {
+          _logger.i('✅ Token刷新成功');
           return true;
-        }
-      }
+        },
+      );
     } catch (e) {
-      _logger.e('Failed to refresh token: $e');
-    }
-    return false;
-  }
-
-  /// 获取刷新 Token
-  Future<String?> _getRefreshToken() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getString('refresh_token');
-    } catch (e) {
-      return null;
+      _logger.e('❌ Token刷新异常: $e');
+      return false;
     }
   }
 
@@ -366,18 +371,14 @@ class ApiClient {
 
   // ==================== 公共方法 ====================
 
-  /// 设置认证 Token（外部调用）
-  Future<void> setAuthToken(String token) async {
-    await _saveToken(token);
-    _dio.options.headers['Authorization'] = 'Bearer $token';
-  }
-
-  /// 清除认证 Token（外部调用）
-  Future<void> clearAuthToken() async {
-    await _clearToken();
-    _dio.options.headers.remove('Authorization');
-  }
-
   /// 获取 Dio 实例（用于特殊场景）
   Dio get dio => _dio;
+}
+
+/// 重试请求封装类
+class _RetryRequest {
+  final RequestOptions requestOptions;
+  final ErrorInterceptorHandler handler;
+
+  _RetryRequest(this.requestOptions, this.handler);
 }

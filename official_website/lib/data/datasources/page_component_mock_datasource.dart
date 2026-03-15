@@ -27,9 +27,9 @@ class PageComponentMockDatasource {
 
   /// 构建默认搜索组件
   static SearchComponent _buildDefaultSearch() {
-    return SearchComponent(
+    return const SearchComponent(
       id: 'search_001',
-      config: const SearchConfig(
+      config: SearchConfig(
         placeholder: '请输入搜索内容',
       ),
       style: SearchStyle.defaultStyle,
@@ -66,7 +66,7 @@ class PageComponentMockDatasource {
 
   /// 构建默认标题组件
   static TitleComponent _buildDefaultTitle() {
-    return TitleComponent(
+    return const TitleComponent(
       id: 'title_001',
       text: '热门课程',
       style: TitleStyle.defaultStyle,

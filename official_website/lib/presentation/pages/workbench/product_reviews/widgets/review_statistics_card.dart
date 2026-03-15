@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:official_website/application/blocs/product_review/product_review_bloc.dart';
-import 'package:official_website/application/blocs/product_review/product_review_event.dart';
 import 'package:official_website/application/blocs/product_review/product_review_state.dart';
 import 'package:official_website/domain/entities/product_review.dart';
 

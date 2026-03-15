@@ -484,23 +484,23 @@ class _VerifyMiniProgramDialogState extends State<VerifyMiniProgramDialog> {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: const Color(0xFFFFA940)),
           ),
-          child: Row(
+          child: const Row(
             children: [
-              const Icon(Icons.info, color: Color(0xFFFFA940)),
-              const SizedBox(width: 12),
+              Icon(Icons.info, color: Color(0xFFFFA940)),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        const Text(
+                        Text(
                           '认证费用：',
                           style: TextStyle(fontSize: 14),
                         ),
                         Text(
                           '300元/年',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFFFFA940),
@@ -508,8 +508,8 @@ class _VerifyMiniProgramDialogState extends State<VerifyMiniProgramDialog> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
-                    const Text(
+                    SizedBox(height: 4),
+                    Text(
                       '认证有效期1年，到期前需进行年审',
                       style: TextStyle(
                         fontSize: 12,
@@ -595,13 +595,13 @@ class _VerifyMiniProgramDialogState extends State<VerifyMiniProgramDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              const Row(
                 children: [
-                  const Icon(Icons.info, color: Color(0xFF1890FF), size: 20),
-                  const SizedBox(width: 8),
+                  Icon(Icons.info, color: Color(0xFF1890FF), size: 20),
+                  SizedBox(width: 8),
                   Text(
                     '操作说明',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -753,7 +753,7 @@ class _VerifyMiniProgramDialogState extends State<VerifyMiniProgramDialog> {
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(color: const Color(0xFF52C41A)),
                 image: DecorationImage(
-                  image: NetworkImage(uploadedUrl!),
+                  image: NetworkImage(uploadedUrl),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -771,10 +771,10 @@ class _VerifyMiniProgramDialogState extends State<VerifyMiniProgramDialog> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.cloud_upload_outlined,
                       size: 32,
-                      color: const Color(0xFF999999),
+                      color: Color(0xFF999999),
                     ),
                     const SizedBox(height: 8),
                     Text(

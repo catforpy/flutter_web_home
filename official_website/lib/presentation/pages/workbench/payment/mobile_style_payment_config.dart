@@ -395,21 +395,21 @@ class _MobileStylePaymentConfigState extends State<MobileStylePaymentConfig> {
               color: const Color(0xFFE6F7FF),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Row(
+            child: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(
+                Icon(
                   Icons.info_outline,
                   size: 16,
                   color: Color(0xFF1890FF),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     '超级管理员将负责接收通知及扫码签约，请填写真实负责人信息',
                     style: TextStyle(
                       fontSize: 13,
-                      color: const Color(0xFF1890FF),
+                      color: Color(0xFF1890FF),
                       height: 1.5,
                     ),
                   ),
@@ -825,7 +825,7 @@ class _MobileStylePaymentConfigState extends State<MobileStylePaymentConfig> {
   /// 构建底部操作栏
   Widget _buildFooter() {
     return Container(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         left: 16,
         right: 16,
         bottom: 16,
@@ -1157,18 +1157,18 @@ class _MobileStylePaymentConfigState extends State<MobileStylePaymentConfig> {
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: const Color(0xFFFFD591)),
       ),
-      child: Row(
+      child: const Row(
         children: [
           SizedBox(
             width: 16,
             height: 16,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFFA5151)),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFA5151)),
             ),
           ),
-          const SizedBox(width: 12),
-          const Text(
+          SizedBox(width: 12),
+          Text(
             '⚡️ 正在识别执照信息...',
             style: TextStyle(
               fontSize: 13,
@@ -1202,8 +1202,8 @@ class _MobileStylePaymentConfigState extends State<MobileStylePaymentConfig> {
             Expanded(
               child: Text(
                 placeholder,
-                style: TextStyle(
-                  color: const Color(0xFFCCCCCC),
+                style: const TextStyle(
+                  color: Color(0xFFCCCCCC),
                   fontSize: 15,
                 ),
               ),

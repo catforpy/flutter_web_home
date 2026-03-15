@@ -1161,7 +1161,7 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
 
@@ -1241,7 +1241,7 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ],
@@ -1325,17 +1325,17 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
     final reviews = _filteredReviews;
 
     if (reviews.isEmpty) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.rate_review_outlined,
               size: 80,
-              color: const Color(0xFFCCCCCC),
+              color: Color(0xFFCCCCCC),
             ),
-            const SizedBox(height: 16),
-            const Text(
+            SizedBox(height: 16),
+            Text(
               '暂无评价数据',
               style: TextStyle(
                 fontSize: 16,
@@ -1677,17 +1677,17 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
                     // 底部操作栏
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.thumb_up_outlined,
                           size: 16,
-                          color: const Color(0xFF999999),
+                          color: Color(0xFF999999),
                         ),
                         const SizedBox(width: 4),
                         Text(
                           '${review.likes}',
                           style: const TextStyle(
                             fontSize: 12,
-                            color: const Color(0xFF999999),
+                            color: Color(0xFF999999),
                           ),
                         ),
                         const Spacer(),
@@ -1795,14 +1795,14 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
 
   /// 回复评价
   void _replyToReview(ProductReview review) {
-    final controller = TextEditingController();
-    if (review.reply != null) {
-      controller.text = review.reply!;
-    }
-
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
+        final controller = TextEditingController();
+        if (review.reply != null) {
+          controller.text = review.reply!;
+        }
+
         return AlertDialog(
           title: const Text('回复评价'),
           content: TextField(
@@ -1816,13 +1816,18 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                controller.dispose();  // ✅ 释放controller
+                Navigator.of(dialogContext).pop();
+              },
               child: const Text('取消'),
             ),
             TextButton(
               onPressed: () {
                 if (controller.text.trim().isNotEmpty) {
-                  Navigator.of(context).pop();
+                  final replyText = controller.text.trim();
+                  controller.dispose();  // ✅ 释放controller
+                  Navigator.of(dialogContext).pop();
                   setState(() {
                     final index = _reviews.indexWhere((r) => r.id == review.id);
                     if (index != -1) {
@@ -1842,7 +1847,7 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
                         images: review.images,
                         createTime: review.createTime,
                         status: review.status,
-                        reply: controller.text.trim(),
+                        reply: replyText,
                         replyTime: DateTime.now(),
                         likes: review.likes,
                       );
@@ -1904,7 +1909,7 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('确认删除'),
-        content: Text('确定要删除该评价吗？'),
+        content: const Text('确定要删除该评价吗？'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -1954,8 +1959,8 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
                       color: _selectedProductId == null
                           ? const Color(0xFF1A9B8E).withValues(alpha: 0.1)
                           : Colors.white,
-                      border: Border(
-                        bottom: BorderSide(color: const Color(0xFFE0E0E0)),
+                      border: const Border(
+                        bottom: BorderSide(color: Color(0xFFE0E0E0)),
                       ),
                     ),
                     child: Row(
@@ -1997,8 +2002,8 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
                         color: isSelected
                             ? const Color(0xFF1A9B8E).withValues(alpha: 0.1)
                             : Colors.white,
-                        border: Border(
-                          bottom: BorderSide(color: const Color(0xFFE0E0E0)),
+                        border: const Border(
+                          bottom: BorderSide(color: Color(0xFFE0E0E0)),
                         ),
                       ),
                       child: Row(
@@ -2035,7 +2040,7 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),
@@ -2111,8 +2116,8 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
                       color: _selectedManufacturer == null
                           ? const Color(0xFF1A9B8E).withValues(alpha: 0.1)
                           : Colors.white,
-                      border: Border(
-                        bottom: BorderSide(color: const Color(0xFFE0E0E0)),
+                      border: const Border(
+                        bottom: BorderSide(color: Color(0xFFE0E0E0)),
                       ),
                     ),
                     child: Row(
@@ -2154,8 +2159,8 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
                         color: isSelected
                             ? const Color(0xFF1A9B8E).withValues(alpha: 0.1)
                             : Colors.white,
-                        border: Border(
-                          bottom: BorderSide(color: const Color(0xFFE0E0E0)),
+                        border: const Border(
+                          bottom: BorderSide(color: Color(0xFFE0E0E0)),
                         ),
                       ),
                       child: Row(
@@ -2177,7 +2182,7 @@ class _ProductReviewsPageState extends State<ProductReviewsPage> {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),
@@ -2352,7 +2357,7 @@ class _BaseCategoryDialogState extends State<_BaseCategoryDialog> {
                           ),
                         ],
                       );
-                    }).toList(),
+                    }),
                     // 清除选择按钮
                     MouseRegion(
                       cursor: SystemMouseCursors.click,

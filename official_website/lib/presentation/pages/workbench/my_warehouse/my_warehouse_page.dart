@@ -461,7 +461,7 @@ class _MyWarehousePageState extends State<MyWarehousePage> {
     required dynamic value,
     required List<dynamic> items,
     Map<dynamic, String>? itemLabels,
-    required void Function(dynamic?) onChanged,
+    required void Function(dynamic) onChanged,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -537,17 +537,17 @@ class _MyWarehousePageState extends State<MyWarehousePage> {
     final products = _filteredProducts;
 
     if (products.isEmpty) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.inventory_2_outlined,
               size: 80,
-              color: const Color(0xFFCCCCCC),
+              color: Color(0xFFCCCCCC),
             ),
-            const SizedBox(height: 16),
-            const Text(
+            SizedBox(height: 16),
+            Text(
               '暂无商品',
               style: TextStyle(
                 fontSize: 16,

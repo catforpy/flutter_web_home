@@ -109,7 +109,7 @@ class _ReviewFilterPanelState extends State<ReviewFilterPanel> {
                   style: const TextStyle(fontSize: 14),
                 ),
               );
-            }).toList(),
+            }),
           ],
           onChanged: (value) {
             setState(() {

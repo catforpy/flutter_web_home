@@ -47,8 +47,8 @@ class ReviewListView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey),
-                  const SizedBox(height: 16),
-                  const Text('暂无评价数据'),
+                  SizedBox(height: 16),
+                  Text('暂无评价数据'),
                 ],
               ),
             );

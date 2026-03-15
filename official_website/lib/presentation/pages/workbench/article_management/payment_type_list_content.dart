@@ -457,7 +457,7 @@ class _PaymentTypeListContentState extends State<PaymentTypeListContent> {
               items: const ['日卡', '月卡', '年卡'].map((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
-                  child: Text(item, style: TextStyle(fontSize: 14)),
+                  child: Text(item, style: const TextStyle(fontSize: 14)),
                 );
               }).toList(),
               onChanged: (String? newValue) {

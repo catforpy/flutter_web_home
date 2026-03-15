@@ -1014,10 +1014,10 @@ class _ArticleManagementPageState extends State<ArticleManagementPage> {
           topRight: Radius.circular(32),
         ),
       ),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             '19:14',
             style: TextStyle(
               fontSize: 14,
@@ -1027,12 +1027,12 @@ class _ArticleManagementPageState extends State<ArticleManagementPage> {
           ),
           Row(
             children: [
-              const Icon(Icons.signal_cellular_4_bar, size: 16, color: Colors.black),
-              const SizedBox(width: 4),
-              const Text('中国移动 4G', style: TextStyle(fontSize: 12, color: Colors.black)),
-              const SizedBox(width: 8),
-              const Text('61%', style: TextStyle(fontSize: 12, color: Colors.black)),
-              const Icon(Icons.battery_full, size: 16, color: Colors.black),
+              Icon(Icons.signal_cellular_4_bar, size: 16, color: Colors.black),
+              SizedBox(width: 4),
+              Text('中国移动 4G', style: TextStyle(fontSize: 12, color: Colors.black)),
+              SizedBox(width: 8),
+              Text('61%', style: TextStyle(fontSize: 12, color: Colors.black)),
+              Icon(Icons.battery_full, size: 16, color: Colors.black),
             ],
           ),
         ],
@@ -1051,11 +1051,11 @@ class _ArticleManagementPageState extends State<ArticleManagementPage> {
           bottom: BorderSide(color: Color(0xFFE5E5E5), width: 1),
         ),
       ),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
-          const Text(
+          Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
+          Text(
             '分类预览',
             style: TextStyle(
               fontSize: 16,
@@ -1063,7 +1063,7 @@ class _ArticleManagementPageState extends State<ArticleManagementPage> {
               color: Colors.black,
             ),
           ),
-          const Icon(Icons.more_horiz, size: 24, color: Colors.black),
+          Icon(Icons.more_horiz, size: 24, color: Colors.black),
         ],
       ),
     );
@@ -1825,15 +1825,14 @@ class _ArticleManagementPageState extends State<ArticleManagementPage> {
           children: _categories.asMap().entries.map((entry) {
             final index = entry.key;
             final category = entry.value;
-            final controller = TextEditingController(text: category.name);
-            return _buildCategoryCard(category, index, controller);
+            return _buildCategoryCard(category, index);
           }).toList(),
         ),
       ],
     );
   }
 
-  Widget _buildCategoryCard(ArticleCategory category, int index, TextEditingController controller) {
+  Widget _buildCategoryCard(ArticleCategory category, int index) {
     return Container(
       width: 120,
       padding: const EdgeInsets.all(8),
@@ -1853,7 +1852,7 @@ class _ArticleManagementPageState extends State<ArticleManagementPage> {
                 setState(() {
                   _categories.removeAt(index);
                   if (_selectedCategoryIndex >= _categories.length) {
-                    _selectedCategoryIndex = _categories.length > 0 ? _categories.length - 1 : 0;
+                    _selectedCategoryIndex = _categories.isNotEmpty ? _categories.length - 1 : 0;
                   }
                 });
                 debugPrint('删除分类：${category.name}');
@@ -1870,7 +1869,7 @@ class _ArticleManagementPageState extends State<ArticleManagementPage> {
 
           // 输入框
           TextField(
-            controller: controller,
+            controller: TextEditingController(text: category.name),
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 14),
             decoration: InputDecoration(

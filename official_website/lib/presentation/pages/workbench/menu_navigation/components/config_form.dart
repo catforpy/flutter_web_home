@@ -105,18 +105,18 @@ class _ConfigFormState extends State<ConfigForm> {
         border: Border.all(color: const Color(0xFF52C41A), width: 1),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.info_outline,
                 size: 16,
                 color: Color(0xFF52C41A),
               ),
-              const SizedBox(width: 8),
-              const Text(
+              SizedBox(width: 8),
+              Text(
                 '介绍',
                 style: TextStyle(
                   fontSize: 16,
@@ -126,8 +126,8 @@ class _ConfigFormState extends State<ConfigForm> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          const Text(
+          SizedBox(height: 12),
+          Text(
             '底部图标 (底部导航链接不能重复，且必须有一个链接到首页)\n'
             '该处修改底部菜单需要保存后重新提交审核（在小程序管理->审核管理点击）',
             style: TextStyle(
@@ -264,7 +264,7 @@ class _ConfigFormState extends State<ConfigForm> {
           final index = entry.key;
           final item = entry.value;
           return _buildMenuItemCard(index, item);
-        }).toList(),
+        }),
 
         // 添加按钮
         MouseRegion(
@@ -514,7 +514,7 @@ class _ConfigFormState extends State<ConfigForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label + ':',
+          '$label:',
           style: const TextStyle(
             fontSize: 14,
             color: Color(0xFF666666),
@@ -566,7 +566,7 @@ class _ConfigFormState extends State<ConfigForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label + ':',
+          '$label:',
           style: const TextStyle(
             fontSize: 14,
             color: Color(0xFF666666),
@@ -605,18 +605,16 @@ class _ConfigFormState extends State<ConfigForm> {
 
   /// 构建文本输入框
   Widget _buildTextField(String label, String value, Function(String) onChanged) {
-    final controller = TextEditingController(text: value);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label + ':',
+          '$label:',
           style: const TextStyle(fontSize: 14, color: Color(0xFF666666)),
         ),
         const SizedBox(height: 8),
         TextField(
-          controller: controller,
+          controller: TextEditingController(text: value),
           onChanged: onChanged,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
@@ -642,7 +640,7 @@ class _ConfigFormState extends State<ConfigForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label + ':',
+          '$label:',
           style: const TextStyle(fontSize: 14, color: Color(0xFF666666)),
         ),
         const SizedBox(height: 8),

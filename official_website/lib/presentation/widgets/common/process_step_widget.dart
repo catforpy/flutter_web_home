@@ -47,7 +47,7 @@ class ProcessStepWidget extends StatelessWidget {
       children: [
         // 第一行
         _buildRow(firstRowSteps, 1),
-        SizedBox(height: AppSizes.xl),
+        const SizedBox(height: AppSizes.xl),
         // 第二行
         _buildRow(secondRowSteps, 3),
       ],
@@ -77,13 +77,13 @@ class ProcessStepWidget extends StatelessWidget {
       if (i < rowSteps.length - 1) {
         widgets.add(
           connector ??
-              Icon(
+              const Icon(
                 Icons.arrow_forward,
                 color: AppColors.primary,
                 size: AppSizes.iconMd,
               ),
         );
-        widgets.add(SizedBox(width: AppSizes.xl));
+        widgets.add(const SizedBox(width: AppSizes.xl));
       }
     }
 
@@ -107,7 +107,7 @@ class ProcessStepWidget extends StatelessWidget {
 
       // 如果不是最后一个步骤，添加间距
       if (i < steps.length - 1) {
-        widgets.add(SizedBox(height: AppSizes.lg));
+        widgets.add(const SizedBox(height: AppSizes.lg));
       }
     }
 
@@ -126,14 +126,14 @@ class ProcessStepWidget extends StatelessWidget {
             Container(
               width: AppSizes.iconXl + AppSizes.md,
               height: AppSizes.iconXl + AppSizes.md,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: AppColors.primaryGradient,
               ),
               child: Center(
                 child: Text(
                   '$stepNumber',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: AppSizes.fsLg,
                     fontWeight: FontWeight.bold,
                     color: AppColors.background,
@@ -143,7 +143,7 @@ class ProcessStepWidget extends StatelessWidget {
             )
           else
             Container(
-              padding: EdgeInsets.all(AppSizes.md),
+              padding: const EdgeInsets.all(AppSizes.md),
               decoration: BoxDecoration(
                 color: AppColors.primaryLight.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(AppSizes.radiusLg),
@@ -155,13 +155,13 @@ class ProcessStepWidget extends StatelessWidget {
               ),
             ),
 
-          SizedBox(height: AppSizes.md),
+          const SizedBox(height: AppSizes.md),
 
           // 步骤标题
           Text(
             step.title,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: AppSizes.fsMd,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
@@ -170,11 +170,11 @@ class ProcessStepWidget extends StatelessWidget {
 
           // 步骤描述（如果有）
           if (step.description != null && step.description!.isNotEmpty) ...[
-            SizedBox(height: AppSizes.xs),
+            const SizedBox(height: AppSizes.xs),
             Text(
               step.description!,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: AppSizes.fsSm,
                 color: AppColors.textSecondary,
               ),

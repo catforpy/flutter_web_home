@@ -26,7 +26,7 @@ class CoreServicesWidget extends StatelessWidget {
 
     return Container(
       color: backgroundColor ?? AppColors.background,
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         vertical: AppSizes.xxl,
         horizontal: AppSizes.lg,
       ),
@@ -38,7 +38,7 @@ class CoreServicesWidget extends StatelessWidget {
             subtitle: '为企业提供一站式技术服务，以高品质铸造商业价值',
           ),
 
-          SizedBox(height: AppSizes.xl),
+          const SizedBox(height: AppSizes.xl),
 
           // 服务卡片网格
           Center(

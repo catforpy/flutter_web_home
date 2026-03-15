@@ -392,17 +392,17 @@ class _CourseOrderPageState extends State<CourseOrderPage> {
     final orders = _filteredOrders;
 
     if (orders.isEmpty) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.inbox_outlined,
               size: 80,
-              color: const Color(0xFFCCCCCC),
+              color: Color(0xFFCCCCCC),
             ),
-            const SizedBox(height: 16),
-            const Text(
+            SizedBox(height: 16),
+            Text(
               '暂无订单数据',
               style: TextStyle(
                 fontSize: 16,

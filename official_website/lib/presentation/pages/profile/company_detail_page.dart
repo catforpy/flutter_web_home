@@ -18,7 +18,7 @@ class CompanyDetailPage extends StatefulWidget {
 class _CompanyDetailPageState extends State<CompanyDetailPage> {
   // TODO: 从后端获取实际数据
   bool _basicInfoCompleted = true; // 基本信息
-  bool _legalPersonVerified = false; // 法人认证
+  final bool _legalPersonVerified = false; // 法人认证
   bool _qualificationsCompleted = false; // 资质证书
   bool _bankAccountVerified = false; // 银行账户
 
@@ -199,7 +199,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
               ),
               if (extraInfo != null) ...[
                 const SizedBox(height: 16),
-                extraInfo!,
+                extraInfo,
               ],
             ],
           ),
@@ -847,9 +847,9 @@ class _BankAccountDialogState extends State<BankAccountDialog> {
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: const Color(0xFFFFA940)),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text('⚠️ 温馨提示', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFFA940))),
           SizedBox(height: 8),
           Text('• 请确保银行账户信息准确无误', style: TextStyle(fontSize: 12, color: Color(0xFF666666))),

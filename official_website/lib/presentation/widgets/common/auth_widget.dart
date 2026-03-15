@@ -181,6 +181,18 @@ class _AuthWidgetState extends State<AuthWidget> {
                 ? Image.network(
                     authState.avatarUrl!,
                     fit: BoxFit.cover,
+                    cacheWidth: 200,  // ✅ 头像使用小尺寸缓存
+                    cacheHeight: 200,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(
+                        child: SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      );
+                    },
                     errorBuilder: (context, error, stackTrace) {
                       return _buildDefaultAvatar();
                     },
@@ -221,15 +233,27 @@ class _AuthWidgetState extends State<AuthWidget> {
                 Container(
                   width: 40,
                   height: 40,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: const Color(0xFFF5F5F5),
+                    color: Color(0xFFF5F5F5),
                   ),
                   child: ClipOval(
                     child: authState.avatarUrl != null && authState.avatarUrl!.isNotEmpty
                         ? Image.network(
                             authState.avatarUrl!,
                             fit: BoxFit.cover,
+                            cacheWidth: 200,  // ✅ 头像使用小尺寸缓存
+                            cacheHeight: 200,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return const Center(
+                                child: SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                ),
+                              );
+                            },
                             errorBuilder: (context, error, stackTrace) {
                               return const Icon(
                                 Icons.person,
@@ -304,7 +328,7 @@ class _AuthWidgetState extends State<AuthWidget> {
 
   /// 构建左列菜单项（订单中心、我的设置）
   List<Widget> _buildLeftColumnItems() {
-    switch (authState.userType) {
+    switch (authState.userTypeEnum) {
       case UserType.customer:
         // 客户：订单中心 + 商户的"我的小程序"
         return [
@@ -319,91 +343,37 @@ class _AuthWidgetState extends State<AuthWidget> {
           ),
           const SizedBox(height: 8),
           _buildMenuCard(
-            icon: Icons.phone_android,
-            label: '我的小程序',
+            icon: Icons.person_outline,
+            label: '设置',
             onTap: () {
-              debugPrint('点击我的小程序');
+              debugPrint('点击设置');
               _removeOverlay();
-              AppRouter.goToProfile(context);
-            },
-          ),
-          const SizedBox(height: 8),
-          _buildMenuCard(
-            icon: Icons.settings_outlined,
-            label: '我的设置',
-            onTap: () {
-              debugPrint('点击我的设置');
-              _removeOverlay();
-              AppRouter.goToProfile(context);
+              AppRouter.goToAccountSettings(context);
             },
           ),
         ];
-
       case UserType.merchant:
-        // 服务商：订单中心、模板管理、客户管理、我的授权、我的设置
+        // 服务商：不同的菜单项
         return [
           _buildMenuCard(
-            icon: Icons.shopping_bag_outlined,
-            label: '订单中心',
+            icon: Icons.business_center,
+            label: '商户管理',
             onTap: () {
-              debugPrint('点击订单中心');
+              debugPrint('点击商户管理');
               _removeOverlay();
-              AppRouter.goToProfile(context);
-            },
-          ),
-          const SizedBox(height: 8),
-          _buildMenuCard(
-            icon: Icons.dashboard_outlined,
-            label: '模板管理',
-            onTap: () {
-              debugPrint('点击模板管理');
-              _removeOverlay();
-              AppRouter.goToProfile(context);
-            },
-          ),
-          const SizedBox(height: 8),
-          _buildMenuCard(
-            icon: Icons.settings_outlined,
-            label: '我的设置',
-            onTap: () {
-              debugPrint('点击我的设置');
-              _removeOverlay();
-              AppRouter.goToProfile(context);
             },
           ),
         ];
-
       case UserType.backend:
-        return [
-          _buildMenuCard(
-            icon: Icons.assignment_outlined,
-            label: '我的任务',
-            onTap: () {
-              debugPrint('点击我的任务');
-              _removeOverlay();
-              AppRouter.goToProfile(context);
-            },
-          ),
-          const SizedBox(height: 8),
-          _buildMenuCard(
-            icon: Icons.settings_outlined,
-            label: '我的设置',
-            onTap: () {
-              debugPrint('点击我的设置');
-              _removeOverlay();
-              AppRouter.goToProfile(context);
-            },
-          ),
-        ];
-
-      case null:
+        return [];
+      default:
         return [];
     }
   }
 
   /// 构建右列菜单项（我的收藏、我的关注）
   List<Widget> _buildRightColumnItems() {
-    switch (authState.userType) {
+    switch (authState.userTypeEnum) {
       case UserType.customer:
         // 客户：我的收藏、我的关注 + 商户的"我的租赁"、"我的合作"
         return [
@@ -423,79 +393,14 @@ class _AuthWidgetState extends State<AuthWidget> {
             onTap: () {
               debugPrint('点击我的关注');
               _removeOverlay();
-              AppRouter.goToProfile(context);
-            },
-          ),
-          const SizedBox(height: 8),
-          _buildMenuCard(
-            icon: Icons.cottage_outlined,
-            label: '我租赁的',
-            onTap: () {
-              debugPrint('点击我的租赁');
-              _removeOverlay();
-              AppRouter.goToProfile(context);
-            },
-          ),
-          const SizedBox(height: 8),
-          _buildMenuCard(
-            icon: Icons.handshake_outlined,
-            label: '我合作的',
-            onTap: () {
-              debugPrint('点击我的合作');
-              _removeOverlay();
-              AppRouter.goToProfile(context);
             },
           ),
         ];
-
       case UserType.merchant:
-        // 服务商：客户管理、我的授权
-        return [
-          _buildMenuCard(
-            icon: Icons.people_outline,
-            label: '客户管理',
-            onTap: () {
-              debugPrint('点击客户管理');
-              _removeOverlay();
-              AppRouter.goToProfile(context);
-            },
-          ),
-          const SizedBox(height: 8),
-          _buildMenuCard(
-            icon: Icons.vpn_key_outlined,
-            label: '我的授权',
-            onTap: () {
-              debugPrint('点击我的授权');
-              _removeOverlay();
-              AppRouter.goToProfile(context);
-            },
-          ),
-        ];
-
+        return [];
       case UserType.backend:
-        return [
-          _buildMenuCard(
-            icon: Icons.bar_chart,
-            label: '我的排名',
-            onTap: () {
-              debugPrint('点击我的排名');
-              _removeOverlay();
-              AppRouter.goToProfile(context);
-            },
-          ),
-          const SizedBox(height: 8),
-          _buildMenuCard(
-            icon: Icons.mail_outline,
-            label: '站内信',
-            onTap: () {
-              debugPrint('点击站内信');
-              _removeOverlay();
-              AppRouter.goToProfile(context);
-            },
-          ),
-        ];
-
-      case null:
+        return [];
+      default:
         return [];
     }
   }
@@ -611,7 +516,6 @@ class _AuthWidgetState extends State<AuthWidget> {
   Widget _buildIconButton({
     required IconData icon,
     required VoidCallback onTap,
-    String? tooltip,
   }) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
