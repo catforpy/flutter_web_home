@@ -360,8 +360,15 @@ class AppRouter {
   }
 
   /// 导航到商户管理后台
-  static void goToMerchantDashboard(BuildContext context) {
-    context.go(merchantDashboard);
+  /// [from] 来源页面路径（用于返回逻辑）
+  static void goToMerchantDashboard(BuildContext context, {String? from}) {
+    if (from != null) {
+      // 移除开头的斜杠（如果有）
+      final fromPath = from.startsWith('/') ? from.substring(1) : from;
+      context.go('$merchantDashboard?from=$fromPath');
+    } else {
+      context.go(merchantDashboard);
+    }
   }
 
   /// 导航到小程序管理页面（带标签参数）

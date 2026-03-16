@@ -178,8 +178,8 @@ class _PlatformInitializationPageState extends State<PlatformInitializationPage>
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
-              // 跳转到管理后台
-              AppRouter.goToMerchantDashboard(context);
+              // 跳转到管理后台（从工作台进入）
+              AppRouter.goToMerchantDashboard(context, from: AppRouter.workbench);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF1A9B8E),

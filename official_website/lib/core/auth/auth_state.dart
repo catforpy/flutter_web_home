@@ -575,13 +575,18 @@ class AuthState extends ChangeNotifier {
     _clearError();
 
     try {
-      if (_userInfo != null) {
-        await _authService.logout(_userInfo!.userId);
-      }
+      // 调用V2登出接口
+      await _authServiceV2.logout();
 
+      // 清除认证状态
       _clearAuthState();
+
+      _logger.i('✅ 退出登录成功');
     } catch (e) {
+      _logger.e('❌ 退出登录失败: $e');
       _setError('登出失败: $e');
+      // 即使失败也清除本地状态
+      _clearAuthState();
     } finally {
       _setLoading(false);
     }

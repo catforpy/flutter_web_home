@@ -62,6 +62,9 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
     '签到记录', '搜索历史管理', '租赁管理', '合作管理',
   ];
 
+  // 来源页面（用于返回逻辑）
+  String? _previousRoute;
+
   // 消息列表数据
   final List<Map<String, dynamic>> _messages = [
     {
@@ -93,13 +96,44 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
     // 延迟一帧，确保路由参数已经可用
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateSelectedTabFromRoute();
+      _savePreviousRoute();
     });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _updateSelectedTabFromRoute();
+  }
+
+  /// 保存来源页面
+  void _savePreviousRoute() {
+    final state = GoRouterState.of(context);
+
+    // 从 URL 查询参数中获取来源页面信息
+    final fromParam = state.uri.queryParameters['from'];
+
+    if (fromParam != null) {
+      _previousRoute = '/$fromParam';
+      debugPrint('========== 工作台来源页面（从参数）: $_previousRoute ==========');
+    } else {
+      _previousRoute = null;
+      debugPrint('========== 工作台来源页面：无（直接访问或内部导航）==========');
+    }
+  }
+
+  /// 判断是否从指定页面列表进入
+  bool _isFromAllowedPages() {
+    if (_previousRoute == null) return false;
+
+    final allowedPages = [
+      AppRouter.home,
+      AppRouter.purchase,
+      AppRouter.lease,
+      AppRouter.partnership,
+      AppRouter.customDev,
+    ];
+
+    return allowedPages.any((page) => _previousRoute == page);
   }
 
   /// 从路由参数更新选中的标签
@@ -255,9 +289,17 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F6F7),
-      body: SizedBox(
+    return PopScope(
+      canPop: false, // 拦截所有返回事件
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+
+        // 处理返回逻辑
+        _handleBackPressed();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F6F7),
+        body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Stack(
@@ -287,10 +329,27 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
 
             // 消息通知弹窗
             _buildNotificationPopover(),
+
+            // 工具编辑弹窗
+            if (_showToolEditor) _buildToolEditorDialog(),
           ],
         ),
       ),
+      ),
     );
+  }
+
+  /// 处理返回按钮点击
+  void _handleBackPressed() {
+    // 如果是从首页、购买、租赁、合作、定制开发等页面进入的，则正常返回
+    if (_isFromAllowedPages()) {
+      debugPrint('========== 从允许的页面进入，正常返回 ==========');
+      Navigator.of(context).pop();
+    } else {
+      // 否则返回到"我的"页面
+      debugPrint('========== 返回到"我的"页面 ==========');
+      context.go(AppRouter.profile);
+    }
   }
 
   /// 构建左侧导航栏（200px，深灰黑背景）
@@ -401,7 +460,10 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
                 } else {
                   // 没有子菜单的父级菜单项点击处理
                   if (label == '管理中心') {
-                    Navigator.pop(context);
+                    // 点击"管理中心"时，清空子菜单项，显示主页内容
+                    setState(() {
+                      _selectedSubMenuItem = '';
+                    });
                   }
                 }
               });
@@ -712,74 +774,6 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
         ],
       ),
     );
-  }
-
-  /// 获取所有可用的工具列表（按左侧菜单顺序）
-  List<Map<String, dynamic>> _getAllAvailableTools() {
-    return [
-      // 小程序管理
-      {'name': '开发设置', 'parent': '小程序管理', 'icon': Icons.code},
-      {'name': '审核管理', 'parent': '小程序管理', 'icon': Icons.approval},
-      {'name': '菜单导航', 'parent': '小程序管理', 'icon': Icons.menu},
-      {'name': '订阅消息', 'parent': '小程序管理', 'icon': Icons.notifications_active},
-      {'name': '跳转小程序', 'parent': '小程序管理', 'icon': Icons.open_in_new},
-      {'name': '开发者模式', 'parent': '小程序管理', 'icon': Icons.developer_mode},
-      // 配置管理
-      {'name': '支付配置', 'parent': '配置管理', 'icon': Icons.payment},
-      {'name': '分享海报设置', 'parent': '配置管理', 'icon': Icons.share},
-      {'name': '客服设置', 'parent': '配置管理', 'icon': Icons.support_agent},
-      {'name': '短信设置', 'parent': '配置管理', 'icon': Icons.sms},
-      {'name': '音视频存储', 'parent': '配置管理', 'icon': Icons.video_library},
-      {'name': '广告位配置', 'parent': '配置管理', 'icon': Icons.campaign},
-      // 模块管理
-      {'name': '文章管理', 'parent': '模块管理', 'icon': Icons.article},
-      {'name': '留言管理', 'parent': '模块管理', 'icon': Icons.message},
-      {'name': '启动图管理', 'parent': '模块管理', 'icon': Icons.image},
-      {'name': '活动页配置', 'parent': '模块管理', 'icon': Icons.event},
-      {'name': '经典语录管理', 'parent': '模块管理', 'icon': Icons.format_quote},
-      // 页面管理
-      {'name': '导航页面管理', 'parent': '页面管理', 'icon': Icons.navigation},
-      {'name': '功能页面管理', 'parent': '页面管理', 'icon': Icons.widgets},
-      {'name': '个人中心管理', 'parent': '页面管理', 'icon': Icons.person},
-      // 课程管理
-      {'name': '课程分类', 'parent': '课程管理', 'icon': Icons.category},
-      {'name': '课程列表', 'parent': '课程管理', 'icon': Icons.list},
-      {'name': '讲师管理', 'parent': '课程管理', 'icon': Icons.school},
-      {'name': '课程问答管理', 'parent': '课程管理', 'icon': Icons.question_answer},
-      {'name': '评论管理', 'parent': '课程管理', 'icon': Icons.comment},
-      // 订单管理
-      {'name': '课程订单', 'parent': '订单管理', 'icon': Icons.receipt_long},
-      {'name': '商品订单', 'parent': '订单管理', 'icon': Icons.shopping_bag},
-      {'name': '租赁业务订单', 'parent': '订单管理', 'icon': Icons.cottage},
-      // 商城管理
-      {'name': '货架管理', 'parent': '商城管理', 'icon': Icons.store},
-      {'name': '我的仓库', 'parent': '商城管理', 'icon': Icons.inventory_2},
-      {'name': '商品评价', 'parent': '商城管理', 'icon': Icons.star_rate},
-      {'name': '运费模板', 'parent': '商城管理', 'icon': Icons.local_shipping},
-      {'name': '订单设置', 'parent': '商城管理', 'icon': Icons.settings},
-      // 用户管理
-      {'name': '用户列表', 'parent': '用户管理', 'icon': Icons.people},
-      {'name': '用户分类', 'parent': '用户管理', 'icon': Icons.group_work},
-      {'name': '用户等级', 'parent': '用户管理', 'icon': Icons.stars},
-      {'name': '签到记录', 'parent': '用户管理', 'icon': Icons.event_available},
-      {'name': '搜索历史管理', 'parent': '用户管理', 'icon': Icons.history},
-      // 客服管理
-      {'name': '售后处理', 'parent': '客服管理', 'icon': Icons.headset_mic},
-      {'name': '维权订单', 'parent': '客服管理', 'icon': Icons.verified_user},
-      {'name': '客服话术', 'parent': '客服管理', 'icon': Icons.chat},
-      {'name': '咨询记录', 'parent': '客服管理', 'icon': Icons.record_voice_over},
-      // 业务管理
-      {'name': '租赁管理', 'parent': '业务管理', 'icon': Icons.business_center},
-      {'name': '合作管理', 'parent': '业务管理', 'icon': Icons.handshake},
-      // 会员卡管理
-      {'name': '会员卡', 'parent': '会员卡管理', 'icon': Icons.card_membership},
-      {'name': '储值卡', 'parent': '会员卡管理', 'icon': Icons.account_balance_wallet},
-      {'name': '会员对话码', 'parent': '会员卡管理', 'icon': Icons.qr_code},
-      // 营销工具
-      {'name': '优惠券', 'parent': '营销工具', 'icon': Icons.confirmation_number},
-      {'name': '拼团', 'parent': '营销工具', 'icon': Icons.group_add},
-      {'name': '秒杀', 'parent': '营销工具', 'icon': Icons.flash_on},
-    ];
   }
 
   /// 构建主内容区（旧版本，保留用于兼容）
@@ -1330,19 +1324,60 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
     );
   }
 
-  /// 构建常用工具网格区（4列x3行，共12个工具卡片）
+  /// 构建常用工具网格区
   Widget _buildCommonToolsGrid() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 标题
-        const Text(
-          '常用工具',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF333333),
-          ),
+        // 标题行
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              '常用工具',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF333333),
+              ),
+            ),
+            // 编辑按钮
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _showToolEditor = true;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xFFD9D9D9)),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.edit,
+                        size: 14,
+                        color: Color(0xFF666666),
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        '编辑',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF666666),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 16),
 
@@ -1354,36 +1389,115 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
           mainAxisSpacing: 16,
           crossAxisSpacing: 16,
           childAspectRatio: 3.5,
-          children: [
-            _buildToolCard(Icons.home, '页面管理-主页管理'),
-            _buildToolCard(Icons.person, '页面管理-个人中心管理'),
-            _buildToolCard(Icons.category, '课程管理-课程分类'),
-            _buildToolCard(Icons.list, '课程管理-课程列表'),
-            _buildToolCard(Icons.people, '课程管理-作者列表'),
-            _buildToolCard(Icons.comment, '课程管理-评论管理'),
-            _buildToolCard(Icons.receipt, '订单管理-课程订单'),
-            _buildToolCard(Icons.shopping_bag, '订单管理-商品订单'),
-            _buildToolCard(Icons.cottage, '订单管理-租赁业务订单'),
-            _buildToolCard(Icons.group, '用户管理-用户列表'),
-            _buildToolCard(Icons.group_work, '用户管理-用户分类'),
-            _buildToolCard(Icons.stars, '用户管理-用户等级'),
-            _buildToolCard(Icons.event, '用户管理-签到记录'),
-            _buildToolCard(Icons.search, '用户管理-搜索历史管理'),
-            _buildToolCard(Icons.business_center, '业务管理-租赁管理'),
-            _buildToolCard(Icons.handshake, '业务管理-合作管理'),
-          ],
+          children: _selectedTools.map((toolName) {
+            final toolInfo = _getToolInfoByName(toolName);
+            if (toolInfo == null) return const SizedBox.shrink();
+            return _buildToolCard(toolInfo['icon'], toolName, toolInfo['parent']);
+          }).toList(),
         ),
       ],
     );
   }
 
+  /// 获取所有可用的工具（从左侧导航栏子菜单中获取）
+  List<Map<String, dynamic>> _getAllAvailableTools() {
+    return [
+      // 小程序管理
+      {'name': '开发设置', 'parent': '小程序管理', 'icon': Icons.code},
+      {'name': '审核管理', 'parent': '小程序管理', 'icon': Icons.approval},
+      {'name': '菜单导航', 'parent': '小程序管理', 'icon': Icons.menu},
+      {'name': '订阅消息', 'parent': '小程序管理', 'icon': Icons.notifications},
+      {'name': '跳转小程序', 'parent': '小程序管理', 'icon': Icons.exit_to_app},
+      {'name': '开发者模式', 'parent': '小程序管理', 'icon': Icons.developer_mode},
+
+      // 配置管理
+      {'name': '支付配置', 'parent': '配置管理', 'icon': Icons.payment},
+      {'name': '分享海报设置', 'parent': '配置管理', 'icon': Icons.share},
+      {'name': '客服设置', 'parent': '配置管理', 'icon': Icons.headset_mic},
+      {'name': '短信设置', 'parent': '配置管理', 'icon': Icons.sms},
+      {'name': '音视频存储', 'parent': '配置管理', 'icon': Icons.video_library},
+      {'name': '广告位配置', 'parent': '配置管理', 'icon': Icons.campaign},
+
+      // 模块管理
+      {'name': '文章管理', 'parent': '模块管理', 'icon': Icons.article},
+      {'name': '留言管理', 'parent': '模块管理', 'icon': Icons.message},
+      {'name': '启动图管理', 'parent': '模块管理', 'icon': Icons.image},
+      {'name': '活动页配置', 'parent': '模块管理', 'icon': Icons.event},
+      {'name': '经典语录管理', 'parent': '模块管理', 'icon': Icons.format_quote},
+
+      // 页面管理
+      {'name': '导航页面管理', 'parent': '页面管理', 'icon': Icons.navigation},
+      {'name': '功能页面管理', 'parent': '页面管理', 'icon': Icons.widgets},
+      {'name': '个人中心管理', 'parent': '页面管理', 'icon': Icons.person},
+
+      // 课程管理
+      {'name': '课程分类', 'parent': '课程管理', 'icon': Icons.category},
+      {'name': '课程列表', 'parent': '课程管理', 'icon': Icons.list},
+      {'name': '讲师管理', 'parent': '课程管理', 'icon': Icons.school},
+      {'name': '课程问答管理', 'parent': '课程管理', 'icon': Icons.question_answer},
+      {'name': '评论管理', 'parent': '课程管理', 'icon': Icons.comment},
+
+      // 订单管理
+      {'name': '课程订单', 'parent': '订单管理', 'icon': Icons.receipt_long},
+      {'name': '商品订单', 'parent': '订单管理', 'icon': Icons.shopping_bag},
+      {'name': '租赁业务订单', 'parent': '订单管理', 'icon': Icons.cottage},
+
+      // 商城管理
+      {'name': '货架管理', 'parent': '商城管理', 'icon': Icons.store},
+      {'name': '我的仓库', 'parent': '商城管理', 'icon': Icons.warehouse},
+      {'name': '商品评价', 'parent': '商城管理', 'icon': Icons.star_rate},
+      {'name': '运费模板', 'parent': '商城管理', 'icon': Icons.local_shipping},
+      {'name': '订单设置', 'parent': '商城管理', 'icon': Icons.settings},
+
+      // 用户管理
+      {'name': '用户列表', 'parent': '用户管理', 'icon': Icons.people},
+      {'name': '用户分类', 'parent': '用户管理', 'icon': Icons.group_work},
+      {'name': '用户等级', 'parent': '用户管理', 'icon': Icons.stars},
+      {'name': '签到记录', 'parent': '用户管理', 'icon': Icons.event},
+      {'name': '搜索历史管理', 'parent': '用户管理', 'icon': Icons.history},
+
+      // 客服管理
+      {'name': '售后处理', 'parent': '客服管理', 'icon': Icons.support_agent},
+      {'name': '维权订单', 'parent': '客服管理', 'icon': Icons.gavel},
+      {'name': '客服话术', 'parent': '客服管理', 'icon': Icons.chat},
+      {'name': '咨询记录', 'parent': '客服管理', 'icon': Icons.record_voice_over},
+
+      // 业务管理
+      {'name': '租赁管理', 'parent': '业务管理', 'icon': Icons.business_center},
+      {'name': '合作管理', 'parent': '业务管理', 'icon': Icons.handshake},
+
+      // 会员卡管理
+      {'name': '会员卡', 'parent': '会员卡管理', 'icon': Icons.card_membership},
+      {'name': '储值卡', 'parent': '会员卡管理', 'icon': Icons.account_balance_wallet},
+      {'name': '会员对话码', 'parent': '会员卡管理', 'icon': Icons.qr_code},
+
+      // 营销工具
+      {'name': '优惠券', 'parent': '营销工具', 'icon': Icons.local_offer},
+      {'name': '拼团', 'parent': '营销工具', 'icon': Icons.group_add},
+      {'name': '秒杀', 'parent': '营销工具', 'icon': Icons.flash_on},
+    ];
+  }
+
+  /// 根据工具名称获取工具信息
+  Map<String, dynamic>? _getToolInfoByName(String toolName) {
+    final allTools = _getAllAvailableTools();
+    for (var tool in allTools) {
+      if (tool['name'] == toolName) {
+        return tool;
+      }
+    }
+    return null;
+  }
+
   /// 构建单个工具卡片
-  Widget _buildToolCard(IconData icon, String label) {
+  Widget _buildToolCard(IconData icon, String label, String parentCategory) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          debugPrint('点击工具：$label');
+          debugPrint('点击工具：$parentCategory - $label');
+          // 跳转到对应的标签页
+          _handleToolClick(label);
         },
         child: Container(
           padding: const EdgeInsets.all(20),
@@ -1414,6 +1528,27 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
         ),
       ),
     );
+  }
+
+  /// 处理工具卡片点击事件
+  void _handleToolClick(String toolName) {
+    // 展开对应的父菜单
+    final toolInfo = _getToolInfoByName(toolName);
+    if (toolInfo != null) {
+      final parent = toolInfo['parent'] as String;
+      if (!_expandedMenus.contains(parent)) {
+        setState(() {
+          _expandedMenus.add(parent);
+        });
+      }
+
+      // 设置选中的子菜单项
+      setState(() {
+        _selectedSubMenuItem = toolName;
+      });
+
+      debugPrint('跳转到工具：$toolName (父菜单: $parent)');
+    }
   }
 
   /// 构建消息通知按钮（带弹窗功能）
@@ -1605,6 +1740,240 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
   /// 构建消息通知弹窗（旧版本，保留用于兼容）
   Widget _buildNotificationPopover() {
     return const SizedBox.shrink();
+  }
+
+  /// 构建工具编辑弹窗
+  Widget _buildToolEditorDialog() {
+    // 临时存储选中的工具
+    final Set<String> tempSelectedTools = Set.from(_selectedTools);
+
+    return Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Container(
+        width: 800,
+        height: 600,
+        padding: const EdgeInsets.all(24),
+        child: StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 标题栏
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      '编辑常用工具',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
+                    Text(
+                      '已选 ${tempSelectedTools.length}/16',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: tempSelectedTools.length > 16
+                            ? const Color(0xFFFF4D4F)
+                            : const Color(0xFF666666),
+                      ),
+                    ),
+                  ],
+                ),
+                const Divider(height: 32),
+
+                // 工具列表（可滚动）
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _buildToolGroups(tempSelectedTools, setDialogState),
+                    ),
+                  ),
+                ),
+
+                // 底部按钮
+                const Divider(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _showToolEditor = false;
+                        });
+                      },
+                      child: const Text(
+                        '取消',
+                        style: TextStyle(color: Color(0xFF666666)),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    ElevatedButton(
+                      onPressed: tempSelectedTools.length > 16
+                          ? null
+                          : () {
+                              setState(() {
+                                _selectedTools.clear();
+                                _selectedTools.addAll(tempSelectedTools);
+                                _showToolEditor = false;
+                              });
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1890FF),
+                        disabledBackgroundColor: const Color(0xFFD9D9D9),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 12,
+                        ),
+                      ),
+                      child: const Text(
+                        '保存',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  /// 构建工具分组列表
+  List<Widget> _buildToolGroups(Set<String> tempSelectedTools, StateSetter setDialogState) {
+    final allTools = _getAllAvailableTools();
+    final Map<String, List<Map<String, dynamic>>> groupedTools = {};
+
+    // 按父菜单分组
+    for (var tool in allTools) {
+      final parent = tool['parent'] as String;
+      if (!groupedTools.containsKey(parent)) {
+        groupedTools[parent] = [];
+      }
+      groupedTools[parent]!.add(tool);
+    }
+
+    // 生成分组列表
+    final List<Widget> widgets = [];
+    final parentOrder = [
+      '小程序管理', '配置管理', '模块管理', '页面管理', '课程管理',
+      '订单管理', '商城管理', '用户管理', '客服管理', '业务管理',
+      '会员卡管理', '营销工具'
+    ];
+
+    for (var parent in parentOrder) {
+      if (!groupedTools.containsKey(parent)) continue;
+
+      final tools = groupedTools[parent]!;
+
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 父菜单标题
+              Text(
+                parent,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF333333),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // 子工具列表
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: tools.map((tool) {
+                  final toolName = tool['name'] as String;
+                  final isSelected = tempSelectedTools.contains(toolName);
+                  final icon = tool['icon'] as IconData;
+
+                  return MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () {
+                        setDialogState(() {
+                          if (isSelected) {
+                            tempSelectedTools.remove(toolName);
+                          } else {
+                            if (tempSelectedTools.length < 16) {
+                              tempSelectedTools.add(toolName);
+                            }
+                          }
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? const Color(0xFFE6F7FF)
+                              : const Color(0xFFF8F9FA),
+                          border: Border.all(
+                            color: isSelected
+                                ? const Color(0xFF1890FF)
+                                : const Color(0xFFD9D9D9),
+                          ),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              isSelected
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank,
+                              size: 18,
+                              color: isSelected
+                                  ? const Color(0xFF1890FF)
+                                  : const Color(0xFF999999),
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(
+                              icon,
+                              size: 16,
+                              color: const Color(0xFF666666),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              toolName,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: isSelected
+                                    ? const Color(0xFF1890FF)
+                                    : const Color(0xFF666666),
+                                fontWeight: isSelected
+                                    ? FontWeight.w500
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return widgets;
   }
 
   /// 构建单条消息卡片

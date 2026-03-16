@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:official_website/core/error/failures.dart';
 import 'package:official_website/core/config/app_config.dart';
 import 'package:official_website/core/services/token_manager.dart';
-import 'package:official_website/core/services/auth_service.dart';
+import 'package:official_website/core/services/auth_v2_service.dart';
 
 /// API 客户端
 ///
@@ -19,7 +19,7 @@ class ApiClient {
   late final Dio _dio;
   final Logger _logger = Logger();
   late final TokenManager _tokenManager;
-  late final AuthService _authService;
+  late final AuthServiceV2 _authServiceV2;
 
   /// Token刷新锁，防止并发刷新
   bool _isRefreshing = false;
@@ -35,7 +35,7 @@ class ApiClient {
   }
   ApiClient._internal() {
     _tokenManager = TokenManager();
-    _authService = AuthService();
+    _authServiceV2 = AuthServiceV2();
     _dio = Dio(_createBaseOptions());
     _setupInterceptors();
   }
@@ -150,23 +150,36 @@ class ApiClient {
   /// 刷新Token并重试
   Future<bool> _refreshTokenAndRetry() async {
     try {
-      _logger.i('🔄 Token过期，尝试刷新...');
-      final result = await _authService.refreshToken();
+      _logger.i('🔄 Token过期，尝试刷新（V2接口）...');
+      final result = await _authServiceV2.refreshToken();
 
       return result.fold(
         (failure) {
           _logger.e('❌ Token刷新失败: ${failure.message}');
+          // Token刷新失败，清除本地Token并跳转到登录页
+          _handleRefreshFailure();
           return false;
         },
-        (loginResponse) {
+        (loginData) {
           _logger.i('✅ Token刷新成功');
           return true;
         },
       );
     } catch (e) {
       _logger.e('❌ Token刷新异常: $e');
+      // Token刷新异常，清除本地Token并跳转到登录页
+      _handleRefreshFailure();
       return false;
     }
+  }
+
+  /// 处理Token刷新失败
+  /// 清除本地Token
+  void _handleRefreshFailure() {
+    _logger.w('⚠️  Token刷新失败，清除本地Token');
+    // 清除本地Token
+    _tokenManager.clearTokens();
+    // 注意：实际的页面跳转需要在UI层处理，可以监听AuthState的变化
   }
 
   /// 重试请求
