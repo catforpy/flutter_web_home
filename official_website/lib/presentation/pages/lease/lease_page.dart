@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:official_website/presentation/widgets/common/auth_widget.dart';
 import '../../models/service_models.dart';
+import '../../routes/app_router.dart';
 /// 行业分类数据模型
 
 /// 租赁页面 - 都达 B2B 租赁服务平台
@@ -348,7 +349,7 @@ class _LeasePageState extends State<LeasePage>
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onTap: () {
-                    debugPrint('打开消息中心');
+                    AppRouter.goToProfile(context);
                   },
                   child: const Icon(
                     Icons.notifications_outlined,

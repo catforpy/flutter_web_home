@@ -316,6 +316,39 @@ class _ShowcasePageState extends State<ShowcasePage>
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
+          // 返回按钮
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.arrow_back_ios,
+                      size: 20,
+                      color: Color(0xFF333333),
+                    ),
+                    const SizedBox(width: 4),
+                    const Text(
+                      '返回',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Color(0xFF333333),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 24),
+
           // Logo
           const Text(
             '都达 Douda',

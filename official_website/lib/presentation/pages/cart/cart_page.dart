@@ -152,12 +152,22 @@ class _CartPageState extends State<CartPage> {
             onTap: () {
               AppRouter.goToOrders(context);
             },
-            child: const Text(
-              '我的订单历史',
-              style: TextStyle(
-                fontSize: 14,
-                color: Color(0xFF999999),
-              ),
+            child: const Row(
+              children: [
+                Icon(
+                  Icons.receipt_long,
+                  size: 18,
+                  color: Color(0xFF999999),
+                ),
+                SizedBox(width: 4),
+                Text(
+                  '订单',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF999999),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

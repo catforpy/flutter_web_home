@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:official_website/presentation/pages/case_studies/scenic_spot_guide_complete.dart';
+import 'package:official_website/presentation/routes/app_router.dart';
 
 /// 行业分类数据模型
 class IndustryCategory {
@@ -394,7 +395,7 @@ class _PurchasePageState extends State<PurchasePage>
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onTap: () {
-                    debugPrint('打开消息中心');
+                    AppRouter.goToProfile(context);
                   },
                   child: const Icon(
                     Icons.notifications_outlined,
@@ -411,7 +412,7 @@ class _PurchasePageState extends State<PurchasePage>
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onTap: () {
-                    debugPrint('打开个人中心');
+                    AppRouter.goToProfile(context);
                   },
                   child: const CircleAvatar(
                     radius: 18,

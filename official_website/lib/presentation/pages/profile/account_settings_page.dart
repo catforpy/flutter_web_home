@@ -1,10 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/auth/auth_state.dart';
 import '../../widgets/common/unified_navigation_bar.dart';
 import '../../widgets/common/footer_widget.dart';
 import '../../widgets/common/floating_widget.dart';
+import '../../widgets/enhanced_image_upload_dialog.dart';
 import '../../routes/app_router.dart';
+import '../../models/cloud_storage_config.dart';
+import '../../services/cloud_storage_manager.dart';
 
 /// 账户管理页面
 class AccountSettingsPage extends StatefulWidget {
@@ -17,8 +23,87 @@ class AccountSettingsPage extends StatefulWidget {
 class _AccountSettingsPageState extends State<AccountSettingsPage> {
   final ScrollController _scrollController = ScrollController();
 
-  // 当前选中的菜单项（0: 账户绑定, 1: 个人信息, 2: 操作记录, 3: 实名认证, 4: 收件地址）
+  // 当前选中的菜单项（0: 账户绑定, 1: 个人信息, 2: 操作记录, 3: 实名认证, 4: 存储设置, 5: 收件地址）
   int _selectedMenuIndex = 0;
+
+  // 本地存储的头像URL（用于覆盖服务器的头像）
+  String? _localAvatarUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLocalAvatar();
+    _initFakeCloudStorageData();
+  }
+
+  /// 初始化假数据（用于测试云存储功能）
+  Future<void> _initFakeCloudStorageData() async {
+    final storageManager = CloudStorageManager();
+
+    // 检查是否已有配置，如果没有则添加假数据
+    final hasConfig = await storageManager.hasAnyConfig();
+    if (!hasConfig) {
+      // 添加多个云存储配置用于测试
+      final configs = [
+        CloudStorageConfig(
+          id: 'aliyun_001',
+          provider: CloudProvider.aliyun,
+          roleName: 'oss-admin-role',
+          accessKeyId: 'LTAI5tXXXXXXXXXXXX',
+          accessKeySecret: 'xxxx_secret_key_xxxx',
+          bucketName: 'duda-public',
+          region: 'oss-cn-hangzhou',
+        ),
+        CloudStorageConfig(
+          id: 'tencent_001',
+          provider: CloudProvider.tencent,
+          roleName: 'cos-admin-role',
+          accessKeyId: 'AKIDxxxxxxxxxxxxxxxxxxxx',
+          accessKeySecret: 'xxxx_tencent_secret_xxxx',
+          bucketName: 'duda-media',
+          region: 'ap-beijing',
+        ),
+        CloudStorageConfig(
+          id: 'qiniu_001',
+          provider: CloudProvider.qiniu,
+          roleName: 'qiniu-admin-role',
+          accessKeyId: 'qiniu_access_key',
+          accessKeySecret: 'xxxx_qiniu_secret_xxxx',
+          bucketName: 'duda-images',
+          region: 'z0',
+        ),
+      ];
+
+      for (var config in configs) {
+        await storageManager.saveConfig(config);
+      }
+
+      print('✅ 已添加3个云存储配置假数据用于测试');
+    }
+  }
+
+  /// 加载本地存储的头像
+  Future<void> _loadLocalAvatar() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedAvatar = prefs.getString('local_avatar_url');
+    if (savedAvatar != null && savedAvatar.isNotEmpty) {
+      setState(() {
+        _localAvatarUrl = savedAvatar;
+      });
+    }
+  }
+
+  /// 保存头像到本地存储
+  Future<void> _saveLocalAvatar(String avatarUrl) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('local_avatar_url', avatarUrl);
+    setState(() {
+      _localAvatarUrl = avatarUrl;
+    });
+  }
+
+  /// 获取当前应该显示的头像URL
+  String? get _displayAvatarUrl => _localAvatarUrl ?? authState.avatarUrl;
 
   // 实名认证状态
   final bool _isVerified = false; // 默认未认证
@@ -47,6 +132,18 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   final TextEditingController _hobbiesController = TextEditingController();
   final TextEditingController _signatureController = TextEditingController();
 
+  // 存储配置状态
+  String? _currentStorageProvider; // 当前配置的云服务商: 'aliyun', 'tencent', 'qiniu'
+  final TextEditingController _aliyunRoleNameController = TextEditingController();
+  final TextEditingController _aliyunAccessKeyIdController = TextEditingController();
+  final TextEditingController _aliyunAccessKeySecretController = TextEditingController();
+
+  // 已配置的OSS列表
+  final List<Map<String, String>> _aliyunConfigs = [];
+
+  // 云存储管理器
+  final CloudStorageManager _storageManager = CloudStorageManager();
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -63,6 +160,9 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     _birthDayController.dispose();
     _hobbiesController.dispose();
     _signatureController.dispose();
+    _aliyunRoleNameController.dispose();
+    _aliyunAccessKeyIdController.dispose();
+    _aliyunAccessKeySecretController.dispose();
     super.dispose();
   }
 
@@ -169,9 +269,35 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             _buildMenuItem('个人信息', 1),
             _buildMenuItem('操作记录', 2),
             _buildMenuItem('实名认证', 3),
-            _buildMenuItem('收件地址', 4),
+            _buildMenuItem('存储设置', 4),
+            _buildMenuItem('收件地址', 5),
           ],
         ],
+      ),
+    );
+  }
+
+  /// 显示头像上传对话框
+  void _showAvatarUploadDialog() {
+    // 切换到存储设置标签页
+    void goToStorageSettings() {
+      setState(() {
+        _selectedMenuIndex = 4; // 存储设置的索引
+      });
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => EnhancedImageUploadDialog(
+        onImageSelected: (imageUrl) {
+          // 保存头像到本地存储
+          _saveLocalAvatar(imageUrl);
+          // 显示成功提示
+          ScaffoldMessenger.of(this.context).showSnackBar(
+            const SnackBar(content: Text('头像更新成功')),
+          );
+        },
+        onGoToSettings: goToStorageSettings,
       ),
     );
   }
@@ -183,47 +309,79 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       child: Column(
         children: [
           // 头像
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: const Color(0xFFE0E0E0),
-                width: 2,
-              ),
-            ),
-            child: ClipOval(
-              child: authState.avatarUrl != null && authState.avatarUrl!.isNotEmpty
-                  ? Image.network(
-                      authState.avatarUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: const Color(0xFFF5F5F5),
-                          child: const Icon(
-                            Icons.person,
-                            size: 40,
-                            color: Color(0xFF999999),
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: _showAvatarUploadDialog,
+              child: Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: const Color(0xFFE0E0E0),
+                    width: 2,
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    ClipOval(
+                      child: _displayAvatarUrl != null && _displayAvatarUrl!.isNotEmpty
+                          ? Image.network(
+                              _displayAvatarUrl!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: const Color(0xFFF5F5F5),
+                                  child: const Icon(
+                                    Icons.person,
+                                    size: 40,
+                                    color: Color(0xFF999999),
+                                  ),
+                                );
+                              },
+                            )
+                          : Container(
+                              color: const Color(0xFFF5F5F5),
+                              child: const Icon(
+                                Icons.person,
+                                size: 40,
+                                color: Color(0xFF999999),
+                              ),
+                            ),
+                    ),
+                    // 悬停时显示的遮罩和相机图标
+                    Positioned.fill(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: _showAvatarUploadDialog,
+                          borderRadius: BorderRadius.circular(40),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black.withValues(alpha: 0.3),
+                            ),
+                            child: const Icon(
+                              Icons.camera_alt,
+                              size: 24,
+                              color: Colors.white,
+                            ),
                           ),
-                        );
-                      },
-                    )
-                  : Container(
-                      color: const Color(0xFFF5F5F5),
-                      child: const Icon(
-                        Icons.person,
-                        size: 40,
-                        color: Color(0xFF999999),
+                        ),
                       ),
                     ),
+                  ],
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 12),
+          const SizedBox(height: 8),
 
-          // 用户名
+          // 用户名（显示登录用户名）
           Text(
-            authState.nickname,
+            authState.username?.isNotEmpty == true ? authState.username! : '未设置',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -453,6 +611,9 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
           ] else if (_selectedMenuIndex == 3) ...[
             // 实名认证
             _buildRealNameAuthModule(),
+          ] else if (_selectedMenuIndex == 4) ...[
+            // 存储设置
+            _buildStorageSettingsModule(),
           ] else ...[
             // 其他标签显示占位内容
             _buildModuleCard(
@@ -1313,6 +1474,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       case 3:
         return '实名认证';
       case 4:
+        return '存储设置';
+      case 5:
         return '收件地址';
       default:
         return '未知';
@@ -2073,6 +2236,1401 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             ),
         ],
       ),
+    );
+  }
+
+  /// 构建存储设置模块
+  Widget _buildStorageSettingsModule() {
+    // 获取当前配置的服务商名称
+    String getProviderName() {
+      switch (_currentStorageProvider) {
+        case 'aliyun':
+          return '阿里云 OSS';
+        case 'tencent':
+          return '腾讯云 COS';
+        case 'qiniu':
+          return '七牛云';
+        default:
+          return '未配置';
+      }
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFFE0E0E0),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 标题
+          const Text(
+            '云存储配置',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // 当前配置显示
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFF9E6),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: const Color(0xFFFFD54F),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.cloud_queue,
+                  size: 20,
+                  color: Color(0xFFF57C00),
+                ),
+                const SizedBox(width: 12),
+                const Text(
+                  '当前云存储：',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF666666),
+                  ),
+                ),
+                Text(
+                  getProviderName(),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFFF57C00),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // 云服务商列表
+          const Text(
+            '选择云存储服务商',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // 阿里云 OSS
+          _buildCloudProviderCard(
+            providerName: '阿里云 OSS',
+            description: '对象存储服务',
+            color: const Color(0xFFFF6B6B),
+            isConfigured: _aliyunConfigs.isNotEmpty,
+            configCount: _aliyunConfigs.length,
+            onTap: () {
+              _showAliyunConfigDialog();
+            },
+          ),
+
+          // 已配置的阿里云OSS列表
+          if (_aliyunConfigs.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            const Text(
+              '已配置的阿里云OSS',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF666666),
+              ),
+            ),
+            const SizedBox(height: 12),
+            ...List.generate(_aliyunConfigs.length, (index) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _buildAliyunConfigCard(
+                  config: _aliyunConfigs[index],
+                  index: index,
+                  onEdit: () {
+                    _showAliyunConfigDialog(editIndex: index);
+                  },
+                  onDelete: () {
+                    _showDeleteConfirmDialog(index);
+                  },
+                ),
+              );
+            }),
+          ],
+
+          const SizedBox(height: 12),
+
+          // 腾讯云 COS
+          _buildCloudProviderCard(
+            providerName: '腾讯云 COS',
+            description: '对象存储服务',
+            color: const Color(0xFF00A1D6),
+            isConfigured: _currentStorageProvider == 'tencent',
+            onTap: () {
+              _showTencentDevelopingDialog();
+            },
+          ),
+          const SizedBox(height: 12),
+
+          // 七牛云
+          _buildCloudProviderCard(
+            providerName: '七牛云',
+            description: '云存储服务',
+            color: const Color(0xFF42D4F4),
+            isConfigured: _currentStorageProvider == 'qiniu',
+            onTap: () {
+              _showQiniuDevelopingDialog();
+            },
+          ),
+          const SizedBox(height: 24),
+
+          // 配置步骤说明
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF5F5F5),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.help_outline,
+                      size: 18,
+                      color: Colors.grey[600],
+                    ),
+                    const SizedBox(width: 8),
+                    const Text(
+                      '配置说明',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  '1. 选择云服务商进行配置\n'
+                  '2. 按照要求填写配置信息\n'
+                  '3. 不知道如何获取？点击下方按钮查看详细步骤',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF666666),
+                    height: 1.8,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // 查看步骤按钮
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () {
+                _showHelpStepsDialog();
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: const Color(0xFFFF5C31),
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.menu_book,
+                      size: 18,
+                      color: Color(0xFFFF5C31),
+                    ),
+                    const SizedBox(width: 8),
+                    const Text(
+                      '查看获取阿里云OSS密钥的详细步骤',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFFFF5C31),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建云服务商卡片
+  Widget _buildCloudProviderCard({
+    required String providerName,
+    required String description,
+    required Color color,
+    required bool isConfigured,
+    int? configCount,
+    required VoidCallback onTap,
+  }) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: isConfigured ? color : const Color(0xFFE0E0E0),
+              width: isConfigured ? 2 : 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              // 图标
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      color,
+                      color.withValues(alpha: 0.7),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(
+                  child: Text(
+                    providerName.substring(0, 2),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+
+              // 信息
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          providerName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF333333),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        if (isConfigured)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: color,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              configCount != null && configCount > 0
+                                  ? '已配置 $configCount 个'
+                                  : '已配置',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF999999),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // 箭头
+              Icon(
+                Icons.chevron_right,
+                size: 24,
+                color: Colors.grey[400],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 构建已配置的阿里云OSS卡片
+  Widget _buildAliyunConfigCard({
+    required Map<String, String> config,
+    required int index,
+    required VoidCallback onEdit,
+    required VoidCallback onDelete,
+  }) {
+    // 加密显示AccessKey ID（只显示前4位和后4位）
+    String maskAccessKeyId(String keyId) {
+      if (keyId.length <= 8) return '****';
+      return '${keyId.substring(0, 4)}****${keyId.substring(keyId.length - 4)}';
+    }
+
+    // 加密显示AccessKey Secret（全部显示为星号）
+    const String maskedSecret = '********************************';
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: const Color(0xFFE0E0E0),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 标题行：RAM名称 + 操作按钮
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFF6B6B).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.cloud,
+                      size: 18,
+                      color: Color(0xFFFF6B6B),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    config['roleName'] ?? '未命名',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF333333),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  // 编辑按钮
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: onEdit,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: const Color(0xFF2196F3),
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.edit,
+                              size: 14,
+                              color: Color(0xFF2196F3),
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              '编辑',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF2196F3),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // 删除按钮
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: onDelete,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: const Color(0xFFD93025),
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.delete_outline,
+                              size: 14,
+                              color: Color(0xFFD93025),
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              '删除',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFFD93025),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          const Divider(height: 1, color: Color(0xFFE0E0E0)),
+          const SizedBox(height: 12),
+
+          // 配置信息
+          _buildConfigInfoRow('AccessKey ID', maskAccessKeyId(config['accessKeyId'] ?? '')),
+          const SizedBox(height: 8),
+          _buildConfigInfoRow('AccessKey Secret', maskedSecret),
+        ],
+      ),
+    );
+  }
+
+  /// 构建配置信息行
+  Widget _buildConfigInfoRow(String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 120,
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              color: Color(0xFF999999),
+            ),
+          ),
+        ),
+        Expanded(
+          child: SelectableText(
+            value,
+            style: const TextStyle(
+              fontSize: 13,
+              color: Color(0xFF333333),
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Courier',
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 显示阿里云配置对话框
+  void _showAliyunConfigDialog({int? editIndex}) {
+    // 判断是新增还是编辑
+    final bool isEdit = editIndex != null;
+
+    // 加载已保存的配置（如果有）
+    if (isEdit && editIndex != null && editIndex < _aliyunConfigs.length) {
+      final config = _aliyunConfigs[editIndex];
+      _aliyunRoleNameController.text = config['roleName'] ?? '';
+      _aliyunAccessKeyIdController.text = config['accessKeyId'] ?? '';
+      _aliyunAccessKeySecretController.text = config['accessKeySecret'] ?? '';
+    } else {
+      _aliyunRoleNameController.clear();
+      _aliyunAccessKeyIdController.clear();
+      _aliyunAccessKeySecretController.clear();
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Container(
+                width: 600,
+                constraints: const BoxConstraints(maxHeight: 800),
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 标题行：标题 + 关闭按钮
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          isEdit ? '编辑阿里云OSS配置' : '配置阿里云OSS',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF333333),
+                          ),
+                        ),
+                        MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              width: 32,
+                              height: 32,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFF5F5F5),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                size: 18,
+                                color: Color(0xFF666666),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+
+                    // 表单内容
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // RAM角色名
+                            _buildRequiredLabel('RAM角色名'),
+                            const SizedBox(height: 8),
+                            _buildInputField(
+                              _aliyunRoleNameController,
+                              '请输入RAM角色名',
+                            ),
+                            const SizedBox(height: 16),
+
+                            // AccessKey ID
+                            _buildRequiredLabel('AccessKey ID'),
+                            const SizedBox(height: 8),
+                            _buildInputField(
+                              _aliyunAccessKeyIdController,
+                              '请输入AccessKey ID',
+                            ),
+                            const SizedBox(height: 16),
+
+                            // AccessKey Secret
+                            _buildRequiredLabel('AccessKey Secret'),
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: const Color(0xFFE0E0E0),
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: TextField(
+                                controller: _aliyunAccessKeySecretController,
+                                obscureText: true,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: '请输入AccessKey Secret',
+                                  hintStyle: TextStyle(
+                                    color: Color(0xFF999999),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0xFF333333),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+
+                            // 帮助提示
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFF9E6),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: const Color(0xFFFFD54F),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.help_outline,
+                                    size: 18,
+                                    color: Color(0xFFF57C00),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          '不知道如何获取？',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFFF57C00),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                            _showHelpStepsDialog();
+                                          },
+                                          child: const Text(
+                                            '点击查看获取步骤',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: Color(0xFF2196F3),
+                                              decoration:
+                                                  TextDecoration.underline,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // 按钮行
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // 取消按钮
+                        MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: const Color(0xFFE0E0E0),
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Text(
+                                '取消',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0xFF666666),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+
+                        // 保存配置按钮
+                        MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () async {
+                              // 验证必填项
+                              if (_aliyunRoleNameController.text.isEmpty ||
+                                  _aliyunAccessKeyIdController.text.isEmpty ||
+                                  _aliyunAccessKeySecretController.text.isEmpty) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text('提示'),
+                                    content: const Text('请填写完整信息'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('确定'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                return;
+                              }
+
+                              // 保存配置
+                              final storageConfig = CloudStorageConfig(
+                                id: 'aliyun_${DateTime.now().millisecondsSinceEpoch}',
+                                provider: CloudProvider.aliyun,
+                                roleName: _aliyunRoleNameController.text,
+                                accessKeyId: _aliyunAccessKeyIdController.text,
+                                accessKeySecret: _aliyunAccessKeySecretController.text,
+                              );
+
+                              // 保存到CloudStorageManager
+                              await _storageManager.saveConfig(storageConfig);
+
+                              final config = {
+                                'roleName': _aliyunRoleNameController.text,
+                                'accessKeyId': _aliyunAccessKeyIdController.text,
+                                'accessKeySecret': _aliyunAccessKeySecretController.text,
+                              };
+
+                              setState(() {
+                                _currentStorageProvider = 'aliyun';
+                                if (isEdit && editIndex != null) {
+                                  // 编辑现有配置
+                                  _aliyunConfigs[editIndex] = config;
+                                } else {
+                                  // 新增配置
+                                  _aliyunConfigs.add(config);
+                                }
+                              });
+
+                              Navigator.of(context).pop();
+
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('成功'),
+                                  content: Text(isEdit ? '配置更新成功' : '配置保存成功'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('确定'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFF5C31),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Text(
+                                '保存配置',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  /// 显示腾讯云开发中提示
+  void _showTencentDevelopingDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Container(
+            width: 400,
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.info_outline,
+                  size: 48,
+                  color: Color(0xFFFF9800),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  '提示',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF333333),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  '腾讯云COS配置功能',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF666666),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  '开发中，敬请期待',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF999999),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2196F3),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Text(
+                        '我知道了',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 显示七牛云开发中提示
+  void _showQiniuDevelopingDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Container(
+            width: 400,
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.info_outline,
+                  size: 48,
+                  color: Color(0xFFFF9800),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  '提示',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF333333),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  '七牛云配置功能',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF666666),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  '开发中，敬请期待',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF999999),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2196F3),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Text(
+                        '我知道了',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 显示删除确认对话框
+  void _showDeleteConfirmDialog(int index) {
+    final config = _aliyunConfigs[index];
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Container(
+            width: 400,
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.warning_amber,
+                  size: 48,
+                  color: Color(0xFFFF9800),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  '确认删除',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF333333),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  '确定要删除配置"${config['roleName']}"吗？',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF666666),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  '删除后无法恢复，请谨慎操作',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFFD93025),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // 按钮行
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // 取消按钮
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color(0xFFE0E0E0),
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            '取消',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF666666),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+
+                    // 确认删除按钮
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _aliyunConfigs.removeAt(index);
+                            if (_aliyunConfigs.isEmpty) {
+                              _currentStorageProvider = null;
+                            }
+                          });
+                          Navigator.of(context).pop();
+
+                          // 显示删除成功提示
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('成功'),
+                                  content: const Text('配置已删除'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('确定'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFD93025),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            '确认删除',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 显示帮助步骤对话框
+  void _showHelpStepsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Container(
+            width: 600,
+            constraints: const BoxConstraints(maxHeight: 700),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 标题行
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      '阿里云OSS密钥获取步骤',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFF5F5F5),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.close,
+                            size: 18,
+                            color: Color(0xFF666666),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // 步骤内容
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildStepItem(1, '登录阿里云官网',
+                            '访问 https://www.aliyun.com 并登录'),
+                        const SizedBox(height: 12),
+                        _buildStepItem(2, '购买OSS后进入OSS控制台',
+                            '在控制台搜索"OSS"，进入对象存储服务'),
+                        const SizedBox(height: 12),
+                        _buildStepItem(3, '创建RAM用户',
+                            '在RAM控制台创建一个RAM用户，选择"编程访问"'),
+                        const SizedBox(height: 12),
+                        _buildStepItem(4, '创建AccessKey',
+                            '为RAM用户创建AccessKey，获取AccessKey ID和Secret'),
+                        const SizedBox(height: 12),
+                        _buildStepItem(5, '创建RAM角色',
+                            '创建RAM角色并添加OSS访问权限，获取角色名称'),
+                        const SizedBox(height: 16),
+
+                        // 温馨提示
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFF9E6),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: const Color(0xFFFFD54F),
+                              width: 1,
+                            ),
+                          ),
+                          child: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.warning_amber,
+                                    size: 18,
+                                    color: Color(0xFFF57C00),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    '温馨提示',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFFF57C00),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 12),
+                              Text(
+                                '• AccessKey Secret只在创建时显示一次，请务必妥善保存\n'
+                                '• 建议定期更换AccessKey，提高账号安全性\n'
+                                '• 不要将AccessKey泄露给他人或提交到公开代码仓库',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFF666666),
+                                  height: 1.8,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // 关闭按钮
+                Align(
+                  alignment: Alignment.center,
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2196F3),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Text(
+                          '我知道了',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 构建步骤项
+  Widget _buildStepItem(int stepNumber, String title, String description) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFF5C31),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Center(
+            child: Text(
+              '$stepNumber',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF333333),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                description,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Color(0xFF666666),
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:official_website/presentation/widgets/common/auth_widget.dart';
+import '../../routes/app_router.dart';
 /// 行业分类数据模型
 class IndustryCategory {
   final String id;
@@ -387,7 +388,7 @@ class _PartnershipPageState extends State<PartnershipPage>
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onTap: () {
-                    debugPrint('打开消息中心');
+                    AppRouter.goToProfile(context);
                   },
                   child: const Icon(
                     Icons.notifications_outlined,

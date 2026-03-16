@@ -224,7 +224,7 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              authState.nickname,
+              authState.username?.isNotEmpty == true ? authState.username! : '未设置',
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,

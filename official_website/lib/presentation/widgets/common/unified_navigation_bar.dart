@@ -192,7 +192,12 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
 
           const Spacer(flex: 2),
 
-          // 购物车图标
+          // 订单按钮
+          _buildOrderButton(),
+
+          const SizedBox(width: 16),
+
+          // 购物车按钮
           _buildCartButton(),
 
           const SizedBox(width: 24),
@@ -400,6 +405,36 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
   }
 
   /// 构建购物车按钮
+  Widget _buildOrderButton() {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => AppRouter.goToOrders(context),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.receipt_long,
+                size: 20,
+                color: Color(0xFF666666),
+              ),
+              SizedBox(width: 6),
+              Text(
+                '订单',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF666666),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildCartButton() {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
