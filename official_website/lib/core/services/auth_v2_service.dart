@@ -195,9 +195,10 @@ class AuthServiceV2 {
       if (response.statusCode == 200 && response.data != null) {
         final loginResponse = LoginResponseV2.fromJson(response.data);
         if (loginResponse.isSuccess && loginResponse.data != null) {
-          await _tokenManager.saveTokensFromV2(loginResponse.data!);
-          _logger.i('✅ 登录成功');
-          return Right(loginResponse.data!);
+          final loginData = loginResponse.data!;
+          _logger.i('✅ 登录成功 - userType: ${loginData.userType}, userId: ${loginData.userId}, username: ${loginData.username}');
+          await _tokenManager.saveTokensFromV2(loginData);
+          return Right(loginData);
         }
       }
       return const Left(ServerFailure(message: '登录失败'));

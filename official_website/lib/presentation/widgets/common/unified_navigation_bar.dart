@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../routes/app_router.dart';
 import 'auth_widget.dart';
 import '../../../core/auth/auth_state.dart';
@@ -58,7 +59,7 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
   bool _isDropdownHovered = false;
 
   /// 导航菜单数据（可以以后从服务器获取）
-  List<NavbarMenuItem> get _menuItems {
+  List<NavbarMenuItem> _getMenuItems(AuthState? authState) {
     // 基础菜单项（所有用户可见）
     final baseItems = [
       NavbarMenuItem(
@@ -120,9 +121,20 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
     items.addAll(baseItems);
 
     // 根据用户身份添加"工作台"（客户、服务商和后台可以访问）
-    if (authState.userTypeEnum == UserType.customer ||
-        authState.userTypeEnum == UserType.merchant ||
-        authState.userTypeEnum == UserType.backend) {
+    // 检查 userTypeEnum 或直接检查 userType 字符串
+    final shouldShowWorkbench = authState != null &&
+        (authState.userTypeEnum == UserType.customer ||
+            authState.userTypeEnum == UserType.merchant ||
+            authState.userTypeEnum == UserType.backend ||
+            authState.userType == 'platform_account' ||
+            authState.userType == 'service_provider' ||
+            authState.userType == 'platform_admin' ||
+            authState.userType == 'backend_admin');
+
+    if (shouldShowWorkbench) {
+      // 调试日志
+      debugPrint('========== 显示工作台: userType=${authState.userType}, userTypeEnum=${authState.userTypeEnum} ==========');
+
       items.add(
         NavbarMenuItem(
           label: '工作台',
@@ -130,6 +142,8 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
           onTap: () => AppRouter.goToWorkbench(context),
         ),
       );
+    } else {
+      debugPrint('========== 不显示工作台: userType=${authState?.userType}, userTypeEnum=${authState?.userTypeEnum} ==========');
     }
 
     // items.add(contactItem); // 暂时隐藏"联系"菜单项
@@ -180,14 +194,33 @@ class _UnifiedNavigationBarState extends State<UnifiedNavigationBar> {
 
           const Spacer(),
 
-          // 导航菜单
-          Wrap(
-            spacing: 24,
-            children: [
-              ..._menuItems.map((item) => _buildMenuItem(item)),
-              // "合作"下拉菜单（暂时隐藏）
-              // _buildWeDropdown(),
-            ],
+          // 导航菜单 - 安全地监听AuthState变化
+          Builder(
+            builder: (builderContext) {
+              // 先尝试获取 AuthState（不监听）
+              try {
+                Provider.of<AuthState>(context, listen: false);
+                // 如果成功，返回监听版本的 Consumer
+                return Consumer<AuthState>(
+                  builder: (context, authState, child) {
+                    return Wrap(
+                      spacing: 24,
+                      children: [
+                        ..._getMenuItems(authState).map((item) => _buildMenuItem(item)),
+                      ],
+                    );
+                  },
+                );
+              } catch (e) {
+                // 如果找不到 AuthState，显示基础菜单
+                return Wrap(
+                  spacing: 24,
+                  children: [
+                    ..._getMenuItems(null).map((item) => _buildMenuItem(item)),
+                  ],
+                );
+              }
+            },
           ),
 
           const Spacer(flex: 2),

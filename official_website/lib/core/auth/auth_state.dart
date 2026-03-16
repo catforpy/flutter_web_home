@@ -186,6 +186,7 @@ class AuthState extends ChangeNotifier {
         },
         (loginResponse) {
           _userInfo = UserInfo.fromLoginResponse(loginResponse);
+          _logger.i('✅ 登录成功并保存用户信息 - userType: ${_userInfo?.userType}, userId: ${_userInfo?.userId}');
           _isLoggedIn = true;
           notifyListeners();
                   return true;

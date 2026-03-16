@@ -288,16 +288,8 @@ class _ProfilePageState extends State<ProfilePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        const SizedBox(width: 40),
-        _buildStatItem('15', '小程序'),  // 商户
-        const SizedBox(width: 40),
-        _buildStatItem('32', '收藏'),    // 客户
-        const SizedBox(width: 40),
-        _buildStatItem('2', '关注'),     // 客户
-        const SizedBox(width: 40),
-        _buildStatItem('238', '租赁'),   // 商户
-        const SizedBox(width: 40),
-        _buildStatItem('56', '合作'),    // 商户
+        // 移除了：小程序、收藏、关注、租赁、合作
+        // 如需添加其他统计项，可在此处添加
       ],
     );
   }

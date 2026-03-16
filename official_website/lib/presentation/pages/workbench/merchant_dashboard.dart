@@ -52,6 +52,16 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
   // 展开的子菜单
   final Set<String> _expandedMenus = {};
 
+  // 常用工具编辑相关
+  bool _showToolEditor = false;
+
+  // 已选中的常用工具（默认选中前16个）
+  final List<String> _selectedTools = [
+    '导航页面管理', '个人中心管理', '课程分类', '课程列表', '作者列表', '评论管理',
+    '课程订单', '商品订单', '租赁业务订单', '用户列表', '用户分类', '用户等级',
+    '签到记录', '搜索历史管理', '租赁管理', '合作管理',
+  ];
+
   // 消息列表数据
   final List<Map<String, dynamic>> _messages = [
     {
@@ -677,6 +687,109 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 基本信息区 + 运营数据面板（并排）
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 左侧：基本信息区
+              Expanded(
+                flex: 1,
+                child: _buildBasicInfoCard(),
+              ),
+              const SizedBox(width: 16),
+
+              // 右侧：运营数据面板
+              Expanded(
+                flex: 1,
+                child: _buildOperationDataPanel(),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          // 常用工具网格区
+          _buildCommonToolsGrid(),
+        ],
+      ),
+    );
+  }
+
+  /// 获取所有可用的工具列表（按左侧菜单顺序）
+  List<Map<String, dynamic>> _getAllAvailableTools() {
+    return [
+      // 小程序管理
+      {'name': '开发设置', 'parent': '小程序管理', 'icon': Icons.code},
+      {'name': '审核管理', 'parent': '小程序管理', 'icon': Icons.approval},
+      {'name': '菜单导航', 'parent': '小程序管理', 'icon': Icons.menu},
+      {'name': '订阅消息', 'parent': '小程序管理', 'icon': Icons.notifications_active},
+      {'name': '跳转小程序', 'parent': '小程序管理', 'icon': Icons.open_in_new},
+      {'name': '开发者模式', 'parent': '小程序管理', 'icon': Icons.developer_mode},
+      // 配置管理
+      {'name': '支付配置', 'parent': '配置管理', 'icon': Icons.payment},
+      {'name': '分享海报设置', 'parent': '配置管理', 'icon': Icons.share},
+      {'name': '客服设置', 'parent': '配置管理', 'icon': Icons.support_agent},
+      {'name': '短信设置', 'parent': '配置管理', 'icon': Icons.sms},
+      {'name': '音视频存储', 'parent': '配置管理', 'icon': Icons.video_library},
+      {'name': '广告位配置', 'parent': '配置管理', 'icon': Icons.campaign},
+      // 模块管理
+      {'name': '文章管理', 'parent': '模块管理', 'icon': Icons.article},
+      {'name': '留言管理', 'parent': '模块管理', 'icon': Icons.message},
+      {'name': '启动图管理', 'parent': '模块管理', 'icon': Icons.image},
+      {'name': '活动页配置', 'parent': '模块管理', 'icon': Icons.event},
+      {'name': '经典语录管理', 'parent': '模块管理', 'icon': Icons.format_quote},
+      // 页面管理
+      {'name': '导航页面管理', 'parent': '页面管理', 'icon': Icons.navigation},
+      {'name': '功能页面管理', 'parent': '页面管理', 'icon': Icons.widgets},
+      {'name': '个人中心管理', 'parent': '页面管理', 'icon': Icons.person},
+      // 课程管理
+      {'name': '课程分类', 'parent': '课程管理', 'icon': Icons.category},
+      {'name': '课程列表', 'parent': '课程管理', 'icon': Icons.list},
+      {'name': '讲师管理', 'parent': '课程管理', 'icon': Icons.school},
+      {'name': '课程问答管理', 'parent': '课程管理', 'icon': Icons.question_answer},
+      {'name': '评论管理', 'parent': '课程管理', 'icon': Icons.comment},
+      // 订单管理
+      {'name': '课程订单', 'parent': '订单管理', 'icon': Icons.receipt_long},
+      {'name': '商品订单', 'parent': '订单管理', 'icon': Icons.shopping_bag},
+      {'name': '租赁业务订单', 'parent': '订单管理', 'icon': Icons.cottage},
+      // 商城管理
+      {'name': '货架管理', 'parent': '商城管理', 'icon': Icons.store},
+      {'name': '我的仓库', 'parent': '商城管理', 'icon': Icons.inventory_2},
+      {'name': '商品评价', 'parent': '商城管理', 'icon': Icons.star_rate},
+      {'name': '运费模板', 'parent': '商城管理', 'icon': Icons.local_shipping},
+      {'name': '订单设置', 'parent': '商城管理', 'icon': Icons.settings},
+      // 用户管理
+      {'name': '用户列表', 'parent': '用户管理', 'icon': Icons.people},
+      {'name': '用户分类', 'parent': '用户管理', 'icon': Icons.group_work},
+      {'name': '用户等级', 'parent': '用户管理', 'icon': Icons.stars},
+      {'name': '签到记录', 'parent': '用户管理', 'icon': Icons.event_available},
+      {'name': '搜索历史管理', 'parent': '用户管理', 'icon': Icons.history},
+      // 客服管理
+      {'name': '售后处理', 'parent': '客服管理', 'icon': Icons.headset_mic},
+      {'name': '维权订单', 'parent': '客服管理', 'icon': Icons.verified_user},
+      {'name': '客服话术', 'parent': '客服管理', 'icon': Icons.chat},
+      {'name': '咨询记录', 'parent': '客服管理', 'icon': Icons.record_voice_over},
+      // 业务管理
+      {'name': '租赁管理', 'parent': '业务管理', 'icon': Icons.business_center},
+      {'name': '合作管理', 'parent': '业务管理', 'icon': Icons.handshake},
+      // 会员卡管理
+      {'name': '会员卡', 'parent': '会员卡管理', 'icon': Icons.card_membership},
+      {'name': '储值卡', 'parent': '会员卡管理', 'icon': Icons.account_balance_wallet},
+      {'name': '会员对话码', 'parent': '会员卡管理', 'icon': Icons.qr_code},
+      // 营销工具
+      {'name': '优惠券', 'parent': '营销工具', 'icon': Icons.confirmation_number},
+      {'name': '拼团', 'parent': '营销工具', 'icon': Icons.group_add},
+      {'name': '秒杀', 'parent': '营销工具', 'icon': Icons.flash_on},
+    ];
+  }
+
+  /// 构建主内容区（旧版本，保留用于兼容）
+  Widget _buildMainContentOld() {
+    return Container(
+      color: const Color(0xFFF5F6F7),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           // 基本信息区 + 小程序数据助手（并排）
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -688,10 +801,10 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
               ),
               const SizedBox(width: 16),
 
-              // 右侧：小程序数据助手
+              // 右侧：运营数据面板
               Expanded(
                 flex: 1,
-                child: _buildMiniProgramAssistant(),
+                child: _buildOperationDataPanel(),
               ),
             ],
           ),
@@ -748,7 +861,6 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
         return const CourseQAManagementContent();
       case '课程列表':
         return const CourseListContent();
-      case '作者列表':
       case '作者列表':
       case '评论管理':
 
@@ -1058,6 +1170,160 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
               color: Color(0xFF999999),
             ),
             textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建运营数据面板
+  Widget _buildOperationDataPanel() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 2,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 标题
+          const Text(
+            '小程序运营数据',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // 数据网格（2列x3行）
+          Row(
+            children: [
+              Expanded(
+                child: _buildDataItem(
+                  Icons.visibility,
+                  '今日浏览量',
+                  '1,234',
+                  const Color(0xFF1890FF),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildDataItem(
+                  Icons.trending_up,
+                  '总浏览量',
+                  '52,846',
+                  const Color(0xFF52C41A),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          Row(
+            children: [
+              Expanded(
+                child: _buildDataItem(
+                  Icons.receipt_long,
+                  '今日订单',
+                  '28',
+                  const Color(0xFFFA8C16),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildDataItem(
+                  Icons.inventory,
+                  '待处理订单',
+                  '5',
+                  const Color(0xFFFF4D4F),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          Row(
+            children: [
+              Expanded(
+                child: _buildDataItem(
+                  Icons.star_rate,
+                  '用户评价',
+                  '156',
+                  const Color(0xFF722ED1),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildDataItem(
+                  Icons.thumb_up,
+                  '好评率',
+                  '98.5%',
+                  const Color(0xFF13C2C2),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建单个数据项
+  Widget _buildDataItem(IconData icon, String label, String value, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8F9FA),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color: color,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFF666666),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF333333),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import '../../../domain/models/mini_program_registration.dart';
 import '../../../domain/models/mini_program_verification.dart';
 import '../../routes/app_router.dart';
-import '../../widgets/workbench/register_mini_program_dialog.dart';
 import '../../widgets/workbench/registration_complete_guide.dart';
 import '../../widgets/workbench/verify_mini_program_dialog.dart';
 
@@ -19,7 +18,6 @@ class PlatformInitializationPage extends StatefulWidget {
 
 class _PlatformInitializationPageState extends State<PlatformInitializationPage> {
   // 弹窗显示状态
-  bool _showRegisterDialog = false;
   bool _showCompleteGuide = false;
   bool _showVerifyDialog = false;
 
@@ -70,13 +68,6 @@ class _PlatformInitializationPageState extends State<PlatformInitializationPage>
             ],
           ),
 
-          // 注册小程序弹窗
-          if (_showRegisterDialog)
-            RegisterMiniProgramDialog(
-              onRegistrationComplete: _handleRegistrationComplete,
-              onClose: () => setState(() => _showRegisterDialog = false),
-            ),
-
           // 注册完成引导页
           if (_showCompleteGuide && _registeredAppId != null)
             RegistrationCompleteGuide(
@@ -100,16 +91,6 @@ class _PlatformInitializationPageState extends State<PlatformInitializationPage>
   }
 
   /// ==================== 注册和认证流程处理 ====================
-
-  /// 处理注册完成
-  void _handleRegistrationComplete(MiniProgramRegistration registration) {
-    setState(() {
-      _registration = registration;
-      _registeredAppId = registration.appId ?? 'wx${DateTime.now().millisecondsSinceEpoch}';
-      _showRegisterDialog = false;
-      _showCompleteGuide = true;
-    });
-  }
 
   /// 开始认证
   void _startVerification() {
@@ -245,53 +226,6 @@ class _PlatformInitializationPageState extends State<PlatformInitializationPage>
                 ),
               ),
               const SizedBox(width: 24),
-
-              // 注册小程序按钮（醒目）
-              MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _showRegisterDialog = true;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFFF6B35), Color(0xFFFF8C42)],
-                      ),
-                      borderRadius: BorderRadius.circular(6),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFFF6B35).withValues(alpha: 0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.app_registration,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          '注册小程序',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
 
@@ -1023,8 +957,4 @@ class _PlatformInitializationPageState extends State<PlatformInitializationPage>
   }
 
   /// 构建注册小程序弹窗（已废弃，使用RegisterMiniProgramDialog组件）
-  Widget _buildRegisterDialog() {
-    // 这个方法已被RegisterMiniProgramDialog组件替代
-    return const SizedBox.shrink();
-  }
 }

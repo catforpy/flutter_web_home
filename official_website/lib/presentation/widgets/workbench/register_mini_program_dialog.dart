@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../core/auth/auth_state.dart';
+import 'package:provider/provider.dart';
 import '../../../domain/models/mini_program_registration.dart';
 
 /// 注册小程序弹窗
@@ -22,8 +24,12 @@ class RegisterMiniProgramDialog extends StatefulWidget {
 }
 
 class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
-  // 当前步骤（0=企业信息, 1=小程序信息, 2=扫码授权）
+  // 当前步骤（0=选择公司, 1=企业信息, 2=小程序信息, 3=扫码授权）
   int _currentStep = 0;
+
+  // 公司选择方式
+  bool _selectExistingCompany = false; // true=已注册公司, false=新注册公司
+  CompanyInfo? _selectedCompany; // 选中的已注册公司
 
   // 表单数据
   final _formKey = GlobalKey<FormState>();
@@ -47,6 +53,43 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
 
   // 加载状态
   bool _isLoading = false;
+
+  // 模拟公司列表数据
+  final List<CompanyInfo> _companies = [
+    CompanyInfo(
+      id: '1',
+      name: '上海都达网络科技有限公司',
+      code: '91310000MA123456X',
+      legalPerson: '张三',
+      isVerified: true,
+      verificationStatus: '已认证',
+    ),
+    CompanyInfo(
+      id: '2',
+      name: '北京都达科技有限公司',
+      code: '91110000MA789012Y',
+      legalPerson: '李四',
+      isVerified: false,
+      verificationStatus: '未认证',
+    ),
+    CompanyInfo(
+      id: '3',
+      name: '深圳都达信息技术有限公司',
+      code: '91440300MA456789Z',
+      legalPerson: '王五',
+      isVerified: false,
+      verificationStatus: '未认证',
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // TODO: 从后端获取用户的真实公司列表
+    // 示例代码：
+    // final authState = Provider.of<AuthState>(context, listen: false);
+    // final companies = authState.companies;
+  }
 
   @override
   void dispose() {
@@ -155,11 +198,21 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
       child: Row(
         children: [
-          _buildStepItem(0, '企业信息'),
-          _buildStepConnector(0),
-          _buildStepItem(1, '小程序信息'),
-          _buildStepConnector(1),
-          _buildStepItem(2, '扫码授权'),
+          if (!_selectExistingCompany) ...[
+            _buildStepItem(0, '选择公司'),
+            _buildStepConnector(0),
+            _buildStepItem(1, '企业信息'),
+            _buildStepConnector(1),
+            _buildStepItem(2, '小程序信息'),
+            _buildStepConnector(2),
+            _buildStepItem(3, '扫码授权'),
+          ] else ...[
+            _buildStepItem(0, '选择公司'),
+            _buildStepConnector(0),
+            _buildStepItem(1, '小程序信息'),
+            _buildStepConnector(1),
+            _buildStepItem(2, '扫码授权'),
+          ],
         ],
       ),
     );
@@ -220,19 +273,330 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
 
   /// 构建步骤内容
   Widget _buildStepContent() {
-    switch (_currentStep) {
-      case 0:
-        return _buildEnterpriseInfoStep();
-      case 1:
-        return _buildMiniProgramInfoStep();
-      case 2:
-        return _buildAuthorizationStep();
-      default:
-        return const SizedBox.shrink();
+    // 如果还没选择公司类型（初始状态），显示选择界面
+    if (_currentStep == 0) {
+      return _buildCompanySelectionStep();
+    }
+
+    // 已选择新注册公司模式
+    if (!_selectExistingCompany) {
+      switch (_currentStep) {
+        case 1:
+          return _buildEnterpriseInfoStep();
+        case 2:
+          return _buildMiniProgramInfoStep();
+        case 3:
+          return _buildAuthorizationStep();
+        default:
+          return const SizedBox.shrink();
+      }
+    } else {
+      // 已选择已注册公司模式
+      switch (_currentStep) {
+        case 1:
+          return _buildMiniProgramInfoStep();
+        case 2:
+          return _buildAuthorizationStep();
+        default:
+          return const SizedBox.shrink();
+      }
     }
   }
 
-  /// 步骤1：企业主体信息
+  /// 步骤0：选择公司类型（新注册 vs 已注册）
+  Widget _buildCompanySelectionStep() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle('选择公司'),
+        const SizedBox(height: 16),
+        const Text(
+          '请选择您要注册小程序的公司',
+          style: TextStyle(
+            fontSize: 14,
+            color: Color(0xFF666666),
+          ),
+        ),
+        const SizedBox(height: 32),
+
+        // 新注册公司
+        MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectExistingCompany = false;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: const Color(0xFF1A9B8E),
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1A9B8E).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.add_business,
+                      size: 24,
+                      color: Color(0xFF1A9B8E),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '新注册公司',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF333333),
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          '首次注册，需要填写完整企业信息',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF999999),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: Color(0xFF1A9B8E),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        // 已注册公司
+        MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectExistingCompany = true;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: _companies.isEmpty
+                      ? const Color(0xFFE0E0E0)
+                      : const Color(0xFF1A9B8E),
+                  width: _companies.isEmpty ? 1 : 2,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF52C41A).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.business,
+                      size: 24,
+                      color: Color(0xFF52C41A),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '已注册公司',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF333333),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _companies.isEmpty
+                              ? '暂无已注册公司'
+                              : '从已注册公司中选择（${_companies.length}个）',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF999999),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (_companies.isNotEmpty)
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                      color: Color(0xFF1A9B8E),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 步骤0（已注册公司模式）：选择已有的公司
+  Widget _buildExistingCompanySelectionStep() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle('选择已注册公司'),
+        const SizedBox(height: 16),
+        const Text(
+          '请从您的已注册公司中选择一个',
+          style: TextStyle(
+            fontSize: 14,
+            color: Color(0xFF666666),
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // 公司列表
+        ..._companies.map((company) {
+          final isSelected = _selectedCompany?.id == company.id;
+          return MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedCompany = company;
+                });
+              },
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? const Color(0xFF1A9B8E).withOpacity(0.05)
+                      : Colors.white,
+                  border: Border.all(
+                    color: isSelected
+                        ? const Color(0xFF1A9B8E)
+                        : const Color(0xFFE0E0E0),
+                    width: isSelected ? 2 : 1,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: company.isVerified
+                            ? const Color(0xFF52C41A).withOpacity(0.1)
+                            : const Color(0xFFFAAD14).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Icon(
+                        company.isVerified ? Icons.verified : Icons.business,
+                        size: 20,
+                        color: company.isVerified
+                            ? const Color(0xFF52C41A)
+                            : const Color(0xFFFAAD14),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            company.name,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF333333),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '统一社会信用代码: ${company.code}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Color(0xFF999999),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Text(
+                                '法人: ${company.legalPerson}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFF999999),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: company.isVerified
+                                      ? const Color(0xFF52C41A).withOpacity(0.1)
+                                      : const Color(0xFFFAAD14).withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  company.verificationStatus,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: company.isVerified
+                                        ? const Color(0xFF52C41A)
+                                        : const Color(0xFFFAAD14),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  /// 步骤1：企业主体信息（新注册公司模式）
   Widget _buildEnterpriseInfoStep() {
     return Form(
       key: _formKey,
@@ -572,7 +936,7 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
               ),
             ),
           const SizedBox(width: 16),
-          if (_currentStep < 2)
+          if (_currentStep < _getMaxStep())
             ElevatedButton(
               onPressed: _canGoToNextStep ? _goToNextStep : null,
               style: ElevatedButton.styleFrom(
@@ -580,8 +944,8 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
                 disabledBackgroundColor: const Color(0xFFCCCCCC),
                 padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
               ),
-              child: const Text(
-                '下一步 →',
+              child: Text(
+                _getNextButtonText(),
                 style: TextStyle(fontSize: 14, color: Colors.white),
               ),
             )
@@ -610,6 +974,26 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
         ],
       ),
     );
+  }
+
+  /// 获取最大步骤数
+  int _getMaxStep() {
+    if (_selectExistingCompany) {
+      return 2; // 选择公司(0) → 小程序信息(1) → 扫码授权(2)
+    } else {
+      return 3; // 选择公司(0) → 企业信息(1) → 小程序信息(2) → 扫码授权(3)
+    }
+  }
+
+  /// 获取下一步按钮的文字
+  String _getNextButtonText() {
+    if (_currentStep == 0) {
+      return '下一步 →';
+    } else if (_currentStep == 1) {
+      return '下一步 →';
+    } else {
+      return '下一步 →';
+    }
   }
 
   /// ==================== 辅助方法 ====================
@@ -908,18 +1292,28 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
   /// ==================== 事件处理 ====================
 
   bool get _canGoToNextStep {
+    // 步骤0：选择公司类型（总是允许下一步）
     if (_currentStep == 0) {
+      return true;
+    }
+
+    // 新注册公司模式的步骤1：企业信息
+    if (!_selectExistingCompany && _currentStep == 1) {
       return _enterpriseNameController.text.isNotEmpty &&
           _enterpriseCodeController.text.isNotEmpty &&
           _legalPersonNameController.text.isNotEmpty &&
           _legalPersonWechatController.text.isNotEmpty;
     }
-    if (_currentStep == 1) {
+
+    // 小程序信息步骤（新注册公司步骤2，已注册公司步骤1）
+    int miniProgramInfoStep = _selectExistingCompany ? 1 : 2;
+    if (_currentStep == miniProgramInfoStep) {
       return _miniProgramNameController.text.isNotEmpty &&
           _miniProgramIntroController.text.isNotEmpty &&
           _miniProgramSignatureController.text.isNotEmpty &&
           _selectedCategories.isNotEmpty;
     }
+
     return true;
   }
 
@@ -927,7 +1321,8 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
     if (!_canGoToNextStep) return;
 
     // 验证当前步骤
-    if (_currentStep == 1) {
+    int enterpriseInfoStep = _selectExistingCompany ? -1 : 1;
+    if (_currentStep == enterpriseInfoStep) {
       if (!(_formKey.currentState?.validate() ?? false)) {
         return;
       }
@@ -938,7 +1333,8 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
     });
 
     // 如果进入扫码授权步骤，自动提交注册
-    if (_currentStep == 2) {
+    int maxStep = _getMaxStep();
+    if (_currentStep == maxStep) {
       _submitRegistration();
     }
   }
@@ -973,7 +1369,18 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
   }
 
   void _submitRegistration() {
-    if (!(_formKey.currentState?.validate() ?? false)) {
+    // 如果是已注册公司模式，不需要验证企业信息表单
+    if (!_selectExistingCompany) {
+      if (!(_formKey.currentState?.validate() ?? false)) {
+        return;
+      }
+    }
+
+    // 如果是已注册公司，但没有选择公司
+    if (_selectExistingCompany && _selectedCompany == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('请选择一个公司')),
+      );
       return;
     }
 
@@ -983,10 +1390,16 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
 
     // 构建注册信息
     final registration = MiniProgramRegistration(
-      enterpriseName: _enterpriseNameController.text,
-      enterpriseCode: _enterpriseCodeController.text,
+      enterpriseName: _selectExistingCompany
+          ? _selectedCompany!.name
+          : _enterpriseNameController.text,
+      enterpriseCode: _selectExistingCompany
+          ? _selectedCompany!.code
+          : _enterpriseCodeController.text,
       enterpriseType: _selectedEnterpriseType,
-      legalPersonName: _legalPersonNameController.text,
+      legalPersonName: _selectExistingCompany
+          ? _selectedCompany!.legalPerson
+          : _legalPersonNameController.text,
       legalPersonWechat: _legalPersonWechatController.text,
       servicePhone: _servicePhoneController.text.isNotEmpty
           ? _servicePhoneController.text
@@ -1013,4 +1426,23 @@ class _RegisterMiniProgramDialogState extends State<RegisterMiniProgramDialog> {
       }
     });
   }
+}
+
+/// 公司信息模型
+class CompanyInfo {
+  final String id;
+  final String name;
+  final String code; // 统一社会信用代码
+  final String legalPerson; // 法人姓名
+  final bool isVerified; // 是否已认证
+  final String verificationStatus; // 认证状态：已认证/未认证
+
+  CompanyInfo({
+    required this.id,
+    required this.name,
+    required this.code,
+    required this.legalPerson,
+    required this.isVerified,
+    required this.verificationStatus,
+  });
 }

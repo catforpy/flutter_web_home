@@ -62,11 +62,13 @@ class UserInfo {
   factory UserInfo.fromLoginResponse(dynamic loginResponse) {
     // V2: 如果传入的是LoginDataV2对象
     if (loginResponse is LoginDataV2) {
+      final userType = loginResponse.userType ?? 'normal';
+      print('📋 UserInfo.fromLoginResponse - userType: $userType, userId: ${loginResponse.userId}');
       return UserInfo(
         userId: loginResponse.userId ?? 0,
         username: loginResponse.username ?? '',
         realName: loginResponse.realName,
-        userType: loginResponse.userType ?? 'normal',
+        userType: userType,
         avatar: loginResponse.avatar,
         phone: loginResponse.phone,
         email: loginResponse.email,
